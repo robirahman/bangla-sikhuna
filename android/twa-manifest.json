@@ -1,0 +1,41 @@
+{
+  "packageId": "com.robirahman.banlashikhuna",
+  "host": "www.robirahman.com",
+  "name": "Learn Bengali",
+  "launcherName": "Bengali",
+  "display": "standalone",
+  "themeColor": "#1a1a2e",
+  "themeColorDark": "#1a1a2e",
+  "navigationColor": "#1a1a2e",
+  "navigationColorDark": "#1a1a2e",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#1a1a2e",
+  "enableNotifications": false,
+  "startUrl": "/banla-sikhuna/index.html",
+  "iconUrl": "https://www.robirahman.com/banla-sikhuna/icons/icon-512.png",
+  "maskableIconUrl": "https://www.robirahman.com/banla-sikhuna/icons/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://www.robirahman.com/banla-sikhuna/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "minSdkVersion": 19,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": []
+}
