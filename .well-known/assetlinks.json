@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "com.robirahman.banlashikhuna",
+    "package_name": "com.robirahman.banglashikhuna",
     "sha256_cert_fingerprints": [
       "5E:C5:4E:E3:93:40:3E:C3:E3:C2:5D:0B:10:DA:CA:00:E2:0F:68:21:86:21:13:9E:CB:E7:4F:B8:A1:82:F1:8F"
     ]

@@ -21,9 +21,9 @@ plugins {
 }
 
 def twaManifest = [
-    applicationId: 'com.robirahman.banlashikhuna',
+    applicationId: 'com.robirahman.banglashikhuna',
     hostName: 'www.robirahman.com', // The domain being opened in the TWA.
-    launchUrl: '/banla-sikhuna/index.html', // The start path for the TWA. Must be relative to the domain.
+    launchUrl: '/bangla-sikhuna/index.html', // The start path for the TWA. Must be relative to the domain.
     name: 'Learn Bengali', // The application name.
     launcherName: 'Bengali', // The name shown on the Android Launcher.
     themeColor: '#1A1A2E', // The color used for the status bar.
@@ -52,9 +52,9 @@ def twaManifest = [
 
 android {
     compileSdkVersion 36
-    namespace "com.robirahman.banlashikhuna"
+    namespace "com.robirahman.banglashikhuna"
     defaultConfig {
-        applicationId "com.robirahman.banlashikhuna"
+        applicationId "com.robirahman.banglashikhuna"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode 3
@@ -76,7 +76,7 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://www.robirahman.com/banla-sikhuna/manifest.json'
+            resValue "string", "webManifestUrl", 'https://www.robirahman.com/bangla-sikhuna/manifest.json'
         
 
         
