@@ -1,0 +1,852 @@
+---
+layout: none
+title: Learn Bengali
+nav: true
+nav_order: 8
+permalink: /bengali/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1a2e">
+<link rel="manifest" href="manifest.json">
+<title>বাংলা শিক্ষা — Learn Bengali</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- PROFILE SELECTION SCREEN -->
+<div class="profile-screen" id="profile-screen">
+  <a href="https://robirahman.com" class="back-to-site">← robirahman.com</a>
+  <h1><span>বাংলা</span> শিক্ষা</h1>
+  <p class="profile-subtitle">Choose your profile</p>
+  <div class="profile-list" id="profile-list"></div>
+  <div class="profile-input-wrap" id="profile-input-wrap">
+    <input class="profile-input" id="profile-name-input" type="text" placeholder="Enter your name" maxlength="30" autocomplete="off">
+    <input class="profile-input" id="profile-pw-input" type="password" placeholder="Set a password (optional)" maxlength="50" autocomplete="new-password">
+    <div class="profile-input-actions">
+      <button class="btn-primary" id="profile-create-btn" data-action="create-profile">Start</button>
+      <button class="btn-cancel" id="profile-cancel-btn" data-action="cancel-new-profile">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<nav id="main-nav" style="display:none">
+  <div style="display:flex;align-items:center;gap:20px;">
+    <a href="https://robirahman.com" class="back-to-site-nav">← robirahman.com</a>
+    <h1><span>বাংলা</span> শিক্ষা</h1>
+  </div>
+  <div class="nav-stats">
+    <div class="stat-item"><span class="icon">🔥</span><span id="streak-count">0</span></div>
+    <div class="stat-item">
+      <span class="icon">⭐</span><span id="xp-count">0</span> XP
+    </div>
+    <div class="streak-bar"><div class="streak-fill" id="streak-bar-fill" style="width:0%"></div></div>
+    <button class="nav-settings-btn" id="nav-help-btn" data-action="open-help" aria-label="Help" style="font-size:0.85rem;font-weight:700">?</button>
+    <button class="nav-settings-btn" id="nav-settings-btn" data-action="open-settings" aria-label="Settings">⚙️</button>
+    <button class="nav-theme-btn" id="nav-theme-btn" data-action="toggle-theme" aria-label="Toggle theme">☀️</button>
+    <button class="nav-search-btn" data-action="open-search" aria-label="Search">🔍</button>
+  </div>
+</nav>
+
+<div class="tab-bar" id="tab-bar" style="display:none">
+  <button class="tab-btn" id="tab-today" data-action="switch-tab" data-tab="today">Today<span class="tab-review-badge" id="today-tab-badge" style="display:none"></span></button>
+  <button class="tab-btn active" data-action="switch-tab" data-tab="alphabet">Alphabet</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="vocabulary">Vocabulary</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="grammar">Grammar</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="numbers">Numbers</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="phrases">Phrases</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="trivia">Trivia</button>
+  <button class="pt-retake-btn" id="pt-retake-btn" style="display:none" data-action="start-placement-test">Retake Placement</button>
+  <button class="review-due-btn" id="review-due-btn" style="display:none" data-action="start-review-session">🔔 Review Due (<span id="review-due-count">0</span>)</button>
+</div>
+
+<div id="guest-banner" class="guest-banner" style="display:none">
+  <span>Create a profile to save your progress</span>
+  <button data-action="show-profile-screen" class="guest-banner-btn">Create Profile</button>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-overlay" id="settings-overlay">
+  <div class="settings-panel" id="settings-panel">
+    <div class="settings-panel-hdr">
+      <div>
+        <div class="pmh-name" id="pmh-name"></div>
+        <div class="pmh-stats" id="pmh-stats">
+          <span>⭐ 0 XP</span><span>🔥 0</span><span>🏅 0</span>
+        </div>
+      </div>
+      <button class="settings-close-btn" data-action="close-settings">✕</button>
+    </div>
+    <button data-action="open-progress"><span class="pm-icon">📊</span>Adjust Progress</button>
+    <button data-action="open-stats"><span class="pm-icon">📈</span>Statistics</button>
+    <button data-action="settings-start-placement"><span class="pm-icon">🎯</span>Retake Placement Test</button>
+    <div class="settings-divider"></div>
+    <div class="settings-section-label">FIB Answer Mode</div>
+    <div class="settings-mode-group">
+      <button class="mode-chip" id="fibmode-latin" data-action="set-fib-mode" data-mode="latin">Romanized</button>
+      <button class="mode-chip" id="fibmode-mixed" data-action="set-fib-mode" data-mode="mixed">Latin or বাংলা</button>
+      <button class="mode-chip" id="fibmode-bengali" data-action="set-fib-mode" data-mode="bengali">বাংলা only</button>
+    </div>
+    <div class="settings-section-label">Quiz Modality</div>
+    <div class="settings-mode-group">
+      <button class="mode-chip" id="listenmode-text" data-action="set-listening-mode" data-mode="text">Text only</button>
+      <button class="mode-chip" id="listenmode-mixed" data-action="set-listening-mode" data-mode="mixed">Text + Audio</button>
+      <button class="mode-chip" id="listenmode-listening" data-action="set-listening-mode" data-mode="listening">Audio only</button>
+    </div>
+    <details class="settings-collapsible" id="voice-settings">
+      <summary class="settings-section-label settings-collapsible-hdr">Voice</summary>
+      <div style="padding:8px 18px 12px">
+        <select id="voice-select" style="width:100%;padding:6px 8px;background:var(--card-hover);color:var(--text);border:1px solid rgba(255,255,255,0.12);border-radius:8px;font-size:0.88rem;margin-bottom:8px" onchange="setPreferredVoice(this.value)">
+          <option value="">System default (Bengali)</option>
+        </select>
+        <button data-action="speak" data-text="আমি বাংলা শিখছি" style="font-size:0.84rem;padding:6px 14px;background:var(--card-hover)"><span class="pm-icon">🔊</span>Test voice</button>
+      </div>
+    </details>
+    <details class="settings-collapsible">
+      <summary class="settings-section-label settings-collapsible-hdr">Theme</summary>
+      <div class="settings-theme-swatches" id="theme-swatches">
+        <button class="theme-swatch" data-palette="sundarbans" data-action="set-theme" style="--swatch-color:#3ec97a"><span class="swatch-dot"></span><span class="swatch-emoji">🌿</span><span class="swatch-name">Sundarbans</span></button>
+        <button class="theme-swatch" data-palette="padma"      data-action="set-theme"      style="--swatch-color:#4a9eff"><span class="swatch-dot"></span><span class="swatch-emoji">🌊</span><span class="swatch-name">Padma River</span></button>
+        <button class="theme-swatch" data-palette="mustard"    data-action="set-theme"    style="--swatch-color:#e8c030"><span class="swatch-dot"></span><span class="swatch-emoji">🌻</span><span class="swatch-name">Mustard Fields</span></button>
+        <button class="theme-swatch" data-palette="terracotta" data-action="set-theme" style="--swatch-color:#e87040"><span class="swatch-dot"></span><span class="swatch-emoji">🏺</span><span class="swatch-name">Terracotta</span></button>
+        <button class="theme-swatch" data-palette="bengal"     data-action="set-theme"     style="--swatch-color:#38b4d8"><span class="swatch-dot"></span><span class="swatch-emoji">🐟</span><span class="swatch-name">Bay of Bengal</span></button>
+        <button class="theme-swatch" data-palette="kantha"     data-action="set-theme"     style="--swatch-color:#c058c8"><span class="swatch-dot"></span><span class="swatch-emoji">🧵</span><span class="swatch-name">Nakshi Kantha</span></button>
+        <button class="theme-swatch" data-palette="tiger"      data-action="set-theme"      style="--swatch-color:#e89218"><span class="swatch-dot"></span><span class="swatch-emoji">🐯</span><span class="swatch-name">Royal Bengal Tiger</span></button>
+        <button class="theme-swatch" data-palette="boishakh"   data-action="set-theme"   style="--swatch-color:#e83030"><span class="swatch-dot"></span><span class="swatch-emoji">🌺</span><span class="swatch-name">Pohela Boishakh</span></button>
+        <button class="theme-swatch" data-palette="muslin"     data-action="set-theme"     style="--swatch-color:#a8c8e8"><span class="swatch-dot"></span><span class="swatch-emoji">🪡</span><span class="swatch-name">Dhaka Muslin</span></button>
+        <button class="theme-swatch" data-palette="nouka"      data-action="set-theme"      style="--swatch-color:#00c8b0"><span class="swatch-dot"></span><span class="swatch-emoji">🚣</span><span class="swatch-name">Nouka Baich</span></button>
+        <button class="theme-swatch" data-palette="ruposhi"    data-action="set-theme"    style="--swatch-color:#78c840"><span class="swatch-dot"></span><span class="swatch-emoji">🌾</span><span class="swatch-name">Ruposhi Bangla</span></button>
+      </div>
+    </details>
+    <div class="settings-divider"></div>
+    <button data-action="switch-profile"><span class="pm-icon">🔄</span>Switch Profile</button>
+    <details class="settings-collapsible">
+      <summary class="settings-section-label settings-collapsible-hdr">Advanced</summary>
+      <button class="settings-toggle-btn" data-action="toggle-slow-audio" id="settings-slow-audio-btn">🐢 Slow Audio: <span id="slow-audio-status">Off</span></button>
+      <button data-action="manage-profile-pw"><span class="pm-icon">🔒</span><span id="pw-btn-label">Set Password</span></button>
+      <button data-action="import-progress"><span class="pm-icon">⬆</span>Import Progress</button>
+      <button data-action="export-progress"><span class="pm-icon">⬇</span>Export Progress</button>
+      <div class="settings-divider"></div>
+      <button class="danger" data-action="delete-current-profile"><span class="pm-icon">🗑</span>Delete Profile</button>
+      <div class="settings-divider"></div>
+      <button data-action="unlock-all"><span class="pm-icon">🔓</span>Unlock All &amp; Mark Mastered</button>
+    </details>
+  </div>
+</div>
+
+<!-- HELP PANEL -->
+<div class="help-overlay" id="help-overlay">
+  <div class="help-panel">
+    <div class="settings-panel-hdr">
+      <div style="font-weight:600;font-size:1rem">How to Use</div>
+      <button class="settings-close-btn" data-action="close-help">✕</button>
+    </div>
+
+    <div class="settings-section-label">Mastery Levels</div>
+    <div style="padding:8px 18px 14px;font-size:0.87rem;line-height:1.8;color:var(--text-dim)">
+      <div>⬜ <strong style="color:var(--text)">Level 0</strong> — Not yet seen</div>
+      <div>🔴 <strong style="color:var(--text)">Level 1</strong> — Just introduced</div>
+      <div>🟡 <strong style="color:var(--text)">Level 2</strong> — Still learning</div>
+      <div>🟢 <strong style="color:var(--text)">Level 3</strong> — Mastered (reviewed after 7 days)</div>
+      <div>⭐ <strong style="color:var(--text)">Level 4</strong> — Well-known (reviewed after 30 days)</div>
+      <div style="margin-top:8px;font-size:0.81rem">Answer correctly to level up; answer wrong to drop back. Mastered items are scheduled for spaced-repetition review.</div>
+    </div>
+
+    <div class="settings-divider"></div>
+    <div class="settings-section-label">Romanization Guide</div>
+    <div style="padding:8px 18px 14px;font-size:0.85rem;line-height:1.9;color:var(--text-dim)">
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td style="padding-right:10px;font-family:monospace;color:var(--text)">ô / o</td><td>অ — like "o" in <em>hot</em></td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">a</td><td>আ — like "a" in <em>father</em></td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">i / ii</td><td>ই / ঈ — short / long "ee"</td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">u / uu</td><td>উ / ঊ — short / long "oo"</td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">e</td><td>এ — like "ay" in <em>say</em></td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">oi</td><td>ঐ — like "oy" in <em>boy</em></td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">sh</td><td>শ / ষ — like "sh" in <em>she</em></td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">kh / gh</td><td>খ / ঘ — aspirated k / g</td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">chh / jh</td><td>ছ / ঝ — aspirated ch / j</td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">ṭ / ḍ / ṛ</td><td>ট / ড / ড় — retroflex sounds</td></tr>
+        <tr><td style="font-family:monospace;color:var(--text)">~ / n̐</td><td>ঁ — nasalizes the vowel</td></tr>
+      </table>
+      <div style="margin-top:10px;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.82rem;line-height:1.6">
+        <strong style="color:var(--text)">Note on সে:</strong> Throughout this app, সে is romanized as <em>"she"</em> — but it means <strong>he, she, or they</strong> (third-person singular, informal). It is <em>not</em> the English feminine pronoun. The romanization reflects the Bengali pronunciation /ʃe/.
+      </div>
+    </div>
+
+    <div class="settings-divider"></div>
+    <div class="settings-section-label">Keyboard Shortcuts</div>
+    <div style="padding:8px 18px 14px;font-size:0.87rem;line-height:1.9;color:var(--text-dim)">
+      <div><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> — select a multiple-choice answer</div>
+      <div><kbd>0</kbd> — "I don't know"</div>
+      <div><kbd>Enter</kbd> — submit fill-in-the-blank answer</div>
+      <div><kbd>Esc</kbd> — close panels / go back</div>
+    </div>
+
+    <div class="settings-divider"></div>
+    <div class="settings-section-label">About This App</div>
+    <div style="padding:8px 18px 14px;font-size:0.83rem;line-height:1.7;color:var(--text-dim)">
+      This app teaches <strong style="color:var(--text)">Standard Bangladeshi Bengali</strong> (Dhaka dialect), the prestige variety spoken in Bangladesh and used in formal media. West Bengal Bengali (Kolkata) shares the same script and core grammar but differs in some vocabulary, verb forms, and pronunciation — for example, the Bangladeshi present continuous suffix <em>-চ্ছ</em> vs. the West Bengali <em>-ছ</em>. Most learners will find the differences minor at the beginner level.
+    </div>
+
+    <div class="settings-divider"></div>
+    <div style="padding:12px 18px 16px;text-align:center">
+      <a href="/bengali/guide/" target="_blank"
+         style="color:var(--accent);font-size:0.88rem;text-decoration:none">
+        📖 Full user guide →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- PLACEMENT TEST: INTRO -->
+<div class="screen" id="placement-intro" style="position:relative;">
+  <button data-action="dismiss-error" aria-label="Dismiss" class="pt-dismiss-btn">✕</button>
+  <div style="text-align:center;padding:40px 0 20px;">
+    <div style="font-size:3rem;margin-bottom:16px;">🎯</div>
+    <h2 style="font-size:1.6rem;margin-bottom:8px;">Placement Test</h2>
+    <p style="color:var(--text-dim);max-width:500px;margin:0 auto 20px;line-height:1.6;">
+      Already know some Bengali? Take this quick test to skip ahead.<br>
+      Questions span alphabet, vocabulary, grammar, and phrases.<br>
+      We'll set your mastery levels based on your results.
+    </p>
+    <div class="pt-settings">
+      <div class="pt-setting-row">
+        <label class="pt-setting-label">Your level</label>
+        <div class="pt-btn-group">
+          <button class="pt-opt-btn active" id="pt-diff-beginner" data-action="set-pt-difficulty" data-diff="beginner">Beginner</button>
+          <button class="pt-opt-btn" id="pt-diff-intermediate" data-action="set-pt-difficulty" data-diff="intermediate">Intermediate</button>
+          <button class="pt-opt-btn" id="pt-diff-advanced" data-action="set-pt-difficulty" data-diff="advanced">Advanced</button>
+        </div>
+      </div>
+      <div class="pt-setting-row">
+        <label class="pt-setting-label">Test length</label>
+        <div class="pt-btn-group">
+          <button class="pt-opt-btn" id="pt-len-short" data-action="set-pt-len" data-len="short">Short (~15)</button>
+          <button class="pt-opt-btn active" id="pt-len-medium" data-action="set-pt-len" data-len="medium">Medium (~35)</button>
+          <button class="pt-opt-btn" id="pt-len-long" data-action="set-pt-len" data-len="long">Long (~50)</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" id="pt-begin-btn" data-action="begin-placement-quiz" style="font-size:1.1rem;padding:14px 36px;">Begin Test</button>
+    <div id="pt-loading-msg" style="margin-top:12px;color:var(--text-dim);font-size:0.9rem;display:none;">Loading vocabulary… please wait</div>
+    <div style="margin-top:16px;">
+      <a href="#" data-action="discard-placement" style="color:var(--text-dim);font-size:0.85rem;">Skip — I'm a complete beginner</a>
+    </div>
+  </div>
+</div>
+
+<!-- PLACEMENT TEST: QUIZ -->
+<div class="screen" id="placement-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="quit-placement">← Quit</button>
+    <h2 id="pt-quiz-title">Placement Test</h2>
+    <div id="pt-score">0 / 0</div>
+  </div>
+  <div class="placement-stage-label" id="pt-stage-label">Alphabet</div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="pt-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="pt-question-area"></div>
+  <div id="pt-answer-area"></div>
+  <div class="quiz-feedback" id="pt-feedback"></div>
+  <button class="btn-primary quiz-next-btn" id="pt-next-btn" data-action="next-pt-question">Continue →</button>
+</div>
+
+<!-- PLACEMENT TEST: RESULTS -->
+<div class="screen" id="placement-results">
+  <div style="text-align:center;padding-top:30px;">
+    <h2 style="font-size:1.6rem;margin-bottom:8px;">Placement Results</h2>
+    <p style="color:var(--text-dim);margin-bottom:24px;" id="pt-results-summary">Here's how you did:</p>
+    <div class="placement-results-grid" id="pt-results-grid"></div>
+    <div style="margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn-primary" data-action="apply-placement" style="padding:14px 32px;font-size:1.05rem;">Apply & Start Learning</button>
+      <button class="nav-btn" data-action="discard-placement">Discard & Start Fresh</button>
+    </div>
+  </div>
+</div>
+
+<!-- TODAY SCREEN -->
+<div class="screen" id="today-screen">
+  <div class="hero">
+    <h2>আজকের পরিকল্পনা</h2>
+    <p>Today's study plan</p>
+  </div>
+  <div id="today-body" style="padding:0 1rem 2rem"></div>
+</div>
+
+<!-- HOME (Alphabet) -->
+<div class="screen active" id="home">
+  <div class="hero">
+    <h2>বাংলা বর্ণমালা</h2>
+    <p>Master the Bengali alphabet step by step</p>
+  </div>
+  <div class="module-grid" id="module-grid"></div>
+</div>
+
+<!-- VOCAB HOME -->
+<div class="screen" id="vocab-home">
+  <div class="hero">
+    <h2>শব্দভাণ্ডার</h2>
+    <p>Learn 5,000+ common Bengali words</p>
+  </div>
+  <div class="module-grid" id="vocab-module-grid"></div>
+</div>
+
+<!-- LISTENING HOME -->
+<div class="screen" id="listening-home">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="home">← Back</button>
+    <h2>🎧 Listening Practice</h2>
+  </div>
+  <div style="text-align:center;padding:20px 0 12px;color:var(--text-dim);font-size:0.9rem">
+    Identify Bengali sounds and words by ear only.
+  </div>
+  <div class="module-grid" style="max-width:480px;margin:0 auto">
+    <div class="module-card" data-action="start-letter-listening">
+      <div class="module-icon">🔤</div>
+      <h3>Letter Sounds</h3>
+      <p>Hear a letter — identify which one</p>
+    </div>
+    <div class="module-card" data-action="start-vocab-listening">
+      <div class="module-icon">📖</div>
+      <h3>Vocabulary (All)</h3>
+      <p>Hear a word — give its meaning</p>
+    </div>
+  </div>
+  <div style="max-width:760px;margin:12px auto 0;padding:0 6px;">
+    <div style="font-size:0.85rem;color:var(--text-dim);margin:6px 0 10px;">Start vocab listening by category:</div>
+    <div class="cat-chips" id="listening-vocab-categories"></div>
+  </div>
+</div>
+
+<!-- VOCAB BROWSE -->
+<div class="screen" id="vocab-browse">
+  <div class="vb-header">
+    <button class="back-btn" data-action="show-screen" data-screen="vocab-home">← Back</button>
+    <input type="text" class="vb-search" id="vb-search" placeholder="Search words…" oninput="filterVocabList()">
+  </div>
+  <div class="cat-chips" id="cat-chips"></div>
+  <div class="vocab-list" id="vocab-list"></div>
+  <div class="vocab-pagination" id="vocab-pagination"></div>
+</div>
+
+<!-- VOCAB LEARN (flashcards) -->
+<div class="screen" id="vocab-learn">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="vocab-home">← Back</button>
+    <h2 id="vl-title">Category</h2>
+    <div class="card-counter" id="vl-counter">1 / 10</div>
+  </div>
+  <div class="card-hint">Tap card to flip</div>
+  <div class="flashcard-container">
+    <div class="flashcard" id="vocab-flashcard" data-action="flip-vocab-card">
+      <div class="flashcard-face flashcard-front">
+        <div class="vocab-card-bengali" id="vc-bengali">শব্দ</div>
+        <div class="vocab-card-roman" id="vc-roman">shobdo</div>
+      </div>
+      <div class="flashcard-face flashcard-back">
+        <div class="vocab-card-pos" id="vc-pos">noun</div>
+        <div class="vocab-card-english" id="vc-english">word</div>
+        <div class="vocab-card-cat" id="vc-cat">Education</div>
+        <div class="vocab-card-example" id="vc-example"></div>
+        <div class="wm-sound-row">
+          <button class="card-sound-btn" id="vc-sound-btn" data-action="speak-current-vocab" aria-label="Play word">🔊 Word</button>
+          <button class="card-sound-btn" id="vc-example-btn" data-action="speak-current-vocab-example" aria-label="Play example sentence">🔊 Example</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="learn-nav">
+    <button class="nav-btn" id="vl-prev" data-action="prev-vocab-card">← Prev</button>
+    <button class="btn-primary" id="vl-quiz-btn" data-action="start-vocab-quiz">Start Quiz →</button>
+    <button class="nav-btn" id="vl-next" data-action="next-vocab-card">Next →</button>
+  </div>
+</div>
+
+<!-- VOCAB QUIZ -->
+<div class="screen" id="vocab-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="vocab-home">← Quit</button>
+    <h2 id="vq-title">Vocab Quiz</h2>
+    <div id="vq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="vq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="vq-question-area"></div>
+  <div id="vq-answer-area"></div>
+  <div class="quiz-feedback" id="vq-feedback"></div>
+  <div id="vq-rating-area" class="quiz-rating-area">
+    <p class="quiz-rating-prompt">How difficult was this?</p>
+    <div class="quiz-rating-btns">
+      <button class="rating-btn rating-hard" data-action="rate-answer" data-rating="2"><span class="rating-label">Hard</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-good" data-action="rate-answer" data-rating="3"><span class="rating-label">Good</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-easy" data-action="rate-answer" data-rating="4"><span class="rating-label">Easy</span><span class="rating-interval"></span></button>
+    </div>
+  </div>
+  <button class="btn-primary quiz-next-btn" id="vq-next-btn" data-action="next-vocab-question">Continue →</button>
+</div>
+
+<!-- VOCAB RESULTS -->
+<div class="screen" id="vocab-results">
+  <div class="results-circle" id="vr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="vr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="vr-pct">0%</span>
+  </div>
+  <div class="results-title" id="vr-title">Great job!</div>
+  <div class="results-sub" id="vr-sub">You scored 8/10</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="retry-vocab-quiz">Try Again</button>
+    <button class="nav-btn" id="vr-retry-missed" data-action="retry-missed-vocab" style="display:none">Retry Missed</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="vocab-home">Home</button>
+    <button class="btn-primary" id="vr-continue-review" data-action="run-next-review" style="display:none">Continue →</button>
+  </div>
+  <div id="vr-missed"></div>
+</div>
+
+<!-- LEARN -->
+<div class="screen" id="learn">
+  <div class="learn-header">
+    <button class="back-btn" data-action="go-module-home">← Back</button>
+    <h2 id="learn-title">Vowels</h2>
+    <div class="card-counter" id="card-counter">1 / 11</div>
+  </div>
+  <div class="card-hint">Tap card to flip</div>
+  <div class="flashcard-container">
+    <div class="flashcard" id="flashcard" data-action="flip-card">
+      <div class="flashcard-face flashcard-front" id="card-front">
+        <div class="letter-type-badge badge-vowel" id="card-badge">VOWEL</div>
+        <div class="letter-display" id="card-letter">অ</div>
+      </div>
+      <div class="flashcard-face flashcard-back" id="card-back">
+        <div class="letter-name" id="card-name">Ô (Shôro Ô)</div>
+        <div class="letter-translit" id="card-translit">Romanized: ô / o</div>
+        <div class="letter-sound" id="card-sound">Sound: /ɔ/ like "o" in "hot"</div>
+        <div class="letter-example" id="card-example">Example: অনেক (ônek) — many/much</div>
+        <button class="card-sound-btn" id="card-sound-btn" data-action="speak-current-letter" aria-label="Play pronunciation">🔊</button>
+        <button class="canvas-practice-btn" data-action="open-canvas" aria-label="Practice writing">✏️ Practice</button>
+      </div>
+    </div>
+  </div>
+  <div class="learn-nav">
+    <button class="nav-btn" id="prev-btn" data-action="prev-card">← Prev</button>
+    <button class="btn-primary" id="quiz-start-btn" data-action="start-quiz">Start Quiz →</button>
+    <button class="nav-btn" id="next-btn" data-action="next-card">Next →</button>
+  </div>
+  <div class="shortcut-hint">⌨️ Shortcut: <kbd>Space</kbd> flips the card</div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="go-module-home">← Quit</button>
+    <h2 id="quiz-title">Quiz</h2>
+    <div id="quiz-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="quiz-question-area"></div>
+  <div id="quiz-answer-area"></div>
+  <div class="quiz-feedback" id="quiz-feedback"></div>
+  <div id="quiz-rating-area" class="quiz-rating-area">
+    <p class="quiz-rating-prompt">How difficult was this?</p>
+    <p class="shortcut-hint quiz-shortcut-hint">⌨️ Shortcuts: <kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd> or <kbd>N</kbd>/<kbd>Y</kbd></p>
+    <div class="quiz-rating-btns">
+      <button class="rating-btn rating-hard" data-action="rate-answer" data-rating="2"><span class="rating-label">Hard</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-good" data-action="rate-answer" data-rating="3"><span class="rating-label">Good</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-easy" data-action="rate-answer" data-rating="4"><span class="rating-label">Easy</span><span class="rating-interval"></span></button>
+    </div>
+  </div>
+  <button class="btn-primary quiz-next-btn" id="quiz-next-btn" data-action="next-question">Continue →</button>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="results">
+  <div class="results-circle" id="results-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="results-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="results-pct">0%</span>
+  </div>
+  <div class="results-title" id="results-title">Great job!</div>
+  <div class="results-sub" id="results-sub">You scored 8/10</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="retry-quiz">Try Again</button>
+    <button class="nav-btn" id="results-retry-missed" data-action="retry-missed-quiz" style="display:none">Retry Missed</button>
+    <button class="nav-btn" data-action="go-module-home">Home</button>
+    <button class="btn-primary" id="results-continue-review" data-action="run-next-review" style="display:none">Continue →</button>
+  </div>
+  <div id="results-missed"></div>
+</div>
+
+<!-- CHART -->
+<div class="screen" id="chart">
+  <div class="chart-header">
+    <button class="back-btn" data-action="show-screen" data-screen="home">← Back</button>
+    <h2>Full Alphabet Chart</h2>
+  </div>
+  <div id="chart-content"></div>
+</div>
+
+<!-- CANVAS WRITING PRACTICE OVERLAY -->
+<div class="canvas-overlay" id="canvas-overlay" style="display:none">
+  <div class="canvas-modal">
+    <button class="canvas-close-btn" data-action="close-canvas">✕</button>
+    <div class="canvas-char-label" id="canvas-char-label"></div>
+    <canvas id="tracing-canvas" width="400" height="400"></canvas>
+    <div id="canvas-writing-status" class="canvas-writing-status"></div>
+    <div id="stroke-hints" class="stroke-hints"></div>
+    <div class="canvas-actions-row">
+      <button class="nav-btn" data-action="step-stroke-animation">▶ Step Stroke</button>
+      <button class="nav-btn" data-action="clear-canvas">Clear</button>
+      <button class="btn-primary" data-action="complete-canvas-letter">Mark Complete ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- GRAMMAR HOME -->
+<div class="screen" id="grammar-home">
+  <div class="hero">
+    <h2>ব্যাকরণ</h2>
+    <p>Master Bengali grammar in 36 lessons — including sound changes, reading passages, and Mixed Review</p>
+  </div>
+  <div class="conj-table-section">
+    <button class="conj-table-toggle" data-action="toggle-conj-table" aria-expanded="false" id="conj-toggle-btn">
+      ক্রিয়া রূপান্তর — Verb Conjugation Explorer <span class="conj-toggle-arrow">▸</span>
+    </button>
+    <div class="conj-table-wrap" id="conj-table-wrap" hidden>
+      <div id="conj-table-ui"></div>
+    </div>
+  </div>
+  <div class="module-grid" id="grammar-module-grid"></div>
+</div>
+
+<!-- GRAMMAR LESSON -->
+<div class="screen" id="grammar-lesson">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="grammar-home">← Back</button>
+    <h2 id="gl-title">Lesson</h2>
+    <div></div>
+  </div>
+  <div class="grammar-content" id="gl-content"></div>
+</div>
+
+<!-- GRAMMAR QUIZ -->
+<div class="screen" id="grammar-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="grammar-home">← Quit</button>
+    <h2 id="gq-title">Grammar Quiz</h2>
+    <div id="gq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="gq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="gq-question-area"></div>
+  <div id="gq-answer-area"></div>
+  <div class="quiz-feedback" id="gq-feedback"></div>
+  <div id="gq-rating-area" class="quiz-rating-area">
+    <p class="quiz-rating-prompt">How difficult was this?</p>
+    <div class="quiz-rating-btns">
+      <button class="rating-btn rating-hard" data-action="rate-answer" data-rating="2"><span class="rating-label">Hard</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-good" data-action="rate-answer" data-rating="3"><span class="rating-label">Good</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-easy" data-action="rate-answer" data-rating="4"><span class="rating-label">Easy</span><span class="rating-interval"></span></button>
+    </div>
+  </div>
+  <button class="btn-primary quiz-next-btn" id="gq-next-btn" data-action="next-grammar-question">Continue →</button>
+</div>
+
+<!-- GRAMMAR RESULTS -->
+<div class="screen" id="grammar-results">
+  <div class="results-circle" id="gr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="gr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="gr-pct">0%</span>
+  </div>
+  <div class="results-title" id="gr-title">Great job!</div>
+  <div class="results-sub" id="gr-sub">You scored 8/10</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="retry-grammar-quiz">Try Again</button>
+    <button class="nav-btn" id="gr-retry-missed" data-action="retry-missed-grammar" style="display:none">Retry Missed</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="grammar-home">Home</button>
+    <button class="btn-primary" id="gr-continue-review" data-action="run-next-review" style="display:none">Continue →</button>
+  </div>
+  <div id="gr-missed"></div>
+</div>
+
+<!-- NUMBERS HOME -->
+<div class="screen" id="numbers-home">
+  <div class="hero"><h2>সংখ্যা</h2><p>Bengali numerals and number words</p></div>
+  <div class="module-grid" id="numbers-module-grid"></div>
+</div>
+
+<!-- PHRASES HOME -->
+<div class="screen" id="phrases-home">
+  <div class="hero">
+    <h2>বাক্যাংশ</h2>
+    <p>Learn conversational phrases for real-life situations</p>
+  </div>
+  <div class="module-grid" id="phrases-module-grid"></div>
+</div>
+
+<!-- PHRASES SITUATION VIEW -->
+<div class="screen" id="phrases-situation">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="phrases-home">← Back</button>
+    <h2 id="ps-title">Situation</h2>
+    <div></div>
+  </div>
+  <div class="grammar-content" id="ps-content"></div>
+</div>
+
+<!-- PHRASES QUIZ -->
+<div class="screen" id="phrases-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="phrases-home">← Quit</button>
+    <h2 id="phq-title">Phrases Quiz</h2>
+    <div id="phq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="phq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="phq-question-area"></div>
+  <div id="phq-answer-area"></div>
+  <div class="quiz-feedback" id="phq-feedback"></div>
+  <div id="phq-rating-area" class="quiz-rating-area">
+    <p class="quiz-rating-prompt">How difficult was this?</p>
+    <div class="quiz-rating-btns">
+      <button class="rating-btn rating-hard" data-action="rate-answer" data-rating="2"><span class="rating-label">Hard</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-good" data-action="rate-answer" data-rating="3"><span class="rating-label">Good</span><span class="rating-interval"></span></button>
+      <button class="rating-btn rating-easy" data-action="rate-answer" data-rating="4"><span class="rating-label">Easy</span><span class="rating-interval"></span></button>
+    </div>
+  </div>
+  <button class="btn-primary quiz-next-btn" id="phq-next-btn" data-action="next-phrases-question">Continue →</button>
+</div>
+
+<!-- PHRASES RESULTS -->
+<div class="screen" id="phrases-results">
+  <div class="results-circle" id="phr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="phr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="phr-pct">0%</span>
+  </div>
+  <div class="results-title" id="phr-title">Great job!</div>
+  <div class="results-sub" id="phr-sub">You scored 8/10</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="retry-phrases-quiz">Try Again</button>
+    <button class="nav-btn" id="phr-retry-missed" data-action="retry-missed-phrases" style="display:none">Retry Missed</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="phrases-home">Home</button>
+    <button class="btn-primary" id="phr-continue-review" data-action="run-next-review" style="display:none">Continue →</button>
+  </div>
+  <div id="phr-missed"></div>
+</div>
+
+<!-- TRIVIA HOME -->
+<div class="screen" id="trivia-home">
+  <div class="hero">
+    <h2>বাংলা তথ্য</h2>
+    <p>Test your knowledge of Bengali culture, history, and more</p>
+  </div>
+  <div class="module-grid" id="trivia-category-grid"></div>
+</div>
+
+<!-- TRIVIA QUIZ -->
+<div class="screen" id="trivia-quiz">
+  <div class="learn-header">
+    <button class="back-btn" data-action="trivia-quiz-back">← Back</button>
+    <h2 id="tq-title">Trivia</h2>
+    <div id="tq-progress-label" class="progress-label"></div>
+  </div>
+  <div class="quiz-progress-bar" style="margin:0 0 1rem">
+    <div class="quiz-progress-fill" id="tq-progress-bar" style="width:0%"></div>
+  </div>
+  <div id="tq-question-area" style="padding:0 1rem 1rem"></div>
+  <div id="tq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="tq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="tq-next-btn"
+          data-action="trivia-next" style="display:none">Next →</button>
+</div>
+
+<!-- TRIVIA RESULTS -->
+<div class="screen" id="trivia-results">
+  <div class="results-circle" id="tr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="tr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="tr-pct">0%</span>
+  </div>
+  <div class="results-title" id="tr-title">Great job!</div>
+  <div class="results-sub" id="tr-sub">You scored 8/10</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="trivia-play-again">Try Again</button>
+    <button class="nav-btn" data-action="trivia-quiz-back">Home</button>
+  </div>
+  <div id="tr-missed"></div>
+</div>
+
+<script type="module" src="app.js"></script>
+
+<!-- ── First-run Onboarding Modal ─────────────────────────────── -->
+<div id="onboarding-modal" class="onboarding-overlay" style="display:none">
+  <div class="onboarding-card">
+    <h2 class="onboarding-title">Welcome to বাংলা শিক্ষা!</h2>
+    <p class="onboarding-sub">Here's a recommended path to get started:</p>
+    <ol class="onboarding-steps">
+      <li><strong>Alphabet</strong> — Learn the Bengali script with Mixed Practice (letters first)</li>
+      <li><strong>Vocabulary</strong> — Build your word bank with spaced repetition</li>
+      <li><strong>Grammar</strong> — Study sentence structure once you know ~50 words</li>
+    </ol>
+    <p class="onboarding-tip">Tip: Try <em>Romanized</em> input mode first (Settings → Fill-in-the-blank mode), then switch to Bengali script as you progress.</p>
+    <button class="btn-primary onboarding-btn" data-action="dismiss-onboarding">Got it — let's start!</button>
+  </div>
+</div>
+
+<div id="word-modal" class="word-modal">
+  <div class="word-modal-inner">
+    <button class="word-modal-close" data-action="close-word-modal" aria-label="Close">&#x2715;</button>
+    <div class="flashcard word-modal-card" id="word-modal-card" data-action="flip-word-modal">
+      <div class="flashcard-face flashcard-front">
+        <div class="vocab-card-bengali" id="wm-bengali"></div>
+        <div class="vocab-card-roman" id="wm-roman"></div>
+      </div>
+      <div class="flashcard-face flashcard-back">
+        <div class="vocab-card-pos" id="wm-pos"></div>
+        <div class="vocab-card-english" id="wm-english"></div>
+        <div class="vocab-card-cat" id="wm-cat"></div>
+        <div class="vocab-card-example" id="wm-example"></div>
+        <div class="wm-related" id="wm-related" style="display:none">
+          <div class="wm-related-title">Related words</div>
+          <div class="wm-related-list" id="wm-related-list"></div>
+        </div>
+        <div class="wm-sound-row">
+          <button class="card-sound-btn" data-action="speak-wm-bengali" aria-label="Play word">🔊 Word</button>
+          <button class="card-sound-btn" id="wm-example-btn" data-action="speak-vocab-example" aria-label="Play example sentence">🔊 Example</button>
+        </div>
+      </div>
+    </div>
+    <p class="word-modal-hint">Tap card to flip</p>
+    <button id="wm-study-btn" class="wm-study-btn" data-action="study-word-next">+ Study this word</button>
+    <button id="wm-conj-btn" class="wm-conj-btn" data-action="open-verb-conjugation" style="display:none">ক্রিয়া রূপ দেখুন</button>
+  </div>
+</div>
+
+<!-- ── Global Search Overlay ─────────────────────────────── -->
+<div id="search-overlay" class="search-overlay">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <span class="search-icon-lead">🔍</span>
+      <input id="search-input" class="search-input" type="search"
+             placeholder="Search letters, words, grammar…"
+             autocomplete="off" oninput="scheduleSearch()" />
+      <button class="search-close-btn" data-action="close-search" aria-label="Close">✕</button>
+    </div>
+    <div id="search-results" class="search-results">
+      <p class="search-prompt">Search across letters, vocabulary, and grammar lessons.</p>
+    </div>
+  </div>
+</div>
+
+
+<div id="achievement-toast" class="achievement-toast" aria-live="polite">
+  <div class="ach-icon" id="ach-toast-icon">🎯</div>
+  <div class="ach-text">
+    <div class="ach-label">Achievement Unlocked</div>
+    <div class="ach-name" id="ach-toast-name"></div>
+  </div>
+</div>
+
+<div id="stats-overlay" class="stats-overlay">
+  <div class="stats-panel">
+    <div class="stats-panel-hdr">
+      <h2 class="stats-panel-title">Statistics</h2>
+      <button class="progress-close-btn" data-action="close-stats" aria-label="Close">✕</button>
+    </div>
+    <div class="stats-body" id="stats-body">
+      <!-- rendered by renderStatsPanel() -->
+    </div>
+  </div>
+</div>
+
+<div id="progress-overlay" class="progress-overlay">
+  <div class="progress-panel">
+    <div class="progress-panel-hdr">
+      <h2 class="progress-panel-title">Your Progress</h2>
+      <button class="mastery-legend-btn" id="mastery-legend-btn" data-action="toggle-mastery-legend" title="What do the levels mean?">ℹ️</button>
+      <button class="progress-close-btn" data-action="close-progress" aria-label="Close">✕</button>
+    </div>
+    <div class="mastery-legend" id="mastery-legend" style="display:none">
+      <div class="ml-item"><div class="ml-chip lvl0">অ</div><span class="ml-label">Unseen</span></div>
+      <div class="ml-item"><div class="ml-chip lvl1">অ</div><span class="ml-label">Seen once</span></div>
+      <div class="ml-item"><div class="ml-chip lvl2">অ</div><span class="ml-label">Learning</span></div>
+      <div class="ml-item"><div class="ml-chip lvl3">অ</div><span class="ml-label">Mastered</span></div>
+      <div class="ml-item"><div class="ml-chip lvl4">অ</div><span class="ml-label">Well-known</span></div>
+      <span class="ml-label" style="font-size:0.75rem;opacity:0.7">Click any chip to cycle its level</span>
+    </div>
+    <div class="progress-pt-cta">
+      <button class="btn-primary progress-pt-btn" data-action="progress-start-placement">
+        🎯 Retake Placement Test
+      </button>
+      <p class="progress-pt-hint">Automatically calibrate your levels with a quiz</p>
+    </div>
+    <div class="progress-body" id="progress-body">
+      <!-- rendered by renderProgressPanel() -->
+    </div>
+  </div>
+</div>
+
+<!-- BENGALI SOFT KEYBOARD -->
+<div id="bng-kbd" class="bng-kbd" aria-label="Bengali keyboard">
+  <div class="bng-kbd-handle" data-action="toggle-bng-kbd">বাংলা keyboard</div>
+  <div class="bng-kbd-row">
+    <button class="bng-key" data-action="append-char" data-char="অ">অ</button><button class="bng-key" data-action="append-char" data-char="আ">আ</button><button class="bng-key" data-action="append-char" data-char="ই">ই</button><button class="bng-key" data-action="append-char" data-char="ঈ">ঈ</button><button class="bng-key" data-action="append-char" data-char="উ">উ</button><button class="bng-key" data-action="append-char" data-char="ঊ">ঊ</button><button class="bng-key" data-action="append-char" data-char="ঋ">ঋ</button><button class="bng-key" data-action="append-char" data-char="এ">এ</button><button class="bng-key" data-action="append-char" data-char="ঐ">ঐ</button><button class="bng-key" data-action="append-char" data-char="ও">ও</button><button class="bng-key" data-action="append-char" data-char="ঔ">ঔ</button>
+  </div>
+  <div class="bng-kbd-row">
+    <button class="bng-key" data-action="append-char" data-char="া" title="aa-kar">া</button><button class="bng-key" data-action="append-char" data-char="ি" title="i-kar">ি</button><button class="bng-key" data-action="append-char" data-char="ী" title="ii-kar">ী</button><button class="bng-key" data-action="append-char" data-char="ু" title="u-kar">ু</button><button class="bng-key" data-action="append-char" data-char="ূ" title="uu-kar">ূ</button><button class="bng-key" data-action="append-char" data-char="ৃ" title="ri-kar">ৃ</button><button class="bng-key" data-action="append-char" data-char="ে" title="e-kar">ে</button><button class="bng-key" data-action="append-char" data-char="ৈ" title="oi-kar">ৈ</button><button class="bng-key" data-action="append-char" data-char="ো" title="o-kar">ো</button><button class="bng-key" data-action="append-char" data-char="ৌ" title="ou-kar">ৌ</button><button class="bng-key" data-action="append-char" data-char="্" title="hasanta">্</button>
+  </div>
+  <div class="bng-kbd-row">
+    <button class="bng-key" data-action="append-char" data-char="ক">ক</button><button class="bng-key" data-action="append-char" data-char="খ">খ</button><button class="bng-key" data-action="append-char" data-char="গ">গ</button><button class="bng-key" data-action="append-char" data-char="ঘ">ঘ</button><button class="bng-key" data-action="append-char" data-char="ঙ">ঙ</button><button class="bng-key" data-action="append-char" data-char="চ">চ</button><button class="bng-key" data-action="append-char" data-char="ছ">ছ</button><button class="bng-key" data-action="append-char" data-char="জ">জ</button><button class="bng-key" data-action="append-char" data-char="ঝ">ঝ</button><button class="bng-key" data-action="append-char" data-char="ঞ">ঞ</button>
+  </div>
+  <div class="bng-kbd-row">
+    <button class="bng-key" data-action="append-char" data-char="ট">ট</button><button class="bng-key" data-action="append-char" data-char="ঠ">ঠ</button><button class="bng-key" data-action="append-char" data-char="ড">ড</button><button class="bng-key" data-action="append-char" data-char="ঢ">ঢ</button><button class="bng-key" data-action="append-char" data-char="ণ">ণ</button><button class="bng-key" data-action="append-char" data-char="ত">ত</button><button class="bng-key" data-action="append-char" data-char="থ">থ</button><button class="bng-key" data-action="append-char" data-char="দ">দ</button><button class="bng-key" data-action="append-char" data-char="ধ">ধ</button><button class="bng-key" data-action="append-char" data-char="ন">ন</button>
+  </div>
+  <div class="bng-kbd-row">
+    <button class="bng-key" data-action="append-char" data-char="প">প</button><button class="bng-key" data-action="append-char" data-char="ফ">ফ</button><button class="bng-key" data-action="append-char" data-char="ব">ব</button><button class="bng-key" data-action="append-char" data-char="ভ">ভ</button><button class="bng-key" data-action="append-char" data-char="ম">ম</button><button class="bng-key" data-action="append-char" data-char="য">য</button><button class="bng-key" data-action="append-char" data-char="র">র</button><button class="bng-key" data-action="append-char" data-char="ল">ল</button><button class="bng-key" data-action="append-char" data-char="শ">শ</button><button class="bng-key" data-action="append-char" data-char="ষ">ষ</button>
+  </div>
+  <div class="bng-kbd-row">
+    <button class="bng-key" data-action="append-char" data-char="স">স</button><button class="bng-key" data-action="append-char" data-char="হ">হ</button><button class="bng-key" data-action="append-char" data-char="ড়">ড়</button><button class="bng-key" data-action="append-char" data-char="ঢ়">ঢ়</button><button class="bng-key" data-action="append-char" data-char="য়">য়</button><button class="bng-key" data-action="append-char" data-char="ৎ">ৎ</button><button class="bng-key" data-action="append-char" data-char="ং">ং</button><button class="bng-key" data-action="append-char" data-char="ঃ">ঃ</button><button class="bng-key" data-action="append-char" data-char="ঁ">ঁ</button><button class="bng-key" data-action="append-char" data-char="।">।</button>
+  </div>
+  <div class="bng-kbd-row">
+    <button class="bng-key bng-key-wide" data-action="append-char" data-char="⎵">Space</button>
+    <button class="bng-key bng-key-wide" data-action="append-char" data-char="⌫">⌫</button>
+    <button class="bng-key bng-key-wide" data-action="append-char" data-char="✕">Clear</button>
+  </div>
+</div>
+
+<!-- Custom modal dialog (replaces native alert/confirm) -->
+<div id="app-modal" class="app-modal-overlay" style="display:none" role="dialog" aria-modal="true">
+  <div class="app-modal-box">
+    <p id="app-modal-msg" class="app-modal-msg"></p>
+    <div class="app-modal-btns" id="app-modal-btns"></div>
+  </div>
+</div>
+
+</body>
+</html>

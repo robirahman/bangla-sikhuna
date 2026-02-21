@@ -1,0 +1,1929 @@
+---
+layout: none
+title: Bengali Learning App — User Guide
+nav: false
+permalink: /bengali/guide/
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Guide — বাংলা শিক্ষা</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0b1a14;
+        --card: #132a1e;
+        --card-hover: #1e3d2c;
+        --accent: #3ec97a;
+        --accent-dim: #2a8f55;
+        --wrong: #e85050;
+        --text: #e8f5ec;
+        --text-dim: #7aaa8a;
+        --gold: #c8b847;
+        --radius: 14px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        font-size: 1rem;
+        line-height: 1.7;
+        min-height: 100vh;
+      }
+      .bn {
+        font-family: "Noto Sans Bengali", sans-serif;
+      }
+
+      /* ── Layout ── */
+      .page-wrap {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
+      }
+
+      /* ── Top nav ── */
+      .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(11, 26, 20, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 0 20px;
+      }
+      .top-bar-inner {
+        max-width: 820px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 52px;
+      }
+      .top-bar a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.88rem;
+      }
+      .top-bar a:hover {
+        color: var(--text);
+      }
+      .top-bar .sep {
+        color: rgba(255, 255, 255, 0.2);
+      }
+      .top-bar .title {
+        color: var(--text);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        text-align: center;
+        padding: 56px 0 40px;
+      }
+      .hero h1 {
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .hero h1 .bn-title {
+        display: block;
+        font-family: "Noto Sans Bengali", sans-serif;
+        color: var(--accent);
+        font-size: 1.1em;
+      }
+      .hero .sub {
+        color: var(--text-dim);
+        font-size: 1.05rem;
+        max-width: 540px;
+        margin: 0 auto 28px;
+      }
+      .hero-cta {
+        display: inline-block;
+        background: var(--accent);
+        color: #0b1a14;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 12px 32px;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: opacity 0.15s;
+      }
+      .hero-cta:hover {
+        opacity: 0.88;
+      }
+
+      /* ── Table of contents ── */
+      .toc-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 24px 28px;
+        margin-bottom: 48px;
+      }
+      .toc-card h2 {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-dim);
+        margin-bottom: 14px;
+      }
+      .toc-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 24px;
+      }
+      .toc-list li a {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.92rem;
+      }
+      .toc-list li a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 500px) {
+        .toc-list {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ── Sections ── */
+      .guide-section {
+        margin-bottom: 56px;
+        scroll-margin-top: 64px;
+      }
+      .guide-section h2 {
+        font-size: 1.45rem;
+        font-weight: 700;
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .guide-section h2 .icon {
+        font-size: 1.3rem;
+      }
+      .guide-section h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--accent);
+        margin: 24px 0 8px;
+      }
+      .guide-section p {
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+      .guide-section p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ── Cards / callouts ── */
+      .card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 18px 22px;
+        margin: 16px 0;
+      }
+      .card.accent-border {
+        border-left: 3px solid var(--accent);
+      }
+      .card.tip {
+        border-left: 3px solid var(--gold);
+      }
+      .card.tip::before {
+        content: "💡 Tip";
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--gold);
+        margin-bottom: 6px;
+      }
+
+      /* ── Feature grid ── */
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        margin: 16px 0;
+      }
+      .feature-tile {
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .feature-tile .ft-icon {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+      }
+      .feature-tile .ft-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+      }
+      .feature-tile .ft-desc {
+        font-size: 0.84rem;
+        color: var(--text-dim);
+        line-height: 1.5;
+      }
+
+      /* ── Tables ── */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 0.92rem;
+      }
+      th {
+        text-align: left;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-dim);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      td {
+        padding: 9px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        vertical-align: top;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* ── Mastery dots ── */
+      .mastery-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+      .m0 {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .m1 {
+        background: #e85050;
+      }
+      .m2 {
+        background: #c8b847;
+      }
+      .m3 {
+        background: #3ec97a;
+      }
+
+      /* ── KBD tags ── */
+      kbd {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        padding: 2px 7px;
+        font-size: 0.82rem;
+        font-family: monospace;
+      }
+
+      /* ── Category chips ── */
+      .chip-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      .chip {
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 0.82rem;
+        color: var(--text-dim);
+      }
+
+      /* ── Inline code ── */
+      code {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-family: monospace;
+        font-size: 0.88em;
+      }
+
+      /* ── Footer ── */
+      .guide-footer {
+        text-align: center;
+        padding-top: 32px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        color: var(--text-dim);
+        font-size: 0.88rem;
+      }
+      .guide-footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top navigation -->
+    <nav class="top-bar">
+      <div class="top-bar-inner">
+        <a href="/bengali/">← App</a>
+        <span class="sep">|</span>
+        <span class="title">User Guide</span>
+      </div>
+    </nav>
+
+    <div class="page-wrap">
+      <!-- Hero -->
+      <header class="hero">
+        <h1>
+          <span class="bn-title">বাংলা শিক্ষা</span>
+          User Guide
+        </h1>
+        <p class="sub">Everything you need to know to get the most out of this Bengali learning app — from your first letter to 5,000+ words.</p>
+        <a href="/bengali/" class="hero-cta">Open the App →</a>
+      </header>
+
+      <!-- Table of contents -->
+      <nav class="toc-card" aria-label="Table of contents">
+        <h2>Contents</h2>
+        <ul class="toc-list">
+          <li><a href="#getting-started">Getting started</a></li>
+          <li><a href="#today">Today tab</a></li>
+          <li><a href="#alphabet">Alphabet &amp; Matra Drills</a></li>
+          <li><a href="#vocabulary">Vocabulary</a></li>
+          <li><a href="#grammar">Grammar &amp; Reading</a></li>
+          <li><a href="#numbers">Numbers</a></li>
+          <li><a href="#phrases">Common Phrases</a></li>
+          <li><a href="#mastery">Mastery &amp; review</a></li>
+          <li><a href="#placement">Placement test</a></li>
+          <li><a href="#settings">Settings</a></li>
+          <li><a href="#profiles">Profiles &amp; progress</a></li>
+          <li><a href="#gamification">XP, streaks &amp; achievements</a></li>
+          <li><a href="#shortcuts">Keyboard shortcuts</a></li>
+          <li><a href="#romanization">Romanization guide</a></li>
+          <li><a href="#tips">Study tips</a></li>
+        </ul>
+      </nav>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="getting-started">
+        <h2><span class="icon">🚀</span> Getting Started</h2>
+
+        <p>The app has six tabs in the navigation bar:</p>
+
+        <div class="feature-grid">
+          <div class="feature-tile">
+            <div class="ft-icon">📋</div>
+            <div class="ft-title">Today</div>
+            <div class="ft-desc">Your daily study plan — due reviews, new words queued, and today's suggested grammar lesson, all in one place.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🔤</div>
+            <div class="ft-title">Alphabet</div>
+            <div class="ft-desc">Learn the 50+ letters of the Bengali script, their names, sounds, and how to read them.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">📖</div>
+            <div class="ft-title">Vocabulary</div>
+            <div class="ft-desc">Learn over 5,000 of the most common Bengali words, organized by category.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">📝</div>
+            <div class="ft-title">Grammar</div>
+            <div class="ft-desc">36 lessons — grammar concepts, a sound-change guide, and 5 graded reading passages.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🔢</div>
+            <div class="ft-title">Numbers</div>
+            <div class="ft-desc">Bengali numeral glyphs (০–৯) and spoken number words from zero through one million.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🗣️</div>
+            <div class="ft-title">Phrases</div>
+            <div class="ft-desc">144 conversational phrases across 12 real-life situations — greetings, food, transport, health, and more.</div>
+          </div>
+        </div>
+
+        <p>
+          If you're a complete beginner, start with the <strong>Alphabet</strong> tab — the app will introduce letters in waves and quiz you on them
+          as you go. If you already know some Bengali, take the <a href="#placement">placement test</a> to skip ahead. After your first session, check
+          the <strong>Today</strong> tab each day to see exactly what's due.
+        </p>
+
+        <div class="card tip">
+          On your very first login the app will show a short welcome card suggesting a recommended path (Alphabet → Vocabulary → Grammar). You can
+          dismiss it immediately or read it for a quick orientation.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="today">
+        <h2><span class="icon">📋</span> Today Tab</h2>
+
+        <p>
+          The <strong>Today</strong> tab gives you a single answer to "what should I study right now?" It assembles a daily plan from three sources:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Section</th>
+              <th>What it shows</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔔 <strong>Due for Review</strong></td>
+              <td>
+                The count of letters, words, and grammar items whose spaced-repetition interval has elapsed. A <em>Start Review</em> button launches
+                the review session directly.
+              </td>
+            </tr>
+            <tr>
+              <td>📖 <strong>New Vocabulary</strong></td>
+              <td>
+                The next batch of unseen words in your Mixed Practice queue. Previews the words by Bengali script and English meaning, with a
+                <em>Study These</em> button.
+              </td>
+            </tr>
+            <tr>
+              <td>📚 <strong>Grammar</strong></td>
+              <td>The next grammar lesson you haven't yet mastered, with an <em>Open Lesson</em> button.</td>
+            </tr>
+            <tr>
+              <td>📚 <strong>Lesson of the Day</strong></td>
+              <td>
+                A highlighted card at the top of the Today screen showing the first grammar lesson you haven't yet completed — its title, the first
+                example sentence in Bengali, and a <em>Start Lesson →</em> button. Only appears when an incomplete lesson exists.
+              </td>
+            </tr>
+            <tr>
+              <td>🔁 <strong>Mistake Review</strong></td>
+              <td>
+                Appears once you've accumulated wrong answers. Shows how many items are in your mistake history and offers a
+                <em>Review Mistakes →</em>
+                button that launches a targeted quiz on the items you've most recently answered incorrectly (up to 50 unique items, capped at 100 in
+                history). Covers alphabet letters; more item types are included as the feature grows.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>At the bottom of the screen you'll also see today's XP total and your current streak at a glance.</p>
+
+        <h3>Review badge</h3>
+        <p>
+          When items are due for review, a numbered badge appears directly on the <strong>Today</strong> tab label in the navigation bar, and a
+          prominent <strong>🔔 Reviews due — Start now</strong> alert card appears at the top of the Today screen. Tapping either one launches the
+          review session immediately, without having to navigate anywhere else.
+        </p>
+
+        <div class="card tip">
+          Make the Today tab your daily starting point. Clearing the review queue first, then studying new vocabulary, then reviewing grammar keeps
+          you moving through all three areas in balance.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="alphabet">
+        <h2><span class="icon">🔤</span> Alphabet</h2>
+
+        <p>Bengali has 50+ characters, divided into three types:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Count</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Vowels</strong> (স্বরবর্ণ)</td>
+              <td>11</td>
+              <td class="bn">অ আ ই ঈ উ ঊ ঋ এ ঐ ও ঔ</td>
+            </tr>
+            <tr>
+              <td><strong>Consonants</strong> (ব্যঞ্জনবর্ণ)</td>
+              <td>39</td>
+              <td class="bn">ক খ গ ঘ ঙ চ ছ জ…</td>
+            </tr>
+            <tr>
+              <td><strong>Special characters</strong></td>
+              <td>7</td>
+              <td class="bn">ড় ঢ় য় ৎ ং ঃ ঁ</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Wave-based learning</h3>
+        <p>Letters are introduced in <strong>waves of 5</strong> through the Mixed Practice module. Each wave has two phases:</p>
+        <ol style="padding-left: 1.4em; margin: 8px 0">
+          <li style="margin-bottom: 6px">
+            <strong>Teach</strong> — You see each new letter as a flashcard with its name, pronunciation, IPA sound description, and an example word.
+          </li>
+          <li><strong>Quiz</strong> — 8 questions mixing the new letters with ones you've seen before.</li>
+        </ol>
+        <p>
+          The next wave unlocks once enough letters from the current wave reach <a href="#mastery">mastery level 2</a>. This pacing keeps the workload
+          manageable.
+        </p>
+
+        <h3>Individual module practice</h3>
+        <p>
+          Each letter group (Vowels, Velar Consonants, Palatal Consonants, etc.) also has its own module card you can open for targeted practice.
+          These run standalone quizzes on just those letters.
+        </p>
+
+        <h3>Conjunct Consonants (যুক্তবর্ণ)</h3>
+        <p>
+          The <strong>🔗 Conjunct Consonants</strong> module covers 32 compound letter combinations — two consonants fused together into a single
+          glyph. These appear constantly in everyday Bengali text and are essential for fluent reading. Examples:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Glyph</th>
+              <th>Components</th>
+              <th>Romanized</th>
+              <th>Example word</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bn" style="font-size: 1.3rem">ক্ত</td>
+              <td>ক + ত</td>
+              <td><code>kto</code></td>
+              <td><span class="bn">রক্ত</span> — blood</td>
+            </tr>
+            <tr>
+              <td class="bn" style="font-size: 1.3rem">ক্ষ</td>
+              <td>ক + ষ</td>
+              <td><code>ksha</code></td>
+              <td><span class="bn">ক্ষমা</span> — forgiveness</td>
+            </tr>
+            <tr>
+              <td class="bn" style="font-size: 1.3rem">জ্ঞ</td>
+              <td>জ + ঞ</td>
+              <td><code>gyo</code></td>
+              <td><span class="bn">জ্ঞান</span> — knowledge</td>
+            </tr>
+            <tr>
+              <td class="bn" style="font-size: 1.3rem">শ্র</td>
+              <td>শ + র</td>
+              <td><code>shro</code></td>
+              <td><span class="bn">শ্রম</span> — labor</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          The module uses the same quiz types as base consonants (name MC, sound MC, name FIB, romanized FIB) and integrates with the mastery and
+          spaced-repetition system. Grammar Lesson 16 covers conjunct consonants in depth — study that lesson alongside this module for the best
+          results.
+        </p>
+
+        <h3>Writing Practice (canvas)</h3>
+        <p>
+          On any letter flashcard inside a learn module, tap the <strong>✏️ Practice</strong> button to open the writing canvas. The Bengali character
+          is shown faded in the background; draw over it freehand with your mouse or finger to practice the stroke shape. Below the canvas, numbered
+          <strong>stroke hints</strong> appear with short tips describing how to draw each part of the character — useful when you're not sure where
+          to start. Tap <strong>Clear</strong> to wipe the canvas and try again. There is no stroke-order checking — the canvas is a free-form
+          scratchpad for building muscle memory.
+        </p>
+        <p>Keyboard shortcuts work while the canvas is open:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><kbd>c</kbd> / <kbd>C</kbd> / <kbd>Delete</kbd> / <kbd>Backspace</kbd></td>
+              <td>Clear the canvas</td>
+            </tr>
+            <tr>
+              <td><kbd>Esc</kbd></td>
+              <td>Close the canvas and return to the flashcard</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Matra Drills (া–ৌ)</h3>
+        <p>
+          Bengali vowel <em>signs</em> (মাত্রা / matra) are diacritics that attach to a consonant to change its vowel sound — for example
+          <span class="bn">কা</span> (ka), <span class="bn">কি</span> (ki), <span class="bn">কো</span> (ko). The <strong>Matra Drills</strong> module
+          (🔡) covers all 9 matras combined with 5 representative consonants — 45 combinations in total. Each quiz question shows the combined glyph
+          and asks you to identify or type its romanized sound (e.g. type <code>che</code> for <span class="bn">চে</span>). This module pairs well
+          with <strong>Grammar Lesson 15</strong>, which explains the matra system in detail.
+        </p>
+
+        <h3>Listening Practice</h3>
+        <p>
+          The <strong>Listening Practice</strong> card (🎧) at the bottom of the Alphabet home runs audio-only versions of the letter quizzes — you
+          hear a letter sound and must identify it or type its romanized form, without seeing the Bengali glyph. This builds the ear-to-script
+          connection that reading-focused practice alone can't develop.
+        </p>
+
+        <h3>Full Alphabet Chart</h3>
+        <p>
+          The <strong>Full Alphabet Chart</strong> module (📊) shows all letters at a glance, color-coded by your current mastery level so you can see
+          where you still have gaps.
+        </p>
+
+        <h3>Question types</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>What you do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Name MC</td>
+              <td>See a letter, choose its name from four options</td>
+            </tr>
+            <tr>
+              <td>Sound MC</td>
+              <td>See a letter, choose its IPA sound from four options</td>
+            </tr>
+            <tr>
+              <td>Name FIB</td>
+              <td>See a letter, type its name (e.g. <code>Khô</code> for <span class="bn">খ</span>)</td>
+            </tr>
+            <tr>
+              <td>Romanized FIB</td>
+              <td>
+                See a letter or combination, type its romanized sound (e.g. <code>kh</code> for <span class="bn">খ</span>, <code>chi</code> for
+                <span class="bn">চি</span>)
+              </td>
+            </tr>
+            <tr>
+              <td>Sound MC</td>
+              <td>See a letter or numeral, choose its sound / value from four options (used in Matra Drills and Numeral module)</td>
+            </tr>
+            <tr>
+              <td>Read string</td>
+              <td>See a Bengali word, type its romanized pronunciation</td>
+            </tr>
+            <tr>
+              <td>Spell string</td>
+              <td>See a romanized word, arrange tiles to spell it in Bengali</td>
+            </tr>
+            <tr>
+              <td>Listening MC</td>
+              <td>Hear a letter sound, identify which letter it is</td>
+            </tr>
+            <tr>
+              <td>Listening FIB</td>
+              <td>Hear a letter sound, type its romanized form</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="vocabulary">
+        <h2><span class="icon">📖</span> Vocabulary</h2>
+
+        <p>
+          The vocabulary section covers <strong>5,278 words</strong> — from the most common everyday expressions down to intermediate vocabulary
+          across 26 topic areas.
+        </p>
+
+        <h3>Categories</h3>
+        <div class="chip-list">
+          <span class="chip">👤 Pronouns &amp; Questions</span>
+          <span class="chip">🔢 Numbers</span>
+          <span class="chip">👪 Family &amp; People</span>
+          <span class="chip">🦴 Body &amp; Health</span>
+          <span class="chip">🍚 Food &amp; Drink</span>
+          <span class="chip">🐅 Animals</span>
+          <span class="chip">🎨 Colors</span>
+          <span class="chip">🕐 Time &amp; Calendar</span>
+          <span class="chip">🌳 Nature &amp; Weather</span>
+          <span class="chip">🏠 Home &amp; Objects</span>
+          <span class="chip">📍 Places</span>
+          <span class="chip">🏃 Common Verbs</span>
+          <span class="chip">📐 Adjectives</span>
+          <span class="chip">🔗 Adverbs &amp; Connectors</span>
+          <span class="chip">🗣️ Greetings &amp; Phrases</span>
+          <span class="chip">💼 Professions</span>
+          <span class="chip">🚗 Transport</span>
+          <span class="chip">👕 Clothing</span>
+          <span class="chip">❤️ Emotions &amp; Feelings</span>
+          <span class="chip">📚 Education &amp; Work</span>
+          <span class="chip">🏛️ Society &amp; Religion</span>
+          <span class="chip">💡 Abstract &amp; General</span>
+          <span class="chip">📖 Grammar Words</span>
+          <span class="chip">🏥 Health &amp; Medicine</span>
+          <span class="chip">💻 Technology</span>
+          <span class="chip">💬 Useful Phrases</span>
+        </div>
+
+        <h3>Mixed Practice — the main learning mode</h3>
+        <p>
+          The <strong>Mixed Practice</strong> card (🧠) is the recommended way to build vocabulary. It introduces words in frequency order — starting
+          with the 20 most common Bengali words and gradually working through the full 5,000+ corpus.
+        </p>
+        <ul style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 5px">Words are introduced in waves of 10, with 5 shown as flashcards before each quiz.</li>
+          <li style="margin-bottom: 5px">The curriculum interleaves words across categories, so you never study just one topic for too long.</li>
+          <li>The next wave unlocks when enough words reach mastery level 2.</li>
+        </ul>
+
+        <h3>Category practice</h3>
+        <p>Each category card runs a focused quiz on words from that topic only — useful for drilling a specific area or preparing for a trip.</p>
+
+        <h3>Browse All Words</h3>
+        <p>The <strong>Browse All Words</strong> card (🔍) lets you search and explore the full dictionary. You can:</p>
+        <ul style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 5px">Search by Bengali script, romanization, or English meaning</li>
+          <li style="margin-bottom: 5px">Filter by category</li>
+          <li style="margin-bottom: 5px">Tap any word to see its full entry: pronunciation, part of speech, and an example sentence</li>
+          <li style="margin-bottom: 5px">
+            In a word's detail card, tap <strong>🔊 Word</strong> to hear just the word, or <strong>🔊 Example</strong> to hear the full example
+            sentence read aloud — useful for hearing the word in natural sentence context
+          </li>
+          <li style="margin-bottom: 5px">
+            Tap <strong>+ Study</strong> next to any search result to add that word to the front of your Mixed Practice queue without having to open
+            its detail card first — a fast way to queue words you encounter while browsing
+          </li>
+          <li>Tap <strong>+ Study this word</strong> inside a word's detail card for the same effect</li>
+        </ul>
+
+        <h3>Question types</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>What you do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>MC — English</td>
+              <td>See a Bengali word, choose its English meaning</td>
+            </tr>
+            <tr>
+              <td>MC — Bengali</td>
+              <td>See an English word, choose the Bengali translation</td>
+            </tr>
+            <tr>
+              <td>FIB — English</td>
+              <td>See a Bengali word, type its English meaning</td>
+            </tr>
+            <tr>
+              <td>FIB — Bengali</td>
+              <td>See an English word, type the Bengali translation</td>
+            </tr>
+            <tr>
+              <td>Listening MC</td>
+              <td>Hear a word, choose its English meaning</td>
+            </tr>
+            <tr>
+              <td>Listening FIB</td>
+              <td>Hear a word, type its English meaning or Bengali form</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Wrong-answer feedback</h3>
+        <p>
+          When you get a vocabulary question wrong, the feedback bar shows the correct answer <em>and</em> the word's example sentence in context — so
+          you can see the word used naturally right away.
+        </p>
+
+        <div class="card tip">
+          The Bengali typing mode (set in Settings → FIB Answer Mode) lets you practice writing in the Bengali script. Use the on-screen Bengali
+          keyboard (বাং ▲ button) if you don't have a physical Bengali keyboard.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="grammar">
+        <h2><span class="icon">📝</span> Grammar</h2>
+
+        <p>
+          36 lessons take you from basic sentence structure through advanced topics (causative verbs, passive constructions, honorific register), a
+          dedicated pronunciation/sound-change guide, and five graded reading passages. The first 30 lessons teach grammar concepts; the later lessons
+          extend that foundation with practical reading.
+        </p>
+
+        <h3>Lesson list</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Topic</th>
+              <th>#</th>
+              <th>Topic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Sentence Structure (SOV)</td>
+              <td>16</td>
+              <td>Conjunct Consonants</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Pronouns &amp; Formality</td>
+              <td>17</td>
+              <td>Compound Verbs</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Present Simple Tense</td>
+              <td>18</td>
+              <td>Conditional Sentences</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Possessives</td>
+              <td>19</td>
+              <td>Relative Clauses</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Nouns &amp; Plurals</td>
+              <td>20</td>
+              <td>Honorific System &amp; Politeness</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Adjectives</td>
+              <td>21</td>
+              <td>Comparatives &amp; Superlatives</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>Negation</td>
+              <td>22</td>
+              <td>Topic &amp; Focus Particles</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>Asking Questions</td>
+              <td>23</td>
+              <td>Verbal Nouns &amp; Infinitives</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td>Past Simple Tense</td>
+              <td>24</td>
+              <td>Causative Verbs</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>Future Tense</td>
+              <td>25</td>
+              <td>Reported Speech</td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td>Continuous Tenses</td>
+              <td>26</td>
+              <td>Passive Constructions</td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td>Imperative Mood</td>
+              <td>27</td>
+              <td>Reduplication &amp; Intensifiers</td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td>Postpositions</td>
+              <td>28</td>
+              <td>Compound &amp; Complex Sentences</td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td>Classifiers &amp; Counters</td>
+              <td>29</td>
+              <td>Honorific &amp; Register</td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td>Vowel Marks (কার)</td>
+              <td>30</td>
+              <td>Advanced Mixed Review</td>
+            </tr>
+            <tr>
+              <td>31</td>
+              <td>Sound Changes &amp; Pronunciation Rules</td>
+              <td colspan="2" style="color: var(--text-dim); font-style: italic">
+                Covers the inherent vowel ô, spoken shortening (-কে → -য়), vowel blending, and consonant assimilation in conjuncts
+              </td>
+            </tr>
+            <tr>
+              <td>32–33</td>
+              <td>📖 Reading — Beginner</td>
+              <td colspan="2" style="color: var(--text-dim); font-style: italic"><em>আমার পরিবার</em> (My Family) and <em>আমার দিন</em> (My Day)</td>
+            </tr>
+            <tr>
+              <td>34–35</td>
+              <td>📖 Reading — Intermediate</td>
+              <td colspan="2" style="color: var(--text-dim); font-style: italic">
+                <em>বাজারে</em> (At the Market) and <em>বাংলাদেশের প্রকৃতি</em> (Nature of Bangladesh)
+              </td>
+            </tr>
+            <tr>
+              <td>36</td>
+              <td>📖 Reading — Advanced</td>
+              <td colspan="2" style="color: var(--text-dim); font-style: italic"><em>একটি চিঠি</em> (A Letter) — formal epistolary Bengali</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Conjugation reference table</h3>
+        <p>
+          At the top of the Grammar home there is a collapsible <strong>Bengali Verb Conjugation</strong> table (tap to expand). It shows common verb
+          endings for every subject pronoun across four tenses — present, past, future, and continuous — in a single compact grid. Use it as a quick
+          reference while working through the grammar lessons or when you encounter an unfamiliar verb form.
+        </p>
+
+        <h3>Reading passages (Lessons 32–36)</h3>
+        <p>
+          Each reading passage lesson presents a short Bengali text — between two sentences and a full letter — at a difficulty level matched to the
+          lesson number. Inside each lesson:
+        </p>
+        <ul style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 5px">The Bengali text is shown first, unsupported — read as much as you can without help.</li>
+          <li style="margin-bottom: 5px">Tap <strong>▼ Show romanization</strong> to reveal the phonetic transcription.</li>
+          <li style="margin-bottom: 5px">Tap <strong>▼ Show English translation</strong> to reveal the full translation.</li>
+          <li style="margin-bottom: 5px">Example cards highlight key vocabulary and grammar patterns used in the passage.</li>
+          <li>The quiz tests reading comprehension with multiple-choice and fill-in-the-blank questions about the passage.</li>
+        </ul>
+
+        <h3>How lessons work</h3>
+        <p>Each lesson card shows a short explanation followed by a quiz. Lesson quizzes use four question types:</p>
+        <ul style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 5px"><strong>Word order:</strong> Arrange tiles into the correct Bengali sentence</li>
+          <li style="margin-bottom: 5px"><strong>Translation MC:</strong> Choose the correct translation from four options</li>
+          <li style="margin-bottom: 5px"><strong>Error spot:</strong> Identify which sentence is grammatically correct</li>
+          <li><strong>Fill-in-the-blank:</strong> Type the missing word or phrase</li>
+        </ul>
+
+        <h3>Wrong-answer feedback</h3>
+        <p>
+          When you answer a grammar question incorrectly, the feedback shows the correct answer. For fill-in-the-blank and word-order questions, it
+          also shows any additional explanation attached to that question, so you understand <em>why</em> that answer is correct — not just what the
+          correct answer is.
+        </p>
+
+        <div class="card tip">
+          Grammar lessons are best studied alongside vocabulary. When you encounter a grammar rule, look up the words used in the examples in the
+          Vocabulary section to reinforce both at once.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="numbers">
+        <h2><span class="icon">🔢</span> Numbers</h2>
+
+        <p>
+          The <strong>Numbers</strong> tab (<span class="bn">সংখ্যা</span>) teaches Bengali numeral glyphs and the spoken words for numbers. It has
+          four modules:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th>What it covers</th>
+              <th>Items</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔢 Numeral Glyphs</td>
+              <td>The 10 Bengali script digits ০–৯ and their names</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>1️⃣ Ones &amp; Teens</td>
+              <td>Bengali words for zero through nineteen (<span class="bn">শূন্য</span> through <span class="bn">উনিশ</span>)</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <td>🔟 Tens</td>
+              <td>Bengali words for the tens multiples: <span class="bn">বিশ</span> (20) through <span class="bn">নব্বই</span> (90)</td>
+              <td>8</td>
+            </tr>
+            <tr>
+              <td>💯 Large Numbers</td>
+              <td>
+                <span class="bn">একশো</span> (100), <span class="bn">এক হাজার</span> (1,000), <span class="bn">দশ হাজার</span> (10,000),
+                <span class="bn">এক লাখ</span> (100,000), <span class="bn">দশ লাখ</span> (1,000,000)
+              </td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>➕ Number Recognition</td>
+              <td>
+                Mixed reading drill — see a Bengali numeral string (e.g. <span class="bn">৩৭</span>) and type the Arabic integer, or see an Arabic
+                integer and choose the Bengali numeral from four options. Also includes Bengali number-word recognition. 15 randomized questions per
+                session.
+              </td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Numeral Glyphs (০–৯)</h3>
+        <p>
+          Signs, currency notes, and printed documents in Bangladesh use Bengali numerals alongside or instead of Arabic digits. This module shows you
+          each digit glyph and asks you to name it or type its romanized pronunciation. The quiz is identical in format to the Alphabet quizzes —
+          multiple-choice name, multiple-choice sound, name fill-in-the-blank, or romanized fill-in-the-blank.
+        </p>
+
+        <h3>Number words</h3>
+        <p>
+          Bengali has a complex counting system with distinct words for every number from 1–99 — unlike English, where you just combine tens and ones.
+          The three word modules introduce these in groups, starting with the most frequent. Question types:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>What you do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Meaning MC</td>
+              <td>See a Bengali number word, choose its numeric value from four options</td>
+            </tr>
+            <tr>
+              <td>Bengali MC</td>
+              <td>See a numeral (e.g. 10), choose the correct Bengali word from four options</td>
+            </tr>
+            <tr>
+              <td>Bengali FIB</td>
+              <td>See a numeral, type the Bengali word for it</td>
+            </tr>
+            <tr>
+              <td>Romanized FIB</td>
+              <td>See a Bengali number word, type its romanized pronunciation</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="card tip">
+          Combine the Numbers tab with the <strong>Numbers in Context</strong> situation in the Phrases tab — it covers prices in taka, ordinals
+          (first, second, third), and phone numbers, putting the words you've learned here into natural sentence patterns.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="phrases">
+        <h2><span class="icon">🗣️</span> Common Phrases</h2>
+
+        <p>
+          The <strong>Phrases</strong> tab teaches 144 high-utility conversational phrases organized into 12 real-life situations. Unlike the
+          Vocabulary section — which teaches individual words — Phrases teaches whole expressions you can use immediately in conversation.
+        </p>
+
+        <h3>Situations covered</h3>
+        <div class="feature-grid">
+          <div class="feature-tile">
+            <div class="ft-icon">👋</div>
+            <div class="ft-title">Greetings &amp; Farewells</div>
+            <div class="ft-desc">সালাম, নমস্কার, কেমন আছেন, শুভ সকাল, বিদায়, and more.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🙏</div>
+            <div class="ft-title">Politeness &amp; Requests</div>
+            <div class="ft-desc">Please, thank you, sorry, excuse me, I didn't understand, can you speak slowly?</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">❓</div>
+            <div class="ft-title">Asking Questions</div>
+            <div class="ft-desc">What, where, when, why, how, how much — plus how to ask for help when you're lost.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🤝</div>
+            <div class="ft-title">Introductions</div>
+            <div class="ft-desc">My name is…, Where are you from?, I'm learning Bengali, Nice to meet you.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🍛</div>
+            <div class="ft-title">At a Restaurant</div>
+            <div class="ft-desc">Order food, ask about ingredients and spice level, request the bill.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🚌</div>
+            <div class="ft-title">Transport</div>
+            <div class="ft-desc">Get a rickshaw, buy a bus ticket, ask about train times, start the meter.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🗺️</div>
+            <div class="ft-title">Directions &amp; Places</div>
+            <div class="ft-desc">Turn left/right, go straight, how far is it?, can you show me the way?</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🛍️</div>
+            <div class="ft-title">Shopping &amp; Bargaining</div>
+            <div class="ft-desc">How much does this cost?, too expensive, please lower the price, I'll take it.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🕐</div>
+            <div class="ft-title">Time &amp; Scheduling</div>
+            <div class="ft-desc">What time is it?, today/tomorrow/yesterday, how long will it take?, when will we meet?</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🏥</div>
+            <div class="ft-title">Health &amp; Emergencies</div>
+            <div class="ft-desc">I need a doctor, I have a fever, call the police, take me to the hospital.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">💬</div>
+            <div class="ft-title">Social Conversation</div>
+            <div class="ft-desc">I like Bengali food, your country is beautiful, I enjoyed talking with you.</div>
+          </div>
+          <div class="feature-tile">
+            <div class="ft-icon">🔢</div>
+            <div class="ft-title">Numbers in Context</div>
+            <div class="ft-desc">Counting 1–100, prices in taka, ordinals (first, second, third), phone numbers.</div>
+          </div>
+        </div>
+
+        <h3>How the Phrases tab works</h3>
+        <p>
+          The hub screen shows a grid of situation cards, each with a progress bar showing how many phrases you've mastered. Tap any unlocked
+          situation to open its <strong>flashcard view</strong>, then start a quiz.
+        </p>
+        <ol style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 6px">
+            <strong>Flashcard view</strong> — Browse through all 12 phrases in a situation one at a time. The front shows the Bengali script; tap to
+            flip and reveal the romanization, English meaning, and any cultural notes. Phrases that have a natural reply also show it on the card
+            back, so you can see how the exchange flows.
+          </li>
+          <li style="margin-bottom: 6px">
+            <strong>Situation quiz</strong> — Tap <em>Start Quiz →</em> to practice just that situation (up to 12 questions).
+          </li>
+          <li>
+            <strong>Mixed Practice</strong> — The card at the top of the hub draws from all your unlocked situations, prioritizing phrases you haven't
+            seen or have answered incorrectly.
+          </li>
+        </ol>
+
+        <h3>Question types</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>What you do</th>
+              <th>XP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Meaning MC</td>
+              <td>See a Bengali phrase and its romanization, choose the English meaning from four options</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Bengali MC</td>
+              <td>See an English phrase, choose the correct Bengali from four options</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Listening MC</td>
+              <td>Hear the phrase played aloud via TTS, choose its English meaning</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Romanization FIB</td>
+              <td>See the English phrase, type its romanized form (short phrases only)</td>
+              <td>15</td>
+            </tr>
+            <tr>
+              <td><strong>Dialogue</strong></td>
+              <td>See a conversation prompt, choose the most natural reply from four options</td>
+              <td>15</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>The Dialogue question type</h3>
+        <p>
+          Dialogue questions are unique to the Phrases module. Instead of translating an isolated phrase, you're shown a conversational opener and
+          must choose the most natural response:
+        </p>
+        <div class="card accent-border">
+          <p><strong>Someone says:</strong> <span class="bn">আপনি কেমন আছেন?</span> — "How are you? (formal)"</p>
+          <p style="margin-top: 10px"><strong>Choose the natural reply:</strong></p>
+          <ul style="padding-left: 1.4em; margin-top: 6px">
+            <li><span class="bn">ঠিক আছে।</span> — "Okay / That's fine."</li>
+            <li style="color: var(--accent); font-weight: 600">
+              <span class="bn">ভালো আছি, ধন্যবাদ। আপনি?</span> — "I'm well, thank you. And you?" ✓
+            </li>
+            <li><span class="bn">আমি হারিয়ে গেছি।</span> — "I'm lost."</li>
+            <li><span class="bn">বিদায়।</span> — "Goodbye."</li>
+          </ul>
+        </div>
+        <p>
+          Dialogue questions only appear for phrases that have a defined reply, and only once you've seen a phrase at least once (mastery ≥ 1).
+          Wrong-answer distractors are drawn from elsewhere in the phrase bank, so you're also passively reviewing other phrases as you choose.
+        </p>
+
+        <h3>Wave unlock</h3>
+        <p>
+          Situations unlock one at a time in a fixed order, starting with Greetings. Each new situation unlocks once you've answered at least 60% of
+          the previous situation's phrases correctly enough to reach <a href="#mastery">mastery level 2</a>. The 🔒 icon on a card disappears as soon
+          as it unlocks.
+        </p>
+
+        <div class="card tip">
+          <strong>Learn phrases alongside vocabulary.</strong> Many phrases in the Phrases tab use words from the Vocabulary section. When a phrase
+          contains a word you don't recognize, look it up in Browse All Words and add it to your study queue.
+        </div>
+
+        <div class="card tip">
+          <strong>Use the Listening question type actively.</strong> The TTS plays at natural speed (0.85×). If it's too fast, use the slow-audio
+          setting (🐢) in Settings. Phrases are longer than single words, so listening practice here is especially useful for tuning your ear to
+          Bengali sentence rhythm.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="mastery">
+        <h2><span class="icon">⭐</span> Mastery &amp; Spaced Repetition</h2>
+
+        <p>Every letter, word, and grammar item you study has a mastery level that tracks how well you know it:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Meaning</th>
+              <th>Review interval</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mastery-dot m0"></span> Level 0</td>
+              <td>Not yet seen</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span class="mastery-dot m1"></span> Level 1</td>
+              <td>Just introduced</td>
+              <td>1 day</td>
+            </tr>
+            <tr>
+              <td><span class="mastery-dot m2"></span> Level 2</td>
+              <td>Still learning</td>
+              <td>3 days</td>
+            </tr>
+            <tr>
+              <td><span class="mastery-dot m3"></span> Level 3</td>
+              <td>Mastered</td>
+              <td>7 days</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ul style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 5px">Answer a question <strong>correctly</strong> → level goes up by 1</li>
+          <li>Answer <strong>incorrectly</strong> → level drops by 1</li>
+        </ul>
+
+        <h3>Review Due</h3>
+        <p>
+          When any mastered item is due for review, a <strong>🔔 Review Due (N)</strong> button appears in the tab bar. Tapping it runs a mixed review
+          session covering alphabet letters, vocabulary words, and grammar items that have passed their review interval.
+        </p>
+        <p>The <strong>Today</strong> tab also shows your review count at the top of the daily plan, with a direct button to start the session.</p>
+        <p>
+          Keeping up with reviews is the key to long-term retention — the spaced repetition schedule spaces them out so you review items just as
+          you're about to forget them.
+        </p>
+
+        <div class="card tip">
+          Try to clear the Review Due queue each day before starting new material. It usually takes just a few minutes and makes a big difference in
+          what you remember.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="placement">
+        <h2><span class="icon">🎯</span> Placement Test</h2>
+
+        <p>
+          Already know some Bengali? The placement test assesses your existing knowledge and sets your mastery levels accordingly, so you can skip
+          content you already know.
+        </p>
+
+        <p>The test has three stages (~30 questions total):</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Questions</th>
+              <th>What's tested</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alphabet</td>
+              <td>10</td>
+              <td>Letter names and romanized forms, sampled across early, middle, and later waves</td>
+            </tr>
+            <tr>
+              <td>Vocabulary</td>
+              <td>10</td>
+              <td>Word meanings from five frequency tiers (very common → intermediate)</td>
+            </tr>
+            <tr>
+              <td>Grammar</td>
+              <td>10</td>
+              <td>Sentence structure, tenses, and grammar rules from five lessons</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          After the test, you'll see a results breakdown by stage and can choose to apply the results or start fresh. You can retake it anytime from
+          <strong>Settings → Retake Placement Test</strong>.
+        </p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="settings">
+        <h2><span class="icon">⚙️</span> Settings</h2>
+
+        <p>Open settings by tapping the <strong>⚙️</strong> button in the top-right corner of the app.</p>
+
+        <h3>FIB Answer Mode</h3>
+        <p>Controls how you type answers in fill-in-the-blank questions:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>What to type</th>
+              <th>Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Romanized</strong></td>
+              <td>Latin letters, e.g. <code>khai</code></td>
+              <td>Beginners and US keyboard users</td>
+            </tr>
+            <tr>
+              <td><strong>Latin or বাংলা</strong></td>
+              <td>Either romanized or Bengali script</td>
+              <td>Learners with occasional Bengali keyboard access</td>
+            </tr>
+            <tr>
+              <td><strong>বাংলা only</strong></td>
+              <td>Bengali script only, e.g. <span class="bn">খাই</span></td>
+              <td>Intermediate learners working on script fluency</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The on-screen Bengali keyboard (বাং ▲ button) is available in all FIB input fields regardless of mode.</p>
+
+        <h3>Quiz Modality</h3>
+        <p>Controls whether audio is used in quizzes:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Text only</strong></td>
+              <td>No audio questions; all quizzes are text-based</td>
+            </tr>
+            <tr>
+              <td><strong>Text + Audio</strong></td>
+              <td>Includes listening questions alongside text questions (recommended)</td>
+            </tr>
+            <tr>
+              <td><strong>Audio only</strong></td>
+              <td>Only listening-based questions — challenging mode for advanced learners</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 10px">
+          <strong>Slow audio:</strong> On listening questions, a 🐢 button appears next to the play button. Tap it to toggle half-speed playback (0.5×
+          vs. the default 0.85×) — useful if the speech is too fast to catch individual sounds. The setting stays on until you tap it again.
+        </p>
+        <p style="margin-top: 8px">
+          <strong>Note on audio quality:</strong> Pronunciation is generated by your browser's built-in text-to-speech (TTS) engine using the
+          <code>bn-BD</code> voice. Quality and accent vary by browser and operating system — Chrome on Android typically gives the best Bengali TTS.
+          If you don't hear audio, your device may not have a Bengali voice installed; check your system's language/speech settings.
+        </p>
+
+        <h3>Advanced</h3>
+        <p>
+          The <strong>Advanced</strong> section in Settings contains the <strong>🐢 Slow Audio</strong> toggle. When enabled, all TTS playback uses
+          half-speed (0.5×) instead of the default 0.85×. This is a persistent, app-wide setting — unlike the per-question 🐢 button on individual
+          listening cards, this toggle keeps slow audio on for the entire session and across restarts until you turn it off again.
+        </p>
+
+        <h3>Themes</h3>
+        <p>
+          11 color palettes inspired by Bengali culture and geography, each available in light and dark mode. Switch light/dark with the ☀️ button.
+        </p>
+        <div class="chip-list">
+          <span class="chip">🌿 Sundarbans</span>
+          <span class="chip">🌊 Padma River</span>
+          <span class="chip">🌻 Mustard Fields</span>
+          <span class="chip">🏺 Terracotta</span>
+          <span class="chip">🐟 Bay of Bengal</span>
+          <span class="chip">🧵 Nakshi Kantha</span>
+          <span class="chip">🐯 Royal Bengal Tiger</span>
+          <span class="chip">🌺 Pohela Boishakh</span>
+          <span class="chip">🪡 Dhaka Muslin</span>
+          <span class="chip">🚣 Nouka Baich</span>
+          <span class="chip">🌾 Ruposhi Bangla</span>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="profiles">
+        <h2><span class="icon">👤</span> Profiles &amp; Progress</h2>
+
+        <h3>Multiple profiles</h3>
+        <p>
+          The app supports multiple user profiles, each with completely separate progress. This is useful for households where multiple people share a
+          device, or for keeping a "study" profile separate from a "casual" one.
+        </p>
+        <p>Switch profiles or create a new one from <strong>Settings → Switch Profile</strong>.</p>
+
+        <h3>Renaming a profile</h3>
+        <p>
+          Each profile card in the profile picker has a <strong>✏️</strong> rename button. Tap it, enter a new name, and confirm. The profile name
+          must contain only letters, numbers, spaces, or hyphens.
+        </p>
+
+        <h3>Statistics</h3>
+        <p>Tap <strong>📈 Statistics</strong> in Settings to see a detailed breakdown of your progress:</p>
+        <ul style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 5px"><strong>Summary cards:</strong> Total XP, day streak, letters/words/lessons mastered</li>
+          <li style="margin-bottom: 5px"><strong>Activity heatmap:</strong> 13 weeks of daily XP history</li>
+          <li style="margin-bottom: 5px">
+            <strong>Mastery breakdown:</strong> Progress bars for Alphabet, Vocabulary, Grammar, Phrases, and Conjunct Consonants
+          </li>
+          <li style="margin-bottom: 5px"><strong>Vocabulary by category:</strong> See which topic areas you're strongest and weakest in</li>
+          <li style="margin-bottom: 5px"><strong>Letter grid:</strong> All 50+ letters colored by mastery level</li>
+          <li><strong>Achievements:</strong> All 10 badges with earned/unearned status</li>
+        </ul>
+
+        <h3>Export &amp; import</h3>
+        <p>Back up your progress anytime from the profile picker. Each profile card has two export options:</p>
+        <ul style="padding-left: 1.4em; margin: 8px 0 12px">
+          <li style="margin-bottom: 5px"><strong>⬇ Download</strong> — saves a JSON file to your device. This is the recommended backup method.</li>
+          <li><strong>📋 Copy to clipboard</strong> — copies the same JSON to your clipboard, useful for pasting into a note or email.</li>
+        </ul>
+        <p>
+          When you tap Download, a filter dialog lets you choose what to include in the export: <strong>All</strong> data, or just one module —
+          <strong>Alphabet</strong>, <strong>Vocabulary</strong>, <strong>Grammar</strong>, or <strong>Phrases</strong>. This is useful for sharing
+          just your vocabulary progress without exporting everything.
+        </p>
+        <p>
+          To restore on another device or browser, use <strong>Import Progress</strong> in Settings. This is the recommended way to move your data
+          between devices.
+        </p>
+
+        <h3>Progress adjustment</h3>
+        <p>
+          If the placement test set something wrong, you can fine-tune individual mastery levels from <strong>Settings → Adjust Progress</strong>.
+        </p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="gamification">
+        <h2><span class="icon">🏆</span> XP, Streaks &amp; Achievements</h2>
+
+        <h3>XP (Experience Points)</h3>
+        <p>
+          You earn XP for every question you answer correctly. FIB questions are worth slightly more than multiple choice (15 vs 10 XP) because they
+          require active recall. Your total XP is shown in the top navigation bar (⭐).
+        </p>
+
+        <h3>Streaks</h3>
+        <p>
+          A <strong>streak</strong> counts the number of consecutive days you've done at least one quiz. Your current streak is shown in the nav bar
+          (🔥). The streak bar below the nav fills up toward 7 days.
+        </p>
+
+        <h3>Achievements</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Badge</th>
+              <th>Name</th>
+              <th>How to earn it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🎯</td>
+              <td>First Quiz</td>
+              <td>Complete any quiz</td>
+            </tr>
+            <tr>
+              <td>🔤</td>
+              <td>Vowel Master</td>
+              <td>Master all 11 Bengali vowels</td>
+            </tr>
+            <tr>
+              <td>📚</td>
+              <td>Full Alphabet</td>
+              <td>Master all 50+ letters</td>
+            </tr>
+            <tr>
+              <td>⭐</td>
+              <td>Century</td>
+              <td>Earn 100 XP</td>
+            </tr>
+            <tr>
+              <td>📖</td>
+              <td>Word Collector</td>
+              <td>Master 50+ vocabulary words</td>
+            </tr>
+            <tr>
+              <td>🏆</td>
+              <td>Vocab Champion</td>
+              <td>Master 500+ vocabulary words</td>
+            </tr>
+            <tr>
+              <td>📝</td>
+              <td>Grammar Beginner</td>
+              <td>Complete your first grammar lesson</td>
+            </tr>
+            <tr>
+              <td>🎓</td>
+              <td>Grammar Graduate</td>
+              <td>Complete all grammar lessons (100% on every lesson)</td>
+            </tr>
+            <tr>
+              <td>🔥</td>
+              <td>On a Roll</td>
+              <td>Maintain a 3-day streak</td>
+            </tr>
+            <tr>
+              <td>💪</td>
+              <td>Week Warrior</td>
+              <td>Maintain a 7-day streak</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>A toast notification pops up the moment you earn a new badge. View all your badges in the Statistics panel.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="shortcuts">
+        <h2><span class="icon">⌨️</span> Keyboard Shortcuts</h2>
+
+        <h3>Quiz shortcuts</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></td>
+              <td>Select option A, B, C, or D in multiple-choice questions</td>
+            </tr>
+            <tr>
+              <td><kbd>0</kbd></td>
+              <td>"I don't know" — skip the question and see the answer</td>
+            </tr>
+            <tr>
+              <td><kbd>Enter</kbd></td>
+              <td>Submit a fill-in-the-blank answer, or advance to the next question</td>
+            </tr>
+            <tr>
+              <td><kbd>Esc</kbd></td>
+              <td>Close any open panel (settings, help, search, stats)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Key hints are shown on multiple-choice buttons in the app (e.g. <code>[1]</code>, <code>[2]</code>) so you can always see which key maps to
+          which option.
+        </p>
+
+        <h3>Writing canvas shortcuts</h3>
+        <p>These keys are active whenever the writing practice canvas is open:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><kbd>c</kbd> / <kbd>C</kbd> / <kbd>Delete</kbd> / <kbd>Backspace</kbd></td>
+              <td>Clear the canvas</td>
+            </tr>
+            <tr>
+              <td><kbd>Esc</kbd></td>
+              <td>Close the canvas and return to the flashcard</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="romanization">
+        <h2><span class="icon">🔡</span> Romanization Guide</h2>
+
+        <p>The app uses a consistent romanization scheme throughout. Here are the most important symbols:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Roman</th>
+              <th>Bengali</th>
+              <th>Sounds like</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ô</code> or <code>o</code></td>
+              <td class="bn">অ</td>
+              <td>"o" in <em>hot</em></td>
+            </tr>
+            <tr>
+              <td><code>a</code></td>
+              <td class="bn">আ</td>
+              <td>"a" in <em>father</em></td>
+            </tr>
+            <tr>
+              <td><code>i</code></td>
+              <td class="bn">ই</td>
+              <td>"ee" in <em>see</em> (short)</td>
+            </tr>
+            <tr>
+              <td><code>ii</code></td>
+              <td class="bn">ঈ</td>
+              <td>"ee" in <em>see</em> (long)</td>
+            </tr>
+            <tr>
+              <td><code>u</code></td>
+              <td class="bn">উ</td>
+              <td>"oo" in <em>food</em> (short)</td>
+            </tr>
+            <tr>
+              <td><code>uu</code></td>
+              <td class="bn">ঊ</td>
+              <td>"oo" in <em>food</em> (long)</td>
+            </tr>
+            <tr>
+              <td><code>e</code></td>
+              <td class="bn">এ</td>
+              <td>"ay" in <em>say</em></td>
+            </tr>
+            <tr>
+              <td><code>oi</code></td>
+              <td class="bn">ঐ</td>
+              <td>"oy" in <em>boy</em></td>
+            </tr>
+            <tr>
+              <td><code>sh</code></td>
+              <td class="bn">শ / ষ</td>
+              <td>"sh" in <em>she</em></td>
+            </tr>
+            <tr>
+              <td><code>kh</code></td>
+              <td class="bn">খ</td>
+              <td>aspirated "k" — a breathy k sound</td>
+            </tr>
+            <tr>
+              <td><code>gh</code></td>
+              <td class="bn">ঘ</td>
+              <td>aspirated "g" — a breathy g sound</td>
+            </tr>
+            <tr>
+              <td><code>chh</code></td>
+              <td class="bn">ছ</td>
+              <td>aspirated "ch"</td>
+            </tr>
+            <tr>
+              <td><code>jh</code></td>
+              <td class="bn">ঝ</td>
+              <td>aspirated "j"</td>
+            </tr>
+            <tr>
+              <td><code>ṭ</code> / <code>ḍ</code></td>
+              <td class="bn">ট / ড</td>
+              <td>retroflex t/d — tongue curled back</td>
+            </tr>
+            <tr>
+              <td><code>ṛ</code></td>
+              <td class="bn">ড়</td>
+              <td>flapped retroflex r</td>
+            </tr>
+            <tr>
+              <td><code>~</code> or <code>n̐</code></td>
+              <td class="bn">ঁ</td>
+              <td>nasalizes the vowel before it</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="card accent-border" style="margin-bottom: 16px">
+          <p>
+            <strong>Note on <span class="bn">সে</span> — romanized as "she".</strong> This app romanizes the Bengali third-person pronoun
+            <span class="bn">সে</span> as <code>she</code>, following a common Bengali romanization convention. It means
+            <em>he, she, or they (singular informal)</em> — it is not specifically feminine. When you see <code>she</code> in romanized text here, it
+            refers to any person regardless of gender.
+          </p>
+        </div>
+
+        <div class="card accent-border">
+          <p>
+            <strong>Diacritics are optional in romanized FIB answers.</strong> The app normalizes a wide range of diacritics so you can type plain
+            ASCII without penalty:
+          </p>
+          <table style="margin-top: 8px">
+            <thead>
+              <tr>
+                <th>Diacritic form</th>
+                <th>Accepted plain form</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ā / Ā</code></td>
+                <td><code>a</code></td>
+              </tr>
+              <tr>
+                <td><code>ē / Ē</code></td>
+                <td><code>e</code></td>
+              </tr>
+              <tr>
+                <td><code>ī / Ī</code></td>
+                <td><code>i</code></td>
+              </tr>
+              <tr>
+                <td><code>ō / Ō</code></td>
+                <td><code>o</code></td>
+              </tr>
+              <tr>
+                <td><code>ū / Ū</code></td>
+                <td><code>u</code></td>
+              </tr>
+              <tr>
+                <td><code>ṭ / Ṭ</code></td>
+                <td><code>t</code></td>
+              </tr>
+              <tr>
+                <td><code>ḍ / Ḍ</code></td>
+                <td><code>d</code></td>
+              </tr>
+              <tr>
+                <td><code>ṇ / Ṇ</code></td>
+                <td><code>n</code></td>
+              </tr>
+              <tr>
+                <td><code>ś / Ś</code> and <code>ṣ / Ṣ</code></td>
+                <td><code>sh</code></td>
+              </tr>
+              <tr>
+                <td><code>ṛ / Ṛ</code></td>
+                <td><code>r</code></td>
+              </tr>
+              <tr>
+                <td><code>ñ</code></td>
+                <td><code>ny</code></td>
+              </tr>
+              <tr>
+                <td><code>ô</code></td>
+                <td><code>o</code></td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 8px">
+            For example, <code>taka</code> and <code>ṭaka</code> are both accepted for <span class="bn">টাকা</span>; <code>shomoy</code> and
+            <code>śomoy</code> are both accepted for <span class="bn">সময়</span>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <section class="guide-section" id="tips">
+        <h2><span class="icon">💡</span> Study Tips</h2>
+
+        <div class="card tip">
+          <strong>Do a little every day.</strong> Even 10 minutes is enough to maintain a streak and keep items in memory. Consistency beats long
+          infrequent sessions.
+        </div>
+
+        <div class="card tip">
+          <strong>Clear your review queue first.</strong> When the 🔔 Review Due button appears, do those reviews before starting new material. Spaced
+          repetition only works if you actually do the reviews.
+        </div>
+
+        <div class="card tip">
+          <strong>Use the placement test if you're not a complete beginner.</strong> Skipping content you already know saves time and keeps sessions
+          more engaging.
+        </div>
+
+        <div class="card tip">
+          <strong>Switch to Bengali-script FIB mode when you're ready.</strong> Once you can read the alphabet, typing answers in Bengali (Settings →
+          FIB Answer Mode → বাংলা only) dramatically improves script fluency. Start with the mixed mode if that's too hard at first.
+        </div>
+
+        <div class="card tip">
+          <strong>Study vocabulary and grammar together.</strong> Grammar lessons use real words — when you see an unfamiliar word in a grammar
+          example, search for it in Browse All Words to learn it properly.
+        </div>
+
+        <div class="card tip">
+          <strong>Export your progress regularly.</strong> The app stores everything in your browser's local storage. Download a backup from the
+          profile picker (⬇ button) so you don't lose your data if you clear your browser history.
+        </div>
+
+        <div class="card tip">
+          <strong>Use Phrases for real trips.</strong> Before travelling to Bangladesh or West Bengal, work through the Transport, Directions, Food,
+          and Health situations. Even mastering a handful of phrases in each category goes a long way in daily interactions.
+        </div>
+
+        <div class="card tip">
+          <strong>After the alphabet, practice matras.</strong> Once you can recognize the 50 base letters, the Matra Drills module is the natural
+          next step — it shows you how vowel signs combine with consonants to create the syllable shapes you'll see in every real word. Work through
+          Matra Drills alongside Grammar Lesson 15 for the best results.
+        </div>
+
+        <div class="card tip">
+          <strong>Use the writing canvas to reinforce new letters.</strong> After each teach phase in the Alphabet tab, open the ✏️ Practice canvas
+          for each new letter and trace it a few times. Even without stroke-order feedback, the physical act of drawing the shape greatly speeds up
+          recognition and recall.
+        </div>
+
+        <div class="card tip">
+          <strong>Use the reading passages as a milestone check.</strong> Open a reading lesson (32–36 in the Grammar tab), cover the romanization,
+          and try to read the Bengali text aloud before revealing any help. If you can read Lesson 33 (Beginner) without the romanization, your script
+          recognition is solid enough to move to the Intermediate passages.
+        </div>
+
+        <div class="card tip">
+          <strong>Note your session time.</strong> Each quiz result screen shows how long the session took (⏱). If a 10-question quiz is taking over
+          5 minutes, you may be guessing more than recalling — consider reviewing the flashcards for that module before quizzing again.
+        </div>
+
+        <div class="card tip">
+          <strong>Spotted a mistake?</strong> Every quiz card has a small <strong>⚑ Report</strong> button in the feedback bar after you answer. Tap
+          it to copy a problem report (question, correct answer, your answer, timestamp) to your clipboard.
+        </div>
+
+        <div class="card tip">
+          <strong>Found a word you want to learn now?</strong> Search for it (🔍 button top-right) and tap <strong>+ Study</strong> next to the result
+          — or open its card and tap <strong>+ Study this word</strong>. It will move to the front of your Mixed Practice queue.
+        </div>
+      </section>
+
+      <footer class="guide-footer">
+        <p><a href="/bengali/">← Back to the app</a></p>
+        <p style="margin-top: 10px">Built by <a href="/">Robi Rahman</a></p>
+      </footer>
+    </div>
+    <!-- /page-wrap -->
+  </body>
+</html>
