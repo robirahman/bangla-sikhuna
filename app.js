@@ -920,8 +920,6 @@ let _canvasDrawing = false, _canvasLastX = 0, _canvasLastY = 0;
 let _canvasKeyHandler = null;
 let _canvasUserStrokes = [];
 let _canvasCurrentStroke = null;
-let _canvasTemplateSegments = [];
-let _canvasTemplateStep = 0;
 
 function _drawCanvasBg(ctx, canvas, letter) {
   ctx.save();
@@ -933,25 +931,6 @@ function _drawCanvasBg(ctx, canvas, letter) {
   ctx.restore();
 }
 
-function _buildStrokeTemplate(letter, w, h) {
-  const hintCount = Math.max(1, (STROKE_HINTS[letter] || []).length);
-  // Scaffold only: derive rough guide paths from hint count.
-  // This can later be swapped with true vector stroke-order data per letter.
-  const cx = w / 2, cy = h / 2;
-  const radius = Math.min(w, h) * 0.25;
-  const seed = letter.charCodeAt(0) % 360;
-  const segments = [];
-  for (let i = 0; i < hintCount; i++) {
-    const a1 = (seed + i * (240 / hintCount)) * Math.PI / 180;
-    const a2 = a1 + (Math.PI / (2.5 + (i % 2)));
-    segments.push([
-      [cx + Math.cos(a1) * radius, cy + Math.sin(a1) * radius],
-      [cx + Math.cos((a1 + a2) / 2) * radius * 0.45, cy + Math.sin((a1 + a2) / 2) * radius * 0.45],
-      [cx + Math.cos(a2) * radius * 0.92, cy + Math.sin(a2) * radius * 0.92],
-    ]);
-  }
-  return segments;
-}
 
 function _redrawCanvas() {
   const canvas = document.getElementById('tracing-canvas');
@@ -960,18 +939,6 @@ function _redrawCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   _drawCanvasBg(ctx, canvas, letter);
 
-  // Draw scaffold template paths.
-  _canvasTemplateSegments.forEach((seg, idx) => {
-    ctx.beginPath();
-    ctx.moveTo(seg[0][0], seg[0][1]);
-    ctx.quadraticCurveTo(seg[1][0], seg[1][1], seg[2][0], seg[2][1]);
-    ctx.strokeStyle = idx < _canvasTemplateStep ? 'rgba(246, 184, 63, 0.9)' : 'rgba(255,255,255,0.2)';
-    ctx.lineWidth = idx < _canvasTemplateStep ? 3.5 : 2;
-    ctx.setLineDash(idx < _canvasTemplateStep ? [] : [8, 7]);
-    ctx.lineCap = 'round';
-    ctx.stroke();
-  });
-  ctx.setLineDash([]);
 
   // Draw user captured strokes.
   ctx.strokeStyle = 'var(--accent)';
@@ -986,11 +953,6 @@ function _redrawCanvas() {
   });
 }
 
-function stepStrokeAnimation() {
-  if (!_canvasTemplateSegments.length) return;
-  _canvasTemplateStep = (_canvasTemplateStep + 1) % (_canvasTemplateSegments.length + 1);
-  _redrawCanvas();
-}
 
 function openCanvas() {
   const card = currentModule && currentModule.letters && currentModule.letters[currentCardIndex];
@@ -1004,19 +966,9 @@ function openCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   _canvasUserStrokes = [];
   _canvasCurrentStroke = null;
-  _canvasTemplateSegments = _buildStrokeTemplate(letter, canvas.width, canvas.height);
-  _canvasTemplateStep = 0;
   _redrawCanvas();
   _setupCanvasListeners(canvas);
 
-  // Populate stroke hints
-  const hintsEl = document.getElementById('stroke-hints');
-  if (hintsEl) {
-    const tips = STROKE_HINTS[letter] || ['Trace the character shape carefully', 'Follow the natural stroke direction'];
-    hintsEl.innerHTML = tips.map((tip, i) =>
-      `<div class="stroke-hint-item"><span class="stroke-hint-num">${i + 1}.</span> ${escapeStr(tip)}</div>`
-    ).join('') + `<div class="stroke-hint-note">Template is scaffolded from text hints and can be upgraded with vector stroke data later.</div>`;
-  }
 
   const status = document.getElementById('canvas-writing-status');
   if (status) {
@@ -7144,7 +7096,6 @@ document.addEventListener('click', function(e) {
     case 'open-canvas': openCanvas(); break;
     case 'close-canvas': closeCanvas(); break;
     case 'clear-canvas': clearCanvas(); break;
-    case 'step-stroke-animation': stepStrokeAnimation(); break;
     case 'complete-canvas-letter': completeCanvasLetter(); break;
     case 'navigate-letter': navigateToLetter(a.letter); break;
     case 'show-chart-detail': showChartDetail(el); break;
