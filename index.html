@@ -35,7 +35,7 @@
   <div class="nav-stats">
     <div class="stat-item"><span class="icon">🔥</span><span id="streak-count">0</span></div>
     <div class="stat-item">
-      <span class="icon">⭐</span><span id="xp-count">0</span> XP
+      <span class="icon">⭐</span><span id="xp-count">0</span> <span data-t="XP">XP</span>
     </div>
     <div class="streak-bar"><div class="streak-fill" id="streak-bar-fill" style="width:0%"></div></div>
     <button class="nav-settings-btn" id="nav-help-btn" data-action="open-help" aria-label="Help" style="font-size:0.85rem;font-weight:700">?</button>
@@ -53,8 +53,8 @@
   <button class="tab-btn" data-action="switch-tab" data-tab="numbers" data-t="Numbers">Numbers</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="phrases" data-t="Phrases">Phrases</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="trivia" data-t="Trivia">Trivia</button>
-  <button class="pt-retake-btn" id="pt-retake-btn" style="display:none" data-action="start-placement-test">Retake Placement</button>
-  <button class="review-due-btn" id="review-due-btn" style="display:none" data-action="start-review-session">🔔 Review Due (<span id="review-due-count">0</span>)</button>
+  <button class="pt-retake-btn" id="pt-retake-btn" style="display:none" data-action="start-placement-test" data-t="Retake Placement">Retake Placement</button>
+  <button class="review-due-btn" id="review-due-btn" style="display:none" data-action="start-review-session">🔔 <span data-t="Review Due">Review Due</span> (<span id="review-due-count">0</span>)</button>
 </div>
 
 <div id="guest-banner" class="guest-banner" style="display:none">

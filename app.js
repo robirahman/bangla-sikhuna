@@ -109,6 +109,56 @@ const UI_STRINGS_BN = {
   'Example:': 'উদাহরণ:',
   // ── Listening ──
   'Tap to replay': 'আবার শুনতে ট্যাপ করুন',
+  // ── Nav / Stats ──
+  'XP': 'এক্সপি',
+  'Total XP': 'মোট এক্সপি',
+  'Day Streak': 'ধারাবাহিক দিন',
+  "Today's XP": 'আজকের এক্সপি',
+  'day streak': 'দিনের ধারা',
+  'token': 'টোকেন',
+  'tokens': 'টোকেন',
+  'Letters': 'অক্ষর',
+  'Words': 'শব্দ',
+  'Lessons': 'পাঠ',
+  'Badges': 'ব্যাজ',
+  'Review Due': 'পুনরালোচনা বাকি',
+  'due': 'বাকি',
+  'items ready for review': 'আইটেম পুনরালোচনার জন্য প্রস্তুত',
+  'item ready for review': 'আইটেম পুনরালোচনার জন্য প্রস্তুত',
+  'All caught up! Nothing due right now.': 'সব হয়ে গেছে! এখন কিছু বাকি নেই।',
+  'Start Review →': 'পুনরালোচনা শুরু →',
+  'Study These →': 'এগুলো পড়ুন →',
+  'Open Lesson →': 'পাঠ খুলুন →',
+  'Go to Phrases →': 'বাক্যাংশে যান →',
+  'Continue Reading': 'পড়া চালিয়ে যান',
+  'Review Reading': 'পড়া পুনরালোচনা',
+  'Lesson of the Day': 'আজকের পাঠ',
+  'Lesson': 'পাঠ',
+  'new words in your queue': 'নতুন শব্দ আপনার তালিকায়',
+  'new word in your queue': 'নতুন শব্দ আপনার তালিকায়',
+  'No new words queued — keep practicing!': 'কোনো নতুন শব্দ নেই — অনুশীলন চালিয়ে যান!',
+  'All unlocked words seen': 'সব আনলক করা শব্দ দেখা হয়েছে',
+  'All lessons complete!': 'সব পাঠ সম্পন্ন!',
+  'new phrases to learn': 'নতুন বাক্যাংশ শিখতে হবে',
+  'new phrase to learn': 'নতুন বাক্যাংশ শিখতে হবে',
+  'Keep practicing!': 'অনুশীলন চালিয়ে যান!',
+  'passages completed': 'প্যাসেজ সম্পন্ন',
+  'unlocked': 'আনলক',
+  'Recommended': 'সুপারিশকৃত',
+  'Reading Progress': 'পড়ার অগ্রগতি',
+  'Short passages with vocabulary-aware filtering and quick lookup.': 'শব্দভাণ্ডার-সচেতন ফিল্টারিং এবং দ্রুত অনুসন্ধান সহ ছোট অনুচ্ছেদ।',
+  'Done': 'সম্পন্ন',
+  'Retake Placement': 'প্লেসমেন্ট আবার দিন',
+  'Activity — Past 13 Weeks': 'কার্যকলাপ — গত ১৩ সপ্তাহ',
+  'You scored': 'আপনার স্কোর',
+  'New best!': 'নতুন সেরা!',
+  'Best:': 'সেরা:',
+  'Today': 'আজকে',
+  'Tomorrow': 'আগামীকাল',
+  'Next 7 days': 'পরবর্তী ৭ দিন',
+  'Submit & Earn XP →': 'জমা দিন ও এক্সপি অর্জন করুন →',
+  'Review →': 'পুনরালোচনা →',
+  'Start Lesson →': 'পাঠ শুরু →',
 };
 
 /**
@@ -128,6 +178,16 @@ function displayBengali(bengali, roman) {
 function t(str) {
   if (getDisplayMode() === 'immersion' && UI_STRINGS_BN[str]) return UI_STRINGS_BN[str];
   return str;
+}
+
+/**
+ * Convert Arabic digits (0-9) to Bengali digits (০-৯) when in Immersion mode.
+ * Returns a string. Passes through non-digit characters unchanged.
+ */
+function toBnDigits(val) {
+  const s = String(val);
+  if (getDisplayMode() !== 'immersion') return s;
+  return s.replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
 }
 
 /**
@@ -171,6 +231,7 @@ function _refreshActiveContent() {
   else if (id === 'vocab-browse') renderVocabList();
   else if (id === 'grammar-lesson') renderGlCard();
   else if (id === 'phrases-situation') renderPsCard();
+  else if (id === 'reading-screen') renderReadingScreen();
 }
 
 function getMixedUnlockedCount() {
@@ -532,8 +593,8 @@ function addXP(amount) {
 }
 
 function updateNav() {
-  document.getElementById('streak-count').textContent = progress.streak;
-  document.getElementById('xp-count').textContent = progress.xp;
+  document.getElementById('streak-count').textContent = toBnDigits(progress.streak);
+  document.getElementById('xp-count').textContent = toBnDigits(progress.xp);
   // streak bar: fills based on days toward 7-day streak
   const pct = Math.min(100, (progress.streak / 7) * 100);
   document.getElementById('streak-bar-fill').style.width = pct + '%';
@@ -1758,11 +1819,11 @@ function showResults() {
   const hist = progress.quizHistory || (progress.quizHistory = {});
   const prev = hist[qid] || { best: -1 };
   if (pct > prev.best) { hist[qid] = { best: pct }; saveProgress(); }
-  const subParts = [`You scored ${quizCorrect}/${total}`];
+  const subParts = [`${t('You scored')} ${toBnDigits(quizCorrect)}/${toBnDigits(total)}`];
   if (_quizStartTime) subParts.push('⏱ ' + _formatElapsed(Date.now() - _quizStartTime));
-  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 New best!');
-  else if (prev.best >= 0 && prev.best > pct) subParts.push(`Best: ${prev.best}%`);
-  if (progress.streak > 1) subParts.push(`🔥 ${progress.streak} day streak`);
+  if (pct > prev.best && prev.best >= 0) subParts.push(`🌟 ${t('New best!')}`);
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(`${t('Best:')} ${toBnDigits(prev.best)}%`);
+  if (progress.streak > 1) subParts.push(`🔥 ${toBnDigits(progress.streak)} ${t('day streak')}`);
   document.getElementById('results-sub').textContent = subParts.join(' · ');
 
   addXP(5);
@@ -2900,11 +2961,11 @@ function showVocabResults() {
   const vhist = progress.quizHistory || (progress.quizHistory = {});
   const vprev = vhist[vqid] || { best: -1 };
   if (pct > vprev.best) { vhist[vqid] = { best: pct }; saveProgress(); }
-  const vSubParts = [`You scored ${vqCorrect}/${total}`];
+  const vSubParts = [`${t('You scored')} ${toBnDigits(vqCorrect)}/${toBnDigits(total)}`];
   if (_quizStartTime) vSubParts.push('⏱ ' + _formatElapsed(Date.now() - _quizStartTime));
-  if (pct > vprev.best && vprev.best >= 0) vSubParts.push('🌟 New best!');
-  else if (vprev.best >= 0 && vprev.best > pct) vSubParts.push(`Best: ${vprev.best}%`);
-  if (progress.streak > 1) vSubParts.push(`🔥 ${progress.streak} day streak`);
+  if (pct > vprev.best && vprev.best >= 0) vSubParts.push(`🌟 ${t('New best!')}`);
+  else if (vprev.best >= 0 && vprev.best > pct) vSubParts.push(`${t('Best:')} ${toBnDigits(vprev.best)}%`);
+  if (progress.streak > 1) vSubParts.push(`🔥 ${toBnDigits(progress.streak)} ${t('day streak')}`);
   document.getElementById('vr-sub').textContent = vSubParts.join(' · ');
   addXP(5);
   detachQuizKeyHandler();
@@ -3559,11 +3620,11 @@ function showGrammarResults() {
   const ghist = progress.quizHistory || (progress.quizHistory = {});
   const gprev = ghist[gqid] || { best: -1 };
   if (pct > gprev.best) { ghist[gqid] = { best: pct }; saveProgress(); }
-  const gSubParts = [`You scored ${gqCorrect}/${total}`];
+  const gSubParts = [`${t('You scored')} ${toBnDigits(gqCorrect)}/${toBnDigits(total)}`];
   if (_quizStartTime) gSubParts.push('⏱ ' + _formatElapsed(Date.now() - _quizStartTime));
-  if (pct > gprev.best && gprev.best >= 0) gSubParts.push('🌟 New best!');
-  else if (gprev.best >= 0 && gprev.best > pct) gSubParts.push(`Best: ${gprev.best}%`);
-  if (progress.streak > 1) gSubParts.push(`🔥 ${progress.streak} day streak`);
+  if (pct > gprev.best && gprev.best >= 0) gSubParts.push(`🌟 ${t('New best!')}`);
+  else if (gprev.best >= 0 && gprev.best > pct) gSubParts.push(`${t('Best:')} ${toBnDigits(gprev.best)}%`);
+  if (progress.streak > 1) gSubParts.push(`🔥 ${toBnDigits(progress.streak)} ${t('day streak')}`);
   document.getElementById('gr-sub').textContent = gSubParts.join(' · ');
   addXP(5);
   detachQuizKeyHandler();
@@ -4385,7 +4446,7 @@ function renderProfileList(forceShowPicker) {
     card.innerHTML = `
       <div class="pc-select" data-action="${selectAction}" data-name="${safeNameJs}">
         <div class="pc-name">${safeName}${lockIcon}</div>
-        <div class="pc-stats">⭐ ${u.xp} XP &nbsp; 🔥 ${u.streak}</div>
+        <div class="pc-stats">⭐ ${toBnDigits(u.xp)} ${t('XP')} &nbsp; 🔥 ${toBnDigits(u.streak)}</div>
       </div>
       <div class="pc-actions">
         <button class="pc-action-btn" data-action="rename-profile" data-name="${safeNameJs}" title="Rename profile">✏️</button>
@@ -4950,7 +5011,7 @@ function updateProfileMenuHeader() {
   const el = document.getElementById('pmh-name');
   const st = document.getElementById('pmh-stats');
   if (el) el.textContent = currentUser || '';
-  if (st) st.innerHTML = `<span>⭐ ${progress.xp} XP</span><span>🔥 ${progress.streak}</span><span>🧊 ${progress.freezeTokens || 0}</span><span>🏅 ${(progress.achievements||[]).length}</span>`;
+  if (st) st.innerHTML = `<span>⭐ ${toBnDigits(progress.xp)} ${t('XP')}</span><span>🔥 ${toBnDigits(progress.streak)}</span><span>🧊 ${toBnDigits(progress.freezeTokens || 0)}</span><span>🏅 ${toBnDigits((progress.achievements||[]).length)}</span>`;
 }
 
 // ════════════════════════════════════════
@@ -5295,16 +5356,16 @@ function renderStatsPanel() {
 
   // Summary
   let html = `<div class="stats-summary">
-    <div class="stat-card"><div class="stat-card-val">${progress.xp}</div><div class="stat-card-lbl">Total XP</div></div>
-    <div class="stat-card"><div class="stat-card-val">${progress.streak}</div><div class="stat-card-lbl">Day Streak</div></div>
-    <div class="stat-card"><div class="stat-card-val">${masteredLetters}/${totalLetters}</div><div class="stat-card-lbl">Letters</div></div>
-    <div class="stat-card"><div class="stat-card-val">${masteredVocab}/${totalVocab}</div><div class="stat-card-lbl">Words</div></div>
-    <div class="stat-card"><div class="stat-card-val">${masteredLessons}/${totalLessons}</div><div class="stat-card-lbl">Lessons</div></div>
-    <div class="stat-card"><div class="stat-card-val">${(progress.achievements||[]).length}</div><div class="stat-card-lbl">Badges</div></div>
+    <div class="stat-card"><div class="stat-card-val">${toBnDigits(progress.xp)}</div><div class="stat-card-lbl">${t('Total XP')}</div></div>
+    <div class="stat-card"><div class="stat-card-val">${toBnDigits(progress.streak)}</div><div class="stat-card-lbl">${t('Day Streak')}</div></div>
+    <div class="stat-card"><div class="stat-card-val">${toBnDigits(masteredLetters)}/${toBnDigits(totalLetters)}</div><div class="stat-card-lbl">${t('Letters')}</div></div>
+    <div class="stat-card"><div class="stat-card-val">${toBnDigits(masteredVocab)}/${toBnDigits(totalVocab)}</div><div class="stat-card-lbl">${t('Words')}</div></div>
+    <div class="stat-card"><div class="stat-card-val">${toBnDigits(masteredLessons)}/${toBnDigits(totalLessons)}</div><div class="stat-card-lbl">${t('Lessons')}</div></div>
+    <div class="stat-card"><div class="stat-card-val">${toBnDigits((progress.achievements||[]).length)}</div><div class="stat-card-lbl">${t('Badges')}</div></div>
   </div>`;
 
   // Activity heatmap
-  html += `<div class="stats-section-title">Activity — Past 13 Weeks</div>`;
+  html += `<div class="stats-section-title">${t('Activity — Past 13 Weeks')}</div>`;
   html += _buildHeatmap();
 
   // Mastery breakdown bars
@@ -5435,7 +5496,7 @@ function _buildHeatmap() {
     if (xp > 0) level = xp >= 25 ? 3 : xp >= 10 ? 2 : 1;
     const today10 = today.toISOString().slice(0,10);
     const outline = date === today10 ? ' style="outline:1.5px solid var(--accent);outline-offset:1px"' : '';
-    gridHtml += `<div class="heatmap-cell" data-level="${level}" title="${date}: ${xp} XP"${outline}></div>`;
+    gridHtml += `<div class="heatmap-cell" data-level="${level}" title="${date}: ${toBnDigits(xp)} ${t('XP')}"${outline}></div>`;
   });
   gridHtml += '</div>';
 
@@ -5455,15 +5516,20 @@ let readingSession = null;
 
 function ensureReadingUI() {
   const tabBar = document.getElementById('tab-bar');
+  let readingBtn;
   if (tabBar && !tabBar.querySelector('[data-tab="reading"]')) {
-    const readingBtn = document.createElement('button');
+    readingBtn = document.createElement('button');
     readingBtn.className = 'tab-btn';
     readingBtn.dataset.action = 'switch-tab';
     readingBtn.dataset.tab = 'reading';
-    readingBtn.textContent = 'Reading';
+    readingBtn.setAttribute('data-t', 'Reading');
+    readingBtn.textContent = t('Reading');
     const phrasesBtn = tabBar.querySelector('[data-tab="phrases"]');
     if (phrasesBtn && phrasesBtn.nextSibling) tabBar.insertBefore(readingBtn, phrasesBtn.nextSibling);
     else tabBar.appendChild(readingBtn);
+  } else if (tabBar) {
+    readingBtn = tabBar.querySelector('[data-tab="reading"]');
+    if (readingBtn) readingBtn.textContent = t('Reading');
   }
 
   if (!document.getElementById('reading-screen')) {
@@ -5475,10 +5541,13 @@ function ensureReadingUI() {
     screen.innerHTML = `
       <div class="hero">
         <h2>পাঠ</h2>
-        <p>Short passages with vocabulary-aware filtering and quick lookup.</p>
+        <p data-t="Short passages with vocabulary-aware filtering and quick lookup.">${t('Short passages with vocabulary-aware filtering and quick lookup.')}</p>
       </div>
       <div id="reading-body" style="padding:0 1rem 2rem"></div>`;
     home.parentElement.insertBefore(screen, home.nextSibling);
+  } else {
+    const subtitle = document.querySelector('#reading-screen .hero p');
+    if (subtitle) subtitle.textContent = t('Short passages with vocabulary-aware filtering and quick lookup.');
   }
 }
 
@@ -5515,7 +5584,7 @@ function renderReadingScreen() {
   const recommended = getRecommendedReadingPassages();
   const completedCount = Object.keys(progress.reading?.completed || {}).length;
 
-  let html = `<div class="today-section"><div class="today-section-hdr"><span class="today-section-icon">📘</span><div><div class="today-section-title">Reading Progress</div><div class="today-section-sub">${completedCount}/${READING_PASSAGE_BANK.length} passages completed · ${unlockedCount}/${READING_PASSAGE_BANK.length} unlocked</div></div></div></div>`;
+  let html = `<div class="today-section"><div class="today-section-hdr"><span class="today-section-icon">📘</span><div><div class="today-section-title">${t('Reading Progress')}</div><div class="today-section-sub">${toBnDigits(completedCount)}/${toBnDigits(READING_PASSAGE_BANK.length)} ${t('passages completed')} · ${toBnDigits(unlockedCount)}/${toBnDigits(READING_PASSAGE_BANK.length)} ${t('unlocked')}</div></div></div></div>`;
 
   html += '<div class="today-section"><div class="today-section-hdr"><span class="today-section-icon">🧭</span><div><div class="today-section-title">Recommended</div><div class="today-section-sub">Passages where most required vocabulary is already familiar</div></div></div>';
   if (recommended.length) {
@@ -5580,7 +5649,7 @@ function renderReadingSessionHTML() {
     html += '</div></div>';
   });
 
-  html += `<button class="btn-primary today-action-btn" data-action="submit-reading-check">Submit & Earn XP →</button></div>`;
+  html += `<button class="btn-primary today-action-btn" data-action="submit-reading-check">${t('Submit & Earn XP →')}</button></div>`;
   return html;
 }
 
@@ -5643,7 +5712,8 @@ function renderTodayScreen() {
     return prog.seen < prog.total || prog.mastered < prog.total;
   });
 
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const todayLocale = getDisplayMode() === 'immersion' ? 'bn-BD' : 'en-US';
+  const today = new Date().toLocaleDateString(todayLocale, { weekday: 'long', month: 'long', day: 'numeric' });
 
   let html = `<div class="today-date">${today}</div>`;
 
@@ -5652,10 +5722,10 @@ function renderTodayScreen() {
   if (lessonOfDay) {
     const firstExample = lessonOfDay.examples && lessonOfDay.examples[0];
     html += `<div class="today-lesson-card">
-      <div class="tlc-badge">📚 Lesson of the Day</div>
-      <div class="tlc-title">Lesson ${lessonOfDay.number}: ${escHtml(lessonOfDay.title)}</div>
+      <div class="tlc-badge">📚 ${t('Lesson of the Day')}</div>
+      <div class="tlc-title">${t('Lesson')} ${toBnDigits(lessonOfDay.number)}: ${escHtml(lessonOfDay.title)}</div>
       ${firstExample ? `<div class="tlc-example"><span class="tlc-bn">${escHtml(displayBengali(firstExample.bengali, firstExample.roman))}</span><span class="tlc-en">${escHtml(firstExample.english)}</span></div>` : ''}
-      <button class="btn-primary today-action-btn" data-action="open-grammar-lesson" data-id="${lessonOfDay.id}">Start Lesson →</button>
+      <button class="btn-primary today-action-btn" data-action="open-grammar-lesson" data-id="${lessonOfDay.id}">${t('Start Lesson →')}</button>
     </div>`;
   }
 
@@ -5665,34 +5735,34 @@ function renderTodayScreen() {
       <div class="tra-left">
         <div class="tra-icon">🔔</div>
         <div>
-          <div class="tra-count">${dueCount} <span style="font-size:1rem;font-weight:600">due</span></div>
-          <div class="tra-label">item${dueCount !== 1 ? 's' : ''} ready for review</div>
+          <div class="tra-count">${toBnDigits(dueCount)} <span style="font-size:1rem;font-weight:600">${t('due')}</span></div>
+          <div class="tra-label">${t(dueCount !== 1 ? 'items ready for review' : 'item ready for review')}</div>
         </div>
       </div>
-      <button class="btn-primary" data-action="review-and-alphabet" style="white-space:nowrap">Start Review →</button>
+      <button class="btn-primary" data-action="review-and-alphabet" style="white-space:nowrap">${t('Start Review →')}</button>
     </div>`;
   }
   html += `<div class="today-section">
     <div class="today-section-hdr">
       <span class="today-section-icon">🔔</span>
       <div>
-        <div class="today-section-title">Due for Review</div>
-        <div class="today-section-sub">${dueCount > 0 ? dueCount + ' item' + (dueCount !== 1 ? 's' : '') + ' ready to review' : 'All caught up! Nothing due right now.'}</div>
+        <div class="today-section-title">${t('Due for Review')}</div>
+        <div class="today-section-sub">${dueCount > 0 ? toBnDigits(dueCount) + ' ' + t(dueCount !== 1 ? 'items ready for review' : 'item ready for review') : t('All caught up! Nothing due right now.')}</div>
       </div>
     </div>
     <div class="today-forecast" aria-label="Due forecast">
       <div class="today-forecast-list">
-        ${forecastLabels.map((label, idx) => `<div class="today-forecast-row"><span>${label}</span><strong>${forecastCounts[idx]}</strong></div>`).join('')}
+        ${forecastLabels.map((label, idx) => `<div class="today-forecast-row"><span>${t(label)}</span><strong>${toBnDigits(forecastCounts[idx])}</strong></div>`).join('')}
       </div>
       <div class="today-forecast-calendar">
         ${dueForecast.map((count, offset) => {
           const day = new Date(Date.now() + offset * 86400000);
-          const dow = day.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 1);
-          return `<div class="today-forecast-day${offset === 0 ? ' is-today' : ''}"><span>${dow}</span><strong>${count}</strong></div>`;
+          const dow = day.toLocaleDateString(getDisplayMode() === 'immersion' ? 'bn-BD' : 'en-US', { weekday: 'short' }).slice(0, 1);
+          return `<div class="today-forecast-day${offset === 0 ? ' is-today' : ''}"><span>${dow}</span><strong>${toBnDigits(count)}</strong></div>`;
         }).join('')}
       </div>
     </div>
-    ${dueCount > 0 ? `<button class="btn-primary today-action-btn" data-action="review-and-alphabet">Start Review →</button>` : '<div class="today-done-badge">✓ Done</div>'}
+    ${dueCount > 0 ? `<button class="btn-primary today-action-btn" data-action="review-and-alphabet">${t('Start Review →')}</button>` : `<div class="today-done-badge">✓ ${t('Done')}</div>`}
   </div>`;
 
   // ── New vocab ──
@@ -5700,17 +5770,17 @@ function renderTodayScreen() {
     <div class="today-section-hdr">
       <span class="today-section-icon">📖</span>
       <div>
-        <div class="today-section-title">New Vocabulary</div>
-        <div class="today-section-sub">${newWords.length > 0 ? newWords.length + ' new word' + (newWords.length !== 1 ? 's' : '') + ' in your queue' : 'No new words queued — keep practicing!'}</div>
+        <div class="today-section-title">${t('New Vocabulary')}</div>
+        <div class="today-section-sub">${newWords.length > 0 ? toBnDigits(newWords.length) + ' ' + t(newWords.length !== 1 ? 'new words in your queue' : 'new word in your queue') : t('No new words queued — keep practicing!')}</div>
       </div>
     </div>`;
   if (newWords.length > 0) {
     html += '<div class="today-word-list">' + newWords.map(w =>
       `<div class="today-word-chip"><span class="today-word-bn">${escHtml(displayBengali(w.lemma, w.roman))}</span><span class="today-word-en">${escHtml(w.english)}</span></div>`
     ).join('') + '</div>';
-    html += `<button class="btn-secondary today-action-btn" data-action="vocab-practice">Study These →</button>`;
+    html += `<button class="btn-secondary today-action-btn" data-action="vocab-practice">${t('Study These →')}</button>`;
   } else {
-    html += '<div class="today-done-badge">✓ All unlocked words seen</div>';
+    html += `<div class="today-done-badge">✓ ${t('All unlocked words seen')}</div>`;
   }
   html += '</div>';
 
@@ -5719,11 +5789,11 @@ function renderTodayScreen() {
     <div class="today-section-hdr">
       <span class="today-section-icon">📚</span>
       <div>
-        <div class="today-section-title">Grammar</div>
-        <div class="today-section-sub">${nextGrammar ? 'Lesson ' + nextGrammar.number + ': ' + escHtml(nextGrammar.title) : 'All lessons complete!'}</div>
+        <div class="today-section-title">${t('Grammar')}</div>
+        <div class="today-section-sub">${nextGrammar ? t('Lesson') + ' ' + toBnDigits(nextGrammar.number) + ': ' + escHtml(nextGrammar.title) : t('All lessons complete!')}</div>
       </div>
     </div>
-    ${nextGrammar ? `<button class="btn-secondary today-action-btn" data-action="open-grammar-lesson" data-id="${nextGrammar.id}">Open Lesson →</button>` : '<div class="today-done-badge">✓ Done</div>'}
+    ${nextGrammar ? `<button class="btn-secondary today-action-btn" data-action="open-grammar-lesson" data-id="${nextGrammar.id}">${t('Open Lesson →')}</button>` : `<div class="today-done-badge">✓ ${t('Done')}</div>`}
   </div>`;
 
   // ── Phrases ──
@@ -5734,27 +5804,28 @@ function renderTodayScreen() {
     <div class="today-section-hdr">
       <span class="today-section-icon">💬</span>
       <div>
-        <div class="today-section-title">Phrases</div>
-        <div class="today-section-sub">${phrasesToReview.length > 0 ? phrasesToReview.length + ' new phrase' + (phrasesToReview.length !== 1 ? 's' : '') + ' to learn' : 'Keep practicing!'}</div>
+        <div class="today-section-title">${t('Phrases')}</div>
+        <div class="today-section-sub">${phrasesToReview.length > 0 ? toBnDigits(phrasesToReview.length) + ' ' + t(phrasesToReview.length !== 1 ? 'new phrases to learn' : 'new phrase to learn') : t('Keep practicing!')}</div>
       </div>
     </div>
-    <button class="btn-secondary today-action-btn" data-action="switch-tab" data-tab="phrases">Go to Phrases →</button>
+    <button class="btn-secondary today-action-btn" data-action="switch-tab" data-tab="phrases">${t('Go to Phrases →')}</button>
   </div>`;
 
   // ── Reading ──
   const readingUnlocked = getReadingUnlockedCount();
   const readingNext = READING_PASSAGE_BANK.slice(0, readingUnlocked).find(p => !progress.reading?.completed?.[p.id]);
   const readingRecommended = getRecommendedReadingPassages()[0];
+  const readingCompleted = Object.keys(progress.reading?.completed || {}).length;
   html += `<div class="today-section">
     <div class="today-section-hdr">
       <span class="today-section-icon">📘</span>
       <div>
-        <div class="today-section-title">Reading</div>
-        <div class="today-section-sub">${Object.keys(progress.reading?.completed || {}).length}/${READING_PASSAGE_BANK.length} passages completed · ${readingUnlocked}/${READING_PASSAGE_BANK.length} unlocked</div>
+        <div class="today-section-title">${t('Reading')}</div>
+        <div class="today-section-sub">${toBnDigits(readingCompleted)}/${toBnDigits(READING_PASSAGE_BANK.length)} ${t('passages completed')} · ${toBnDigits(readingUnlocked)}/${toBnDigits(READING_PASSAGE_BANK.length)} ${t('unlocked')}</div>
       </div>
     </div>
-    ${readingRecommended ? `<div class="progress-label">Recommended: ${escHtml(readingRecommended.title)} (${readingRecommended.level})</div>` : ''}
-    <button class="btn-secondary today-action-btn" data-action="start-reading-passage" data-id="${readingNext ? readingNext.id : READING_PASSAGE_BANK[0].id}">${readingNext ? 'Continue Reading' : 'Review Reading'} →</button>
+    ${readingRecommended ? `<div class="progress-label">${t('Recommended')}: ${escHtml(readingRecommended.title)} (${readingRecommended.level})</div>` : ''}
+    <button class="btn-secondary today-action-btn" data-action="start-reading-passage" data-id="${readingNext ? readingNext.id : READING_PASSAGE_BANK[0].id}">${readingNext ? t('Continue Reading') : t('Review Reading')} →</button>
   </div>`;
 
   // ── Mistake Review ──
@@ -5764,11 +5835,11 @@ function renderTodayScreen() {
       <div class="today-section-hdr">
         <span class="today-section-icon">🔁</span>
         <div>
-          <div class="today-section-title">Mistake Review</div>
-          <div class="today-section-sub">${mistakeCount} recent mistake${mistakeCount !== 1 ? 's' : ''} to revisit</div>
+          <div class="today-section-title">${t('Mistake Review')}</div>
+          <div class="today-section-sub">${toBnDigits(mistakeCount)} recent mistake${mistakeCount !== 1 ? 's' : ''} to revisit</div>
         </div>
       </div>
-      <button class="btn-secondary today-action-btn" data-action="start-mistake-review">Review →</button>
+      <button class="btn-secondary today-action-btn" data-action="start-mistake-review">${t('Review →')}</button>
     </div>`;
   }
 
@@ -5776,9 +5847,9 @@ function renderTodayScreen() {
   const xpToday = (progress.practiceLog || {})[new Date().toISOString().slice(0,10)] || 0;
   const freezeUsedToday = progress.lastFreezeUsedDate === new Date().toISOString().slice(0, 10);
   html += `<div class="today-xp-bar">
-    <span class="today-xp-label">Today's XP</span>
-    <span class="today-xp-val">${xpToday} XP</span>
-    <span class="today-streak">🔥 ${progress.streak || 0} day streak · 🧊 ${progress.freezeTokens || 0} token${(progress.freezeTokens || 0) === 1 ? '' : 's'}</span>
+    <span class="today-xp-label">${t("Today's XP")}</span>
+    <span class="today-xp-val">${toBnDigits(xpToday)} ${t('XP')}</span>
+    <span class="today-streak">🔥 ${toBnDigits(progress.streak || 0)} ${t('day streak')} · 🧊 ${toBnDigits(progress.freezeTokens || 0)} ${t((progress.freezeTokens || 0) === 1 ? 'token' : 'tokens')}</span>
   </div>`;
 
   if (freezeUsedToday) {
@@ -6081,7 +6152,7 @@ function updateReviewDueBadge() {
   if (!btn) return;
   if (count > 0) {
     btn.style.display = '';
-    if (cntEl) cntEl.textContent = count;
+    if (cntEl) cntEl.textContent = toBnDigits(count);
   } else {
     btn.style.display = 'none';
   }
@@ -6089,7 +6160,7 @@ function updateReviewDueBadge() {
   const tabBadge = document.getElementById('today-tab-badge');
   if (tabBadge) {
     tabBadge.style.display = count > 0 ? 'flex' : 'none';
-    tabBadge.textContent = count > 9 ? '9+' : count;
+    tabBadge.textContent = toBnDigits(count > 9 ? '9+' : count);
   }
 }
 
@@ -6961,11 +7032,11 @@ function showPhrasesResults() {
   const phist = progress.quizHistory || (progress.quizHistory = {});
   const phprev = phist[phid] || { best: -1 };
   if (pct > phprev.best) { phist[phid] = { best: pct }; saveProgress(); }
-  const subParts = [`You scored ${phqCorrect}/${total}`];
+  const subParts = [`${t('You scored')} ${toBnDigits(phqCorrect)}/${toBnDigits(total)}`];
   if (_quizStartTime) subParts.push('⏱ ' + _formatElapsed(Date.now() - _quizStartTime));
-  if (pct > phprev.best && phprev.best >= 0) subParts.push('🌟 New best!');
-  else if (phprev.best >= 0 && phprev.best > pct) subParts.push(`Best: ${phprev.best}%`);
-  if (progress.streak > 1) subParts.push(`🔥 ${progress.streak} day streak`);
+  if (pct > phprev.best && phprev.best >= 0) subParts.push(`🌟 ${t('New best!')}`);
+  else if (phprev.best >= 0 && phprev.best > pct) subParts.push(`${t('Best:')} ${toBnDigits(phprev.best)}%`);
+  if (progress.streak > 1) subParts.push(`🔥 ${toBnDigits(progress.streak)} ${t('day streak')}`);
   document.getElementById('phr-sub').textContent = subParts.join(' · ');
   addXP(5);
   detachQuizKeyHandler();
