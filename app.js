@@ -1956,7 +1956,9 @@ const recipesScreens = ['recipes-home','recipe-detail','recipe-quiz','recipe-res
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tab);
+    const isActive = btn.dataset.tab === tab;
+    btn.classList.toggle('active', isActive);
+    if (isActive) btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
   });
   if (tab === 'today') {
     showScreen('today-screen');
