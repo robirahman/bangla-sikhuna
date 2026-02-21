@@ -7,6 +7,7 @@ import { PHRASES_SITUATIONS, PHRASES_WAVE_ORDER, PHRASES_DATA } from './phrases.
 import { GRAMMAR_LESSONS } from './grammar.js';
 import { VOCAB_DATA, VOCAB_CATEGORIES, VOCAB_TOTAL_WORDS } from './vocab.js';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from './trivia.js';
+import { RECIPES } from './recipes.js';
 
 // ════════════════════════════════════════
 //  DISPLAY MODE — Standard / Romanized / Immersion
@@ -21,6 +22,7 @@ const UI_STRINGS_BN = {
   'Numbers': 'সংখ্যা',
   'Phrases': 'বাক্যাংশ',
   'Trivia': 'তথ্য',
+  'Recipes': 'রান্নাঘর',
   // ── Buttons ──
   'Start Quiz →': 'কুইজ শুরু →',
   'Practice Quiz →': 'অনুশীলন কুইজ →',
@@ -45,6 +47,11 @@ const UI_STRINGS_BN = {
   'Bengali numerals and number words': 'বাংলা সংখ্যা ও সংখ্যাবাচক শব্দ',
   'Learn conversational phrases for real-life situations': 'দৈনন্দিন পরিস্থিতির জন্য কথোপকথনের বাক্যাংশ শিখুন',
   'Test your knowledge of Bengali culture, history, and more': 'বাংলা সংস্কৃতি, ইতিহাস ইত্যাদি সম্পর্কে জ্ঞান যাচাই করুন',
+  'Learn Bengali through classic recipes — read, cook, and quiz yourself': 'ঐতিহ্যবাহী রেসিপি দিয়ে বাংলা শিখুন — পড়ুন, রান্না করুন, কুইজ দিন',
+  'Take Quiz': 'কুইজ দিন',
+  'Ingredients': 'উপকরণ',
+  'Instructions': 'প্রণালি',
+  'Quiz': 'কুইজ',
   // ── Quiz prompts ──
   'What is the name of this letter?': 'এই অক্ষরের নাম কী?',
   'What sound does this letter make?': 'এই অক্ষরের উচ্চারণ কী?',
@@ -224,6 +231,7 @@ function _refreshActiveContent() {
   else if (id === 'numbers-home') renderNumbersHome();
   else if (id === 'phrases-home') renderPhrasesHome();
   else if (id === 'trivia-home') renderTriviaHome();
+  else if (id === 'recipes-home') renderRecipesHome();
   else if (id === 'today-screen') renderTodayScreen();
   else if (id === 'chart') renderChart();
   else if (id === 'learn') showCard();
@@ -703,6 +711,7 @@ function showScreen(id) {
   if (id === 'reading-screen') renderReadingScreen();
   if (id === 'today-screen') renderTodayScreen();
   if (id === 'trivia-home') renderTriviaHome();
+  if (id === 'recipes-home') renderRecipesHome();
   if (id === 'placement-results') renderPlacementResultsUI();
 }
 
@@ -1942,6 +1951,7 @@ const vocabScreens = ['vocab-home','vocab-browse','vocab-learn','vocab-quiz','vo
 const grammarScreens = ['grammar-home','grammar-lesson','grammar-quiz','grammar-results'];
 const phrasesScreens = ['phrases-home','phrases-situation','phrases-quiz','phrases-results'];
 const readingScreens = ['reading-screen'];
+const recipesScreens = ['recipes-home','recipe-detail','recipe-quiz','recipe-results'];
 
 function switchTab(tab) {
   currentTab = tab;
@@ -1964,6 +1974,8 @@ function switchTab(tab) {
     showScreen('reading-screen');
   } else if (tab === 'trivia') {
     showScreen('trivia-home');
+  } else if (tab === 'recipes') {
+    showScreen('recipes-home');
   } else {
     showScreen('grammar-home');
   }
@@ -7078,6 +7090,264 @@ function retryMissedPhrases() {
 // ════════════════════════════════════════
 //  TRIVIA
 // ════════════════════════════════════════
+// ════════════════════════════════════════
+//  RECIPES
+// ════════════════════════════════════════
+let _recipeCurrentId = null;
+let _recipeQuestions = [];
+let _recipeQIndex = 0;
+let _recipeCorrect = 0;
+let _recipeAnswered = false;
+let _recipeMissed = [];
+let _recipeStartTime = null;
+
+function renderRecipesHome() {
+  const grid = document.getElementById('recipes-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  RECIPES.forEach(recipe => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    // Quiz progress: count how many of 3 questions answered correctly
+    const total = recipe.quiz.length;
+    let answered = 0;
+    recipe.quiz.forEach(q => {
+      if ((progress.mastery['rq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'recipes:' + recipe.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = recipe.tags.map(tag =>
+      `<span class="recipe-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${recipe.icon}</div>
+      <h3>${escHtml(recipe.bengaliName)}</h3>
+      <p style="margin:4px 0 8px;font-size:0.88rem;color:var(--text-dim)">${escHtml(recipe.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'recipe-view';
+    card.dataset.id = recipe.id;
+    grid.appendChild(card);
+  });
+}
+
+function showRecipeDetail(recipeId) {
+  const recipe = RECIPES.find(r => r.id === recipeId);
+  if (!recipe) return;
+  _recipeCurrentId = recipeId;
+
+  document.getElementById('rd-title').textContent = recipe.bengaliName + ' — ' + recipe.englishName;
+  const content = document.getElementById('rd-content');
+
+  const tagHtml = recipe.tags.map(tag =>
+    `<span class="recipe-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  // Build ingredients list
+  const ingBn = recipe.ingredientsBn.map(i => `<li>${escHtml(i)}</li>`).join('');
+  const ingEn = recipe.ingredientsEn.map(i => `<li>${escHtml(i)}</li>`).join('');
+
+  // Build steps
+  const stepsBn = recipe.stepsBn.map((s, i) => `<li>${escHtml(s)}</li>`).join('');
+  const stepsEn = recipe.stepsEn.map((s, i) => `<li>${escHtml(s)}</li>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:12px">${tagHtml}</div>
+    <div class="recipe-section">
+      <p class="recipe-desc-bn">${escHtml(recipe.descBn)}</p>
+      <p class="recipe-desc-en">${escHtml(recipe.descEn)}</p>
+    </div>
+    <div class="recipe-section">
+      <h3 class="recipe-section-title">🥘 ${t('Ingredients')}</h3>
+      <div class="recipe-bilingual">
+        <div class="recipe-col">
+          <ul class="recipe-list recipe-list-bn">${ingBn}</ul>
+        </div>
+        <div class="recipe-col">
+          <ul class="recipe-list recipe-list-en">${ingEn}</ul>
+        </div>
+      </div>
+    </div>
+    <div class="recipe-section">
+      <h3 class="recipe-section-title">👩‍🍳 ${t('Instructions')}</h3>
+      <div class="recipe-bilingual">
+        <div class="recipe-col">
+          <ol class="recipe-list recipe-list-bn">${stepsBn}</ol>
+        </div>
+        <div class="recipe-col">
+          <ol class="recipe-list recipe-list-en">${stepsEn}</ol>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="recipe-start-quiz" data-id="${escHtml(recipeId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('recipe-detail');
+}
+
+function startRecipeQuiz(recipeId) {
+  const recipe = RECIPES.find(r => r.id === recipeId);
+  if (!recipe) return;
+  _recipeCurrentId = recipeId;
+  _recipeQuestions = shuffle(recipe.quiz.slice());
+  _recipeQIndex = 0;
+  _recipeCorrect = 0;
+  _recipeAnswered = false;
+  _recipeMissed = [];
+  _recipeStartTime = Date.now();
+  document.getElementById('rq-title').textContent = recipe.bengaliName + ' ' + t('Quiz');
+  showScreen('recipe-quiz');
+  renderRecipeQuestion();
+}
+
+function renderRecipeQuestion() {
+  const q = _recipeQuestions[_recipeQIndex];
+  if (!q) return;
+  _recipeAnswered = false;
+
+  const total = _recipeQuestions.length;
+  const pct = Math.round((_recipeQIndex / total) * 100);
+  document.getElementById('rq-progress-fill').style.width = pct + '%';
+  document.getElementById('rq-score').textContent = toBnDigits(_recipeQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('rq-feedback').innerHTML = '';
+  document.getElementById('rq-explanation').style.display = 'none';
+  document.getElementById('rq-explanation').textContent = '';
+  document.getElementById('rq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  // Shuffle options so correct answer isn't always in the same position
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled; // store for answer checking
+  const area = document.getElementById('rq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="recipe-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerRecipeMC(btn, chosen) {
+  if (_recipeAnswered) return;
+  _recipeAnswered = true;
+  const q = _recipeQuestions[_recipeQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#rq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  // Map shuffled display index back to original index
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  // Find which display index shows the correct answer
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('rq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _recipeCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('rq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _recipeMissed.push({ answer: q.options[q.correct] });
+  }
+
+  // Track mastery (not FSRS, simple 0/1/2 like trivia)
+  const masteryKey = 'rq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('rq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('rq-next-btn').style.display = 'inline-block';
+}
+
+function recipeNext() {
+  _recipeQIndex++;
+  if (_recipeQIndex >= _recipeQuestions.length) {
+    showRecipeResults();
+  } else {
+    _recipeAnswered = false;
+    renderRecipeQuestion();
+  }
+}
+
+function showRecipeResults() {
+  showScreen('recipe-results');
+  const total = _recipeQuestions.length;
+  const pct = total > 0 ? Math.round((_recipeCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('rr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('rr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('rr-title').textContent = title;
+
+  const bestKey = 'recipes:' + _recipeCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_recipeCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('rr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+
+  const missedEl = document.getElementById('rr-missed');
+  if (missedEl) {
+    if (_recipeMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _recipeMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
 let triviaCurrentCategory = null;
 let triviaQuestions = [];
 let triviaIndex = 0;
@@ -7530,6 +7800,12 @@ document.addEventListener('click', function(e) {
     // Bengali keyboard
     case 'toggle-bng-kbd': toggleBengaliKbd(); break;
     case 'append-char': appendBengaliChar(a.char); break;
+    // Recipes
+    case 'recipe-view':        showRecipeDetail(a.id); break;
+    case 'recipe-start-quiz':  startRecipeQuiz(a.id); break;
+    case 'recipe-mc':          answerRecipeMC(el, +a.idx); break;
+    case 'recipe-next':        recipeNext(); break;
+    case 'recipe-retry':       startRecipeQuiz(_recipeCurrentId); break;
     // Trivia
     case 'trivia-mc':         answerTriviaMC(el, +a.idx); break;
     case 'trivia-submit-fib': answerTriviaFIB(); break;

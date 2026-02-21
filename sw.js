@@ -15,6 +15,7 @@ const PRECACHE_URLS = [
   "./vocab-pack-1.json",
   "./vocab-pack-2.json",
   "./vocab-pack-3.json",
+  "./recipes.js",
   "./manifest.json",
 ];
 

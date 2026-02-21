@@ -1935,6 +1935,74 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
 }
 
 /* ═══════════════════════════════════
+   RECIPES
+   ═══════════════════════════════════ */
+.recipe-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.recipe-section {
+  margin-bottom: 24px;
+}
+.recipe-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.recipe-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.recipe-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.recipe-bilingual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .recipe-bilingual {
+    grid-template-columns: 1fr;
+  }
+}
+.recipe-col {}
+.recipe-list {
+  padding-left: 20px;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+.recipe-list-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.recipe-list-en {
+  color: var(--text-dim);
+}
+.recipe-list li {
+  margin-bottom: 4px;
+}
+.recipe-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════
    DISPLAY MODE — Romanized / Immersion
    ═══════════════════════════════════ */
 
