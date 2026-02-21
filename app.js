@@ -1,4 +1,4 @@
-import { VOWELS, CONSONANTS_VELAR, CONSONANTS_PALATAL, CONSONANTS_RETROFLEX, CONSONANTS_DENTAL, CONSONANTS_LABIAL, CONSONANTS_OTHER, CONSONANTS_SPECIAL, ALL_CONSONANTS, ALL_LETTERS, BENGALI_NUMERALS, BENGALI_NUMBER_NAMES, MATRA_COMBOS, CONJUNCTS, STROKE_HINTS, MODULES, NUMBER_MODULES, READING_PASSAGES, MIXED_CURRICULUM, MIXED_WAVE_SIZE, MIXED_INTRO_BATCH, UNLOCK_THRESHOLD, MIXED_QUIZ_SIZE } from './alphabet.js';
+import { VOWELS, CONSONANTS_VELAR, CONSONANTS_PALATAL, CONSONANTS_RETROFLEX, CONSONANTS_DENTAL, CONSONANTS_LABIAL, CONSONANTS_OTHER, CONSONANTS_SPECIAL, ALL_CONSONANTS, ALL_LETTERS, BENGALI_NUMERALS, BENGALI_NUMBER_NAMES, MATRA_COMBOS, CONJUNCTS, STROKE_HINTS, STROKE_PATHS, MODULES, NUMBER_MODULES, READING_PASSAGES, MIXED_CURRICULUM, MIXED_WAVE_SIZE, MIXED_INTRO_BATCH, UNLOCK_THRESHOLD, MIXED_QUIZ_SIZE } from './alphabet.js';
 import { generateStringPair, generateDistractors, shuffle } from './quiz-engine.js';
 import { REVIEW_INTERVALS_MS, MAX_REVIEW_LETTERS, MAX_REVIEW_VOCAB, MAX_REVIEW_GRAMMAR, MAX_REVIEW_PHRASES, FSRS_AGAIN, FSRS_HARD, FSRS_GOOD, FSRS_EASY, fsrsInitS, fsrsInitD, fsrsR, fsrsSAfterRecall, fsrsSAfterForgetting, fsrsNextD, masteryFromFsrs } from './fsrs.js';
 import { getLessonOfDay, passageWordCount } from './today.js';
@@ -920,6 +920,9 @@ let _canvasDrawing = false, _canvasLastX = 0, _canvasLastY = 0;
 let _canvasKeyHandler = null;
 let _canvasUserStrokes = [];
 let _canvasCurrentStroke = null;
+let _canvasTemplateStep = 0;       // how many guide strokes the user has "completed"
+let _strokeAnimationId = null;     // requestAnimationFrame ID for stroke animation
+let _strokeAnimating = false;      // true while animation is playing
 
 function _drawCanvasBg(ctx, canvas, letter) {
   ctx.save();
@@ -939,8 +942,48 @@ function _redrawCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   _drawCanvasBg(ctx, canvas, letter);
 
+  // Draw guide strokes from STROKE_PATHS
+  const strokes = STROKE_PATHS[letter];
+  if (strokes) {
+    const w = canvas.width, h = canvas.height;
+    strokes.forEach((stroke, idx) => {
+      if (!stroke.length) return;
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      if (idx < _canvasTemplateStep) {
+        // Completed strokes: solid colored line
+        ctx.strokeStyle = 'rgba(76, 175, 110, 0.45)';
+        ctx.lineWidth = 5;
+        ctx.setLineDash([]);
+      } else {
+        // Upcoming strokes: dashed low-opacity
+        ctx.strokeStyle = 'rgba(200, 200, 200, 0.3)';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([8, 6]);
+      }
+      ctx.beginPath();
+      ctx.moveTo(stroke[0][0] * w, stroke[0][1] * h);
+      for (let i = 1; i < stroke.length; i++) {
+        ctx.lineTo(stroke[i][0] * w, stroke[i][1] * h);
+      }
+      ctx.stroke();
+      ctx.restore();
 
-  // Draw user captured strokes.
+      // Draw stroke-order number at start of each stroke
+      const startX = stroke[0][0] * w;
+      const startY = stroke[0][1] * h;
+      ctx.save();
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillStyle = idx < _canvasTemplateStep ? 'rgba(76, 175, 110, 0.7)' : 'rgba(180, 180, 180, 0.5)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(idx + 1), startX - 12, startY - 10);
+      ctx.restore();
+    });
+  }
+
+  // Draw user captured strokes
   ctx.strokeStyle = 'var(--accent)';
   ctx.lineWidth = 4;
   ctx.lineCap = 'round';
@@ -966,9 +1009,31 @@ function openCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   _canvasUserStrokes = [];
   _canvasCurrentStroke = null;
+  _canvasTemplateStep = 0;
+  _strokeAnimating = false;
+  if (_strokeAnimationId) { cancelAnimationFrame(_strokeAnimationId); _strokeAnimationId = null; }
   _redrawCanvas();
   _setupCanvasListeners(canvas);
 
+  // Show/hide Show Stroke button based on stroke data availability
+  const showStrokeBtn = document.getElementById('show-stroke-btn');
+  if (showStrokeBtn) {
+    showStrokeBtn.style.display = STROKE_PATHS[letter] ? '' : 'none';
+  }
+
+  // Populate stroke hints if stroke data exists
+  const hintsEl = document.getElementById('stroke-hints');
+  if (hintsEl) {
+    const hints = STROKE_HINTS[letter];
+    const hasStrokes = !!STROKE_PATHS[letter];
+    if (hints && hasStrokes) {
+      hintsEl.innerHTML = hints.map((h, i) =>
+        `<div class="stroke-hint-item"><span class="stroke-hint-num">${i + 1}.</span>${h}</div>`
+      ).join('');
+    } else {
+      hintsEl.innerHTML = '';
+    }
+  }
 
   const status = document.getElementById('canvas-writing-status');
   if (status) {
@@ -982,12 +1047,17 @@ function closeCanvas() {
     document.removeEventListener('keydown', _canvasKeyHandler);
     _canvasKeyHandler = null;
   }
+  _strokeAnimating = false;
+  if (_strokeAnimationId) { cancelAnimationFrame(_strokeAnimationId); _strokeAnimationId = null; }
 }
 
 function clearCanvas() {
   const canvas = document.getElementById('tracing-canvas');
   _canvasUserStrokes = [];
   _canvasCurrentStroke = null;
+  _canvasTemplateStep = 0;
+  _strokeAnimating = false;
+  if (_strokeAnimationId) { cancelAnimationFrame(_strokeAnimationId); _strokeAnimationId = null; }
   _redrawCanvas();
 }
 
@@ -998,6 +1068,117 @@ function completeCanvasLetter() {
   const status = document.getElementById('canvas-writing-status');
   if (status) status.textContent = `Writing mastery: ${level}/3`;
   showToast(level >= 3 ? '🌟 Writing mastery reached!' : '✅ Letter marked as traced');
+}
+
+function animateStroke() {
+  const letter = document.getElementById('canvas-char-label').textContent;
+  const strokes = STROKE_PATHS[letter];
+  if (!strokes || !strokes.length) return;
+
+  // If already animating, cancel and restart
+  if (_strokeAnimationId) { cancelAnimationFrame(_strokeAnimationId); _strokeAnimationId = null; }
+  _strokeAnimating = true;
+  _canvasTemplateStep = 0;
+  _canvasUserStrokes = [];
+  _canvasCurrentStroke = null;
+
+  const canvas = document.getElementById('tracing-canvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const STROKE_DURATION = 500;  // ms per stroke
+  const PAUSE_BETWEEN = 250;    // ms pause between strokes
+
+  let currentStrokeIdx = 0;
+  let strokeStart = null;
+
+  function drawFrame(timestamp) {
+    if (!_strokeAnimating) return;
+    if (currentStrokeIdx >= strokes.length) {
+      // Animation complete — all strokes shown as completed
+      _canvasTemplateStep = strokes.length;
+      _strokeAnimating = false;
+      _strokeAnimationId = null;
+      _redrawCanvas();
+      return;
+    }
+
+    if (!strokeStart) strokeStart = timestamp;
+    const elapsed = timestamp - strokeStart;
+    const stroke = strokes[currentStrokeIdx];
+
+    // Redraw base canvas (background + guide strokes + user strokes)
+    _redrawCanvas();
+
+    // Compute how far along this stroke we are (0 to 1)
+    const progress = Math.min(elapsed / STROKE_DURATION, 1);
+
+    // Draw the animated portion of the current stroke
+    if (stroke.length >= 2) {
+      const totalSegments = stroke.length - 1;
+      const segProgress = progress * totalSegments;
+      const fullSegs = Math.floor(segProgress);
+      const partialFrac = segProgress - fullSegs;
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255, 140, 0, 0.85)';
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(stroke[0][0] * w, stroke[0][1] * h);
+
+      for (let i = 0; i < fullSegs && i < totalSegments; i++) {
+        ctx.lineTo(stroke[i + 1][0] * w, stroke[i + 1][1] * h);
+      }
+
+      // Partial segment
+      if (fullSegs < totalSegments) {
+        const sx = stroke[fullSegs][0], sy = stroke[fullSegs][1];
+        const ex = stroke[fullSegs + 1][0], ey = stroke[fullSegs + 1][1];
+        ctx.lineTo((sx + (ex - sx) * partialFrac) * w, (sy + (ey - sy) * partialFrac) * h);
+      }
+
+      ctx.stroke();
+
+      // Draw a moving dot at the tip
+      const tipSeg = Math.min(fullSegs, totalSegments - 1);
+      const tipFrac = fullSegs < totalSegments ? partialFrac : 1;
+      const nextSeg = Math.min(tipSeg + 1, stroke.length - 1);
+      const tipX = (stroke[tipSeg][0] + (stroke[nextSeg][0] - stroke[tipSeg][0]) * tipFrac) * w;
+      const tipY = (stroke[tipSeg][1] + (stroke[nextSeg][1] - stroke[tipSeg][1]) * tipFrac) * h;
+      ctx.fillStyle = 'rgba(255, 100, 0, 0.9)';
+      ctx.beginPath();
+      ctx.arc(tipX, tipY, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    if (progress >= 1) {
+      // Stroke complete — mark it and pause before next
+      _canvasTemplateStep = currentStrokeIdx + 1;
+      currentStrokeIdx++;
+      strokeStart = null;
+      if (currentStrokeIdx < strokes.length) {
+        // Pause between strokes
+        setTimeout(() => {
+          if (_strokeAnimating) {
+            _strokeAnimationId = requestAnimationFrame(drawFrame);
+          }
+        }, PAUSE_BETWEEN);
+        return;
+      } else {
+        _strokeAnimating = false;
+        _strokeAnimationId = null;
+        _redrawCanvas();
+        return;
+      }
+    }
+
+    _strokeAnimationId = requestAnimationFrame(drawFrame);
+  }
+
+  _strokeAnimationId = requestAnimationFrame(drawFrame);
 }
 
 function _setupCanvasListeners(canvas) {
@@ -7096,6 +7277,7 @@ document.addEventListener('click', function(e) {
     case 'open-canvas': openCanvas(); break;
     case 'close-canvas': closeCanvas(); break;
     case 'clear-canvas': clearCanvas(); break;
+    case 'show-stroke': animateStroke(); break;
     case 'complete-canvas-letter': completeCanvasLetter(); break;
     case 'navigate-letter': navigateToLetter(a.letter); break;
     case 'show-chart-detail': showChartDetail(el); break;
