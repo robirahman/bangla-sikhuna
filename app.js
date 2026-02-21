@@ -8,6 +8,171 @@ import { GRAMMAR_LESSONS } from './grammar.js';
 import { VOCAB_DATA, VOCAB_CATEGORIES, VOCAB_TOTAL_WORDS } from './vocab.js';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from './trivia.js';
 
+// ════════════════════════════════════════
+//  DISPLAY MODE — Standard / Romanized / Immersion
+// ════════════════════════════════════════
+
+const UI_STRINGS_BN = {
+  // ── Navigation tabs ──
+  'Today': 'আজকে',
+  'Alphabet': 'বর্ণমালা',
+  'Vocabulary': 'শব্দভাণ্ডার',
+  'Grammar': 'ব্যাকরণ',
+  'Numbers': 'সংখ্যা',
+  'Phrases': 'বাক্যাংশ',
+  'Trivia': 'তথ্য',
+  // ── Buttons ──
+  'Start Quiz →': 'কুইজ শুরু →',
+  'Practice Quiz →': 'অনুশীলন কুইজ →',
+  '← Back': '← পেছনে',
+  '← Quit': '← বন্ধ',
+  'Next →': 'পরবর্তী →',
+  '← Prev': '← আগের',
+  'Continue →': 'চালিয়ে যান →',
+  'Check': 'যাচাই',
+  'Check Order': 'ক্রম যাচাই',
+  'Try Again': 'আবার চেষ্টা',
+  'Retry Missed': 'ভুলগুলো আবার',
+  'Home': 'হোম',
+  "I don't know": 'জানি না',
+  'Create Profile': 'প্রোফাইল তৈরি',
+  'Start': 'শুরু',
+  // ── Hero subtitles ──
+  "Today's study plan": 'আজকের পড়াশোনার পরিকল্পনা',
+  'Master the Bengali alphabet step by step': 'ধাপে ধাপে বাংলা বর্ণমালা শিখুন',
+  'Learn 5,000+ common Bengali words': '৫,০০০+ সাধারণ বাংলা শব্দ শিখুন',
+  'Master Bengali grammar in 36 lessons — including sound changes, reading passages, and Mixed Review': '৩৬টি পাঠে বাংলা ব্যাকরণ শিখুন',
+  'Bengali numerals and number words': 'বাংলা সংখ্যা ও সংখ্যাবাচক শব্দ',
+  'Learn conversational phrases for real-life situations': 'দৈনন্দিন পরিস্থিতির জন্য কথোপকথনের বাক্যাংশ শিখুন',
+  'Test your knowledge of Bengali culture, history, and more': 'বাংলা সংস্কৃতি, ইতিহাস ইত্যাদি সম্পর্কে জ্ঞান যাচাই করুন',
+  // ── Quiz prompts ──
+  'What is the name of this letter?': 'এই অক্ষরের নাম কী?',
+  'What sound does this letter make?': 'এই অক্ষরের উচ্চারণ কী?',
+  'Type the name of this letter:': 'এই অক্ষরের নাম লিখুন:',
+  'Type the romanized form of this letter:': 'এই অক্ষরের রোমানাইজড রূপ লিখুন:',
+  'How do you pronounce this?': 'এটি কীভাবে উচ্চারণ করবেন?',
+  'Spell this in Bengali:': 'বাংলায় বানান করুন:',
+  'What does this word mean?': 'এই শব্দের অর্থ কী?',
+  'Type the English meaning:': 'ইংরেজি অর্থ লিখুন:',
+  'Type the Bengali word:': 'বাংলা শব্দটি লিখুন:',
+  'Type the Bengali word or romanization:': 'বাংলা শব্দ বা রোমানাইজেশন লিখুন:',
+  'Type the romanized Bengali:': 'রোমানাইজড বাংলা লিখুন:',
+  'What does this phrase mean?': 'এই বাক্যাংশের অর্থ কী?',
+  'How do you say this in Bengali?': 'বাংলায় এটি কীভাবে বলবেন?',
+  'Listen and choose the correct meaning:': 'শুনুন এবং সঠিক অর্থ বেছে নিন:',
+  'Type the romanization for:': 'রোমানাইজেশন লিখুন:',
+  'What sound does this combination make?': 'এই সংমিশ্রণের উচ্চারণ কী?',
+  'Type the romanized sound for this combination:': 'এই সংমিশ্রণের রোমানাইজড উচ্চারণ লিখুন:',
+  'What is the Bengali name of this numeral?': 'এই সংখ্যার বাংলা নাম কী?',
+  'What value does this numeral represent?': 'এই সংখ্যার মান কত?',
+  'Type the Bengali name of this numeral:': 'এই সংখ্যার বাংলা নাম লিখুন:',
+  'Type the romanized pronunciation of this numeral:': 'এই সংখ্যার রোমানাইজড উচ্চারণ লিখুন:',
+  'Type the romanized pronunciation:': 'রোমানাইজড উচ্চারণ লিখুন:',
+  'What does this mean in English?': 'ইংরেজিতে এর অর্থ কী?',
+  // ── Results ──
+  'Perfect! 🌟': 'নিখুঁত! 🌟',
+  'Great job!': 'চমৎকার!',
+  'Good effort!': 'ভালো চেষ্টা!',
+  'Keep practicing!': 'অনুশীলন চালিয়ে যান!',
+  // ── Rating ──
+  'How difficult was this?': 'এটি কতটা কঠিন ছিল?',
+  'Hard': 'কঠিন',
+  'Good': 'ভালো',
+  'Easy': 'সহজ',
+  // ── Today screen ──
+  'Due for Review': 'পুনরালোচনার জন্য প্রস্তুত',
+  'New Vocabulary': 'নতুন শব্দভাণ্ডার',
+  'Phrases': 'বাক্যাংশ',
+  'Reading': 'পড়া',
+  'Mistake Review': 'ভুল পুনরালোচনা',
+  // ── Card hints ──
+  'Tap card to flip': 'কার্ড উল্টাতে ট্যাপ করুন',
+  'Tap card to reveal': 'প্রকাশ করতে ট্যাপ করুন',
+  // ── Misc ──
+  'Full Alphabet Chart': 'সম্পূর্ণ বর্ণমালা তালিকা',
+  'Quiz': 'কুইজ',
+  'Vocab Quiz': 'শব্দ কুইজ',
+  'Grammar Quiz': 'ব্যাকরণ কুইজ',
+  'Phrases Quiz': 'বাক্যাংশ কুইজ',
+  'Mixed Practice': 'মিশ্র অনুশীলন',
+  'New Letters': 'নতুন অক্ষর',
+  'Retry Missed': 'ভুলগুলো আবার',
+  'Create a profile to save your progress': 'আপনার অগ্রগতি সংরক্ষণ করতে প্রোফাইল তৈরি করুন',
+  'Choose your profile': 'আপনার প্রোফাইল বেছে নিন',
+  'Retake Placement': 'প্লেসমেন্ট আবার দিন',
+  'Choose your profile': 'আপনার প্রোফাইল বেছে নিন',
+  'Search words…': 'শব্দ খুঁজুন…',
+  'Type your answer…': 'আপনার উত্তর লিখুন…',
+  'Correct!': 'সঠিক!',
+  'Romanized:': 'রোমানাইজড:',
+  'Sound:': 'উচ্চারণ:',
+  'Example:': 'উদাহরণ:',
+  // ── Listening ──
+  'Tap to replay': 'আবার শুনতে ট্যাপ করুন',
+};
+
+/**
+ * Display Bengali text according to current display mode.
+ * In Romanized mode, returns the romanized form; otherwise returns Bengali script.
+ */
+function displayBengali(bengali, roman) {
+  if (getDisplayMode() === 'romanized' && roman) return roman;
+  return bengali;
+}
+
+/**
+ * Translate an English UI string to Bengali when in Immersion mode.
+ * Falls back to the original string if no translation exists.
+ * Settings panel is excluded (always English).
+ */
+function t(str) {
+  if (getDisplayMode() === 'immersion' && UI_STRINGS_BN[str]) return UI_STRINGS_BN[str];
+  return str;
+}
+
+/**
+ * Apply display mode to the document: set data attributes on body,
+ * process [data-t] elements for immersion, refresh active screen content.
+ */
+function applyDisplayMode() {
+  const mode = getDisplayMode();
+  document.body.dataset.displayMode = mode;
+  document.body.dataset.hideEnglish = (mode === 'immersion' && getHideEnglish()) ? 'true' : 'false';
+
+  // Process all [data-t] elements (static HTML translations)
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (mode === 'immersion' && UI_STRINGS_BN[key]) {
+      el.textContent = UI_STRINGS_BN[key];
+    } else {
+      el.textContent = key;
+    }
+  });
+
+  // Refresh whichever screen is currently active
+  _refreshActiveContent();
+}
+
+function _refreshActiveContent() {
+  // Re-render content in the currently visible screen
+  const activeScreen = document.querySelector('.screen.active');
+  if (!activeScreen) return;
+  const id = activeScreen.id;
+  if (id === 'home') renderHome();
+  else if (id === 'vocab-home') renderVocabHome();
+  else if (id === 'grammar-home') renderGrammarHome();
+  else if (id === 'numbers-home') renderNumbersHome();
+  else if (id === 'phrases-home') renderPhrasesHome();
+  else if (id === 'trivia-home') renderTriviaHome();
+  else if (id === 'today-screen') renderTodayScreen();
+  else if (id === 'chart') renderChart();
+  else if (id === 'learn') showCard();
+  else if (id === 'vocab-learn') showVocabCardAt();
+  else if (id === 'vocab-browse') renderVocabList();
+  else if (id === 'grammar-lesson') renderGlCard();
+  else if (id === 'phrases-situation') renderPsCard();
+}
+
 function getMixedUnlockedCount() {
   let unlocked = MIXED_WAVE_SIZE; // first wave is always available
   while (unlocked < MIXED_CURRICULUM.length) {
@@ -66,13 +231,13 @@ function startMixedPractice() {
     // Show flashcards for new letters first, then auto-start quiz
     currentModule = {
       id: 'mixed',
-      title: 'New Letters',
+      title: t('New Letters'),
       letters: mixedSession.teach,
       isMixed: true,
     };
     currentCardIndex = 0;
-    document.getElementById('learn-title').textContent = 'New Letters';
-    document.getElementById('quiz-start-btn').textContent = 'Practice Quiz →';
+    document.getElementById('learn-title').textContent = t('New Letters');
+    document.getElementById('quiz-start-btn').textContent = t('Practice Quiz →');
     document.getElementById('quiz-start-btn').onclick = () => launchMixedQuiz();
     showCard();
     showScreen('learn');
@@ -95,7 +260,7 @@ function launchMixedQuiz() {
   quizIndex = 0;
   quizCorrect = 0;
   _quizStartTime = Date.now();
-  document.getElementById('quiz-title').textContent = 'Mixed Practice';
+  document.getElementById('quiz-title').textContent = t('Mixed Practice');
   showScreen('quiz');
   renderQuestion();
   updateStreak();
@@ -108,7 +273,7 @@ function var_special(){ return 'var(--special)'; }
 // ════════════════════════════════════════
 //  PROGRESS / STATE
 // ════════════════════════════════════════
-const DEFAULT_PROGRESS_SETTINGS = Object.freeze({ fibMode: 'latin', listeningMode: 'text', palette: 'sundarbans' });
+const DEFAULT_PROGRESS_SETTINGS = Object.freeze({ fibMode: 'latin', listeningMode: 'text', palette: 'sundarbans', displayMode: 'standard', hideEnglish: false });
 
 function _defaultProgressSettings() {
   return { ...DEFAULT_PROGRESS_SETTINGS };
@@ -192,6 +357,14 @@ function _loadProgressLS(name) {
   }
   if (!data.settings.palette) {
     data.settings.palette = localStorage.getItem('bengali_palette') || defaults.palette;
+    mutated = true;
+  }
+  if (!data.settings.displayMode) {
+    data.settings.displayMode = defaults.displayMode;
+    mutated = true;
+  }
+  if (typeof data.settings.hideEnglish !== 'boolean') {
+    data.settings.hideEnglish = defaults.hideEnglish;
     mutated = true;
   }
 
@@ -1094,15 +1267,15 @@ function showCard() {
   const fc = document.getElementById('flashcard');
   fc.classList.remove('flipped');
 
-  document.getElementById('card-letter').textContent = card.letter;
+  document.getElementById('card-letter').textContent = displayBengali(card.letter, card.romanized);
   const badge = document.getElementById('card-badge');
   badge.textContent = card.type.toUpperCase();
   badge.className = 'letter-type-badge badge-' + card.type;
 
   document.getElementById('card-name').textContent = card.name;
-  document.getElementById('card-translit').textContent = 'Romanized: ' + card.romanized;
-  document.getElementById('card-sound').textContent = 'Sound: ' + card.ipa + ' — ' + card.sound;
-  document.getElementById('card-example').textContent = 'Example: ' + card.example;
+  document.getElementById('card-translit').textContent = t('Romanized:') + ' ' + card.romanized;
+  document.getElementById('card-sound').textContent = t('Sound:') + ' ' + card.ipa + ' — ' + card.sound;
+  document.getElementById('card-example').textContent = t('Example:') + ' ' + card.example;
 
   document.getElementById('card-counter').textContent =
     (currentCardIndex + 1) + ' / ' + currentModule.letters.length;
@@ -1174,7 +1347,7 @@ function startQuiz() {
   quizCorrect = 0;
   quizMissed = [];
   _quizStartTime = Date.now();
-  document.getElementById('quiz-title').textContent = currentModule.title + ' Quiz';
+  document.getElementById('quiz-title').textContent = currentModule.title + ' ' + t('Quiz');
   showScreen('quiz');
   renderQuestion();
   updateStreak();
@@ -1198,25 +1371,26 @@ function renderQuestion() {
   const qa = document.getElementById('quiz-question-area');
   if (q.type === 'listening-mc' || q.type === 'listening-fib') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div class="listening-controls">
         <button class="listening-play-btn" data-action="speak" data-text="${escapeStr(q.audio)}" aria-label="Play sound">▶</button>
         <button class="slow-audio-btn${_audioSlowMode ? ' active' : ''}" data-action="toggle-slow-audio" title="${_audioSlowMode ? 'Slow mode on — click to restore normal speed' : 'Play at half speed'}" aria-label="Toggle slow audio">🐢</button>
       </div>
-      <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">Tap to replay</div>
+      <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">${t('Tap to replay')}</div>
     `;
     setTimeout(() => speakBengali(q.audio), 300);
   } else if (q.type === 'spell') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div class="quiz-letter-roman">${q.display}</div>
     `;
   } else {
     const showLetter = q.displayLetter !== undefined && q.displayLetter !== null ? q.displayLetter : q.letter;
     const speakLetter = q.letterObj ? q.letterObj.letter : q.letter;
+    const displayLetter = q.letterObj ? displayBengali(showLetter, q.letterObj.romanized) : showLetter;
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
-      <div class="quiz-letter">${showLetter}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
+      <div class="quiz-letter">${displayLetter}</div>
       <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(speakLetter)}" aria-label="Play pronunciation">🔊</button>
     `;
   }
@@ -1235,18 +1409,18 @@ function renderQuestion() {
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-idx="${i}" data-answer="${escapeStr(opt)}" data-action="answer-mc">${opt}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-quiz\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-quiz">${t("I don't know")}</button>`;
     attachQuizKeyHandler('quiz');
   } else if (q.type === 'spell') {
     spellTileOrder = [];
     aa.innerHTML = `<div class="word-order-area">
       <div class="answer-area-wo" id="spell-answer-area"></div>
       <div class="word-tiles" id="spell-tile-bank">
-        ${q.tiles.map((t, i) => `<div class="word-tile" data-idx="${i}" data-word="${t}" data-action="select-spell">${t}</div>`).join('')}
+        ${q.tiles.map((tile, i) => `<div class="word-tile" data-idx="${i}" data-word="${tile}" data-action="select-spell">${tile}</div>`).join('')}
       </div>
-      <button class="btn-primary wo-check-btn" data-action="answer-spell">Check</button>
+      <button class="btn-primary wo-check-btn" data-action="answer-spell">${t('Check')}</button>
     </div>
-    <button class="idk-btn" data-action="dont-know-quiz">I don't know</button>`;
+    <button class="idk-btn" data-action="dont-know-quiz">${t("I don't know")}</button>`;
   } else {
     const hintHtml = q.hint
       ? `<button class="hint-btn" data-action="show-hint">💡 Hint</button><div class="fib-hint" style="display:none">${q.hint}</div>`
@@ -1254,12 +1428,12 @@ function renderQuestion() {
     const kbdHtml = getFibMode() !== 'latin'
       ? `<button class="bng-kbd-toggle" data-action="show-kbd" data-input="fib-input">বাং ▲</button>` : '';
     aa.innerHTML = `<div class="fib-area">
-      <input type="text" class="fib-input" id="fib-input" placeholder="Type your answer…"
+      <input type="text" class="fib-input" id="fib-input" placeholder="${t('Type your answer…')}"
         autocomplete="off" autocapitalize="off">
-      <button class="btn-primary fib-submit" data-action="answer-fib">Check</button>
+      <button class="btn-primary fib-submit" data-action="answer-fib">${t('Check')}</button>
       ${hintHtml}${kbdHtml}
     </div>
-    <button class="idk-btn" data-action="dont-know-quiz">I don't know</button>`;
+    <button class="idk-btn" data-action="dont-know-quiz">${t("I don't know")}</button>`;
     setTimeout(() => document.getElementById('fib-input')?.focus(), 100);
   }
 }
@@ -1578,7 +1752,7 @@ function showResults() {
   }, 100);
   document.getElementById('results-pct').textContent = pct + '%';
 
-  const titles = pct === 100 ? 'Perfect! 🌟' : pct >= 80 ? 'Great job!' : pct >= 50 ? 'Good effort!' : 'Keep practicing!';
+  const titles = pct === 100 ? t('Perfect! 🌟') : pct >= 80 ? t('Great job!') : pct >= 50 ? t('Good effort!') : t('Keep practicing!');
   document.getElementById('results-title').textContent = titles;
   const qid = quizModuleRef ? quizModuleRef.id : 'quiz';
   const hist = progress.quizHistory || (progress.quizHistory = {});
@@ -1627,7 +1801,7 @@ function retryMissedQuiz() {
   quizModuleRef = mod;
   generateQuiz(letterObjs);
   quizIndex = 0; quizCorrect = 0; quizMissed = [];
-  document.getElementById('quiz-title').textContent = 'Retry Missed';
+  document.getElementById('quiz-title').textContent = t('Retry Missed');
   showScreen('quiz');
   renderQuestion();
 }
@@ -1658,7 +1832,7 @@ function renderChart() {
             data-name="${l.name}" data-romanized="${l.romanized}" data-ipa="${l.ipa}"
             data-sound="${l.sound}" data-example="${l.example}">
             <div class="mastery-dot mastery-${m}"></div>
-            <div class="chart-letter">${l.letter}</div>
+            <div class="chart-letter">${displayBengali(l.letter, l.romanized)}</div>
             <div class="chart-romanized">${l.romanized.split('/')[0].trim()}</div>
           </div>`;
         }).join('')}
@@ -2171,7 +2345,7 @@ function renderVocabList() {
   container.innerHTML = ctaHtml + page.map(w => {
     const m = getVocabMastery(w);
     return `<div class="vocab-row" data-action="show-vocab-detail" data-lemma="${w.lemma.replace(/'/g,'&apos;')}">
-      <div class="vr-bengali">${w.lemma}</div>
+      <div class="vr-bengali">${displayBengali(w.lemma, w.roman)}</div>
       <div class="vr-roman">${w.roman}</div>
       <div class="vr-english">${w.english}</div>
       <div class="vr-mastery mastery-${m}"></div>
@@ -2251,7 +2425,7 @@ function renderWordModalRelated(currentWord) {
 
   listEl.innerHTML = sample.map(({ word, type }) =>
     `<button class="wm-related-item" data-action="open-related-word" data-lemma="${escapeStr(word.lemma)}">
-      <span class="wm-related-lemma">${escapeStr(word.lemma)}</span>
+      <span class="wm-related-lemma">${escapeStr(displayBengali(word.lemma, word.roman))}</span>
       <span class="wm-related-type">${escapeStr(type)}</span>
     </button>`
   ).join('');
@@ -2263,7 +2437,7 @@ function showVocabDetail(bengali) {
   if (!w) return;
   _wordModalLemma = w.lemma;
   const cat = VOCAB_CATEGORIES[w.category];
-  document.getElementById('wm-bengali').textContent = w.lemma;
+  document.getElementById('wm-bengali').textContent = displayBengali(w.lemma, w.roman);
   document.getElementById('wm-roman').textContent = w.roman;
   document.getElementById('wm-pos').textContent = w.pos;
   document.getElementById('wm-english').textContent = w.english;
@@ -2363,7 +2537,7 @@ function _startVocabCatQuiz(catId) {
 function showVocabCardAt() {
   const w = vlWords[vlIndex];
   document.getElementById('vocab-flashcard').classList.remove('flipped');
-  document.getElementById('vc-bengali').textContent = w.lemma;
+  document.getElementById('vc-bengali').textContent = displayBengali(w.lemma, w.roman);
   document.getElementById('vc-roman').textContent = w.roman;
   document.getElementById('vc-pos').textContent = w.pos;
   document.getElementById('vc-english').textContent = w.english;
@@ -2554,24 +2728,24 @@ function renderVocabQuestion() {
   const qa = document.getElementById('vq-question-area');
   if (q.type === 'listening-mc' || q.type === 'listening-fib') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div class="listening-controls">
         <button class="listening-play-btn" data-action="speak" data-text="${escapeStr(q.audio)}" aria-label="Play sound">▶</button>
         <button class="slow-audio-btn${_audioSlowMode ? ' active' : ''}" data-action="toggle-slow-audio" title="${_audioSlowMode ? 'Slow mode on — click to restore normal speed' : 'Play at half speed'}" aria-label="Toggle slow audio">🐢</button>
       </div>
-      <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">Tap to replay</div>
+      <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">${t('Tap to replay')}</div>
     `;
     setTimeout(() => speakBengali(q.audio), 300);
   } else if (q.type === 'mc' || q.type === 'fib') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
-      <div class="vq-bengali">${q.bengali}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
+      <div class="vq-bengali">${displayBengali(q.bengali, q.roman)}</div>
       <div class="vq-hint">${q.roman}</div>
       <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(q.bengali)}" aria-label="Play pronunciation">🔊</button>
     `;
   } else {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div style="font-size:2.2rem;font-weight:700;margin:16px 0">${q.english}</div>
     `;
   }
@@ -2588,7 +2762,7 @@ function renderVocabQuestion() {
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-answer="${escapeStr(opt)}" data-action="answer-mc-vocab">${opt}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-vocab\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-vocab">${t("I don't know")}</button>`;
     attachQuizKeyHandler('vq');
   } else {
     const vqHintHtml = q.hint
@@ -2597,12 +2771,12 @@ function renderVocabQuestion() {
     const vqKbdHtml = getFibMode() !== 'latin'
       ? `<button class="bng-kbd-toggle" data-action="show-kbd" data-input="vq-fib-input">বাং ▲</button>` : '';
     aa.innerHTML = `<div class="fib-area">
-      <input type="text" class="fib-input" id="vq-fib-input" placeholder="Type your answer…"
+      <input type="text" class="fib-input" id="vq-fib-input" placeholder="${t('Type your answer…')}"
         autocomplete="off" autocapitalize="off">
-      <button class="btn-primary fib-submit" data-action="answer-vocab-fib">Check</button>
+      <button class="btn-primary fib-submit" data-action="answer-vocab-fib">${t('Check')}</button>
       ${vqHintHtml}${vqKbdHtml}
     </div>
-    <button class="idk-btn" data-action="dont-know-vocab">I don't know</button>`;
+    <button class="idk-btn" data-action="dont-know-vocab">${t("I don't know")}</button>`;
     setTimeout(() => document.getElementById('vq-fib-input')?.focus(), 100);
   }
 }
@@ -2720,7 +2894,7 @@ function showVocabResults() {
     document.getElementById('vr-ring').style.strokeDashoffset = offset;
   }, 100);
   document.getElementById('vr-pct').textContent = pct + '%';
-  const titles = pct === 100 ? 'Perfect! 🌟' : pct >= 80 ? 'Great job!' : pct >= 50 ? 'Good effort!' : 'Keep practicing!';
+  const titles = pct === 100 ? t('Perfect! 🌟') : pct >= 80 ? t('Great job!') : pct >= 50 ? t('Good effort!') : t('Keep practicing!');
   document.getElementById('vr-title').textContent = titles;
   const vqid = vqCatRef || 'vocab';
   const vhist = progress.quizHistory || (progress.quizHistory = {});
@@ -3044,7 +3218,7 @@ function renderGlCard() {
   if (!card) return;
   card.classList.remove('flipped');
   document.getElementById('gl-card-front').innerHTML =
-    `<div class="ge-bengali">${ex.bengali}</div>`;
+    `<div class="ge-bengali">${displayBengali(ex.bengali, ex.roman)}</div>`;
   document.getElementById('gl-card-back').innerHTML =
     `<div class="ge-roman">${ex.roman}</div><div class="ge-english">${ex.english}</div>`;
   document.getElementById('gl-card-counter').textContent =
@@ -3125,23 +3299,23 @@ function renderGrammarQuestion() {
   if (q.type === 'translate-mc') {
     if (q.bengali) {
       qa.innerHTML = `
-        <div class="quiz-prompt">${q.prompt}</div>
-        <div class="vq-bengali">${q.bengali}</div>
+        <div class="quiz-prompt">${t(q.prompt)}</div>
+        <div class="vq-bengali">${displayBengali(q.bengali, q.roman)}</div>
         ${q.roman ? '<div class="vq-hint">' + q.roman + '</div>' : ''}
       `;
     } else {
-      qa.innerHTML = `<div class="quiz-prompt">${q.prompt}</div>`;
+      qa.innerHTML = `<div class="quiz-prompt">${t(q.prompt)}</div>`;
     }
     aa.innerHTML = '<div class="mc-options">' +
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-answer="${escapeStr(opt)}" data-action="answer-mc-grammar">${opt}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-grammar\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-grammar">${t("I don't know")}</button>`;
     attachQuizKeyHandler('gq');
 
   } else if (q.type === 'fib') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div style="font-family:'Noto Sans Bengali',sans-serif;font-size:1.5rem;margin:12px 0">${q.sentence}</div>
       ${q.roman ? '<div class="vq-hint">' + q.roman + '</div>' : ''}
       ${q.english ? '<div class="vq-hint">' + q.english + '</div>' : ''}
@@ -3149,17 +3323,17 @@ function renderGrammarQuestion() {
     const gqKbdHtml = getFibMode() !== 'latin'
       ? `<button class="bng-kbd-toggle" data-action="show-kbd" data-input="gq-fib-input">বাং ▲</button>` : '';
     aa.innerHTML = `<div class="fib-area">
-      <input type="text" class="fib-input" id="gq-fib-input" placeholder="Type your answer…"
+      <input type="text" class="fib-input" id="gq-fib-input" placeholder="${t('Type your answer…')}"
         autocomplete="off" autocapitalize="off">
-      <button class="btn-primary fib-submit" data-action="answer-grammar-fib">Check</button>
+      <button class="btn-primary fib-submit" data-action="answer-grammar-fib">${t('Check')}</button>
       ${gqKbdHtml}
     </div>
-    <button class="idk-btn" data-action="dont-know-grammar">I don't know</button>`;
+    <button class="idk-btn" data-action="dont-know-grammar">${t("I don't know")}</button>`;
     setTimeout(() => document.getElementById('gq-fib-input')?.focus(), 100);
 
   } else if (q.type === 'word-order') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       ${q.english ? '<div class="vq-hint">' + q.english + '</div>' : ''}
     `;
     const shuffled = shuffle([...q.words]);
@@ -3168,17 +3342,17 @@ function renderGrammarQuestion() {
       <div class="word-tiles" id="gq-word-tiles">
         ${shuffled.map((w, i) => `<div class="word-tile" data-idx="${i}" data-word="${w}" data-action="select-word-tile">${w}</div>`).join('')}
       </div>
-      <button class="btn-primary wo-check-btn" data-action="check-word-order">Check Order</button>
+      <button class="btn-primary wo-check-btn" data-action="check-word-order">${t('Check Order')}</button>
     </div>
-    <button class="idk-btn" data-action="dont-know-grammar">I don't know</button>`;
+    <button class="idk-btn" data-action="dont-know-grammar">${t("I don't know")}</button>`;
 
   } else if (q.type === 'error-spot') {
-    qa.innerHTML = `<div class="quiz-prompt">${q.prompt}</div>`;
+    qa.innerHTML = `<div class="quiz-prompt">${t(q.prompt)}</div>`;
     aa.innerHTML = '<div class="mc-options">' +
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-answer="${escapeStr(opt)}" data-action="answer-mc-grammar">${opt}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-grammar\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-grammar">${t("I don't know")}</button>`;
     attachQuizKeyHandler('gq');
   }
 }
@@ -3379,8 +3553,8 @@ function showGrammarResults() {
     document.getElementById('gr-ring').style.strokeDashoffset = offset;
   }, 100);
   document.getElementById('gr-pct').textContent = pct + '%';
-  const titles = pct === 100 ? 'Perfect! 🌟' : pct >= 80 ? 'Great job!' : pct >= 50 ? 'Good effort!' : 'Keep practicing!';
-  document.getElementById('gr-title').textContent = titles;
+  const grTitles = pct === 100 ? t('Perfect! 🌟') : pct >= 80 ? t('Great job!') : pct >= 50 ? t('Good effort!') : t('Keep practicing!');
+  document.getElementById('gr-title').textContent = grTitles;
   const gqid = gqIsMixed ? 'grammar-mixed' : (currentGrammarLesson ? currentGrammarLesson.id : 'grammar');
   const ghist = progress.quizHistory || (progress.quizHistory = {});
   const gprev = ghist[gqid] || { best: -1 };
@@ -3752,7 +3926,7 @@ function renderPlacementQuestionByType(q, qa, aa) {
   // ── Alphabet questions ──
   if (q.stage === 'alphabet') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div class="quiz-letter">${q.letter}</div>
       <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(q.letter)}" aria-label="Play pronunciation">🔊</button>
     `;
@@ -3779,8 +3953,8 @@ function renderPlacementQuestionByType(q, qa, aa) {
   // ── Vocabulary questions ──
   if (q.stage === 'vocabulary') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
-      <div class="vq-bengali">${q.bengali}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
+      <div class="vq-bengali">${displayBengali(q.bengali, q.roman)}</div>
       <div class="vq-hint">${q.roman}</div>
       <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(q.bengali)}" aria-label="Play pronunciation">🔊</button>
     `;
@@ -3807,8 +3981,8 @@ function renderPlacementQuestionByType(q, qa, aa) {
   // ── Phrases questions ──
   if (q.stage === 'phrases') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
-      <div class="vq-bengali">${q.bengali}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
+      <div class="vq-bengali">${displayBengali(q.bengali, q.roman)}</div>
       <div class="vq-hint">${q.roman}</div>
       <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(q.bengali)}" aria-label="Play pronunciation">🔊</button>
     `;
@@ -3823,13 +3997,13 @@ function renderPlacementQuestionByType(q, qa, aa) {
   if (q.type === 'translate-mc' || q.type === 'error-spot') {
     if (q.bengali) {
       qa.innerHTML = `
-        <div class="quiz-prompt">${q.prompt}</div>
-        <div class="vq-bengali">${q.bengali}</div>
+        <div class="quiz-prompt">${t(q.prompt)}</div>
+        <div class="vq-bengali">${displayBengali(q.bengali, q.roman)}</div>
         ${q.roman ? '<div class="vq-hint">' + q.roman + '</div>' : ''}
         <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(q.bengali)}" aria-label="Play pronunciation">🔊</button>
       `;
     } else {
-      qa.innerHTML = `<div class="quiz-prompt">${q.prompt}</div>`;
+      qa.innerHTML = `<div class="quiz-prompt">${t(q.prompt)}</div>`;
     }
     aa.innerHTML = '<div class="mc-options">' +
       q.options.map(opt =>
@@ -4340,6 +4514,7 @@ function enterAppAsGuest() {
   document.getElementById('main-nav').style.display = '';
   document.getElementById('tab-bar').style.display = '';
   applyThemePalette(getThemePalette());
+  applyDisplayMode();
   updateNav();
   updatePlacementRetakeButton();
   switchTab('alphabet');
@@ -4354,6 +4529,7 @@ function enterApp() {
   document.getElementById('tab-bar').style.display = '';
   migrateProgress();
   applyThemePalette(getThemePalette());
+  applyDisplayMode();
   updateNav();
   updatePlacementRetakeButton();
   switchTab('alphabet');
@@ -4425,6 +4601,7 @@ function openSettingsPanel() {
   updateProfileMenuHeader();
   _updateFibModeChips();
   _updateListenModeChips();
+  _updateDisplayModeChips();
   _updateThemeSwatches();
   renderVoiceSelector();
   const statusEl = document.getElementById('slow-audio-status');
@@ -4500,6 +4677,47 @@ function _updateListenModeChips() {
     const el = document.getElementById('listenmode-' + m);
     if (el) el.classList.toggle('active', m === mode);
   });
+}
+
+// ── Display Mode ─────────────────────────────────────────────────────────────
+function getDisplayMode() {
+  return progress.settings?.displayMode || DEFAULT_PROGRESS_SETTINGS.displayMode;
+}
+function setDisplayMode(mode) {
+  if (!progress.settings) progress.settings = _defaultProgressSettings();
+  progress.settings.displayMode = mode;
+  saveProgress();
+  _updateDisplayModeChips();
+  applyDisplayMode();
+}
+function _updateDisplayModeChips() {
+  const mode = getDisplayMode();
+  ['standard','romanized','immersion'].forEach(m => {
+    const el = document.getElementById('dispmode-' + m);
+    if (el) el.classList.toggle('active', m === mode);
+  });
+  const hideEnglishRow = document.getElementById('hide-english-row');
+  if (hideEnglishRow) hideEnglishRow.style.display = mode === 'immersion' ? '' : 'none';
+  const hideBtn = document.getElementById('settings-hide-english-btn');
+  if (hideBtn) {
+    const on = getHideEnglish();
+    hideBtn.classList.toggle('active', on);
+    const statusEl = document.getElementById('hide-english-status');
+    if (statusEl) statusEl.textContent = on ? 'On' : 'Off';
+  }
+}
+function getHideEnglish() {
+  return !!(progress.settings?.hideEnglish);
+}
+function setHideEnglish(val) {
+  if (!progress.settings) progress.settings = _defaultProgressSettings();
+  progress.settings.hideEnglish = !!val;
+  saveProgress();
+  applyDisplayMode();
+}
+function toggleHideEnglish() {
+  setHideEnglish(!getHideEnglish());
+  _updateDisplayModeChips();
 }
 
 // ── Cultural theme palette ───────────────────────────────────────────────────
@@ -5436,7 +5654,7 @@ function renderTodayScreen() {
     html += `<div class="today-lesson-card">
       <div class="tlc-badge">📚 Lesson of the Day</div>
       <div class="tlc-title">Lesson ${lessonOfDay.number}: ${escHtml(lessonOfDay.title)}</div>
-      ${firstExample ? `<div class="tlc-example"><span class="tlc-bn">${escHtml(firstExample.bengali)}</span><span class="tlc-en">${escHtml(firstExample.english)}</span></div>` : ''}
+      ${firstExample ? `<div class="tlc-example"><span class="tlc-bn">${escHtml(displayBengali(firstExample.bengali, firstExample.roman))}</span><span class="tlc-en">${escHtml(firstExample.english)}</span></div>` : ''}
       <button class="btn-primary today-action-btn" data-action="open-grammar-lesson" data-id="${lessonOfDay.id}">Start Lesson →</button>
     </div>`;
   }
@@ -5488,7 +5706,7 @@ function renderTodayScreen() {
     </div>`;
   if (newWords.length > 0) {
     html += '<div class="today-word-list">' + newWords.map(w =>
-      `<div class="today-word-chip"><span class="today-word-bn">${escHtml(w.lemma)}</span><span class="today-word-en">${escHtml(w.english)}</span></div>`
+      `<div class="today-word-chip"><span class="today-word-bn">${escHtml(displayBengali(w.lemma, w.roman))}</span><span class="today-word-en">${escHtml(w.english)}</span></div>`
     ).join('') + '</div>';
     html += `<button class="btn-secondary today-action-btn" data-action="vocab-practice">Study These →</button>`;
   } else {
@@ -6363,7 +6581,7 @@ function renderPsCard() {
   if (!card) return;
   card.classList.remove('flipped');
   document.getElementById('ps-card-front').innerHTML =
-    `<div class="ge-bengali">${phrase.bengali}</div>`;
+    `<div class="ge-bengali">${displayBengali(phrase.bengali, phrase.roman)}</div>`;
   let backHtml = `<div class="ge-roman">${phrase.roman}</div><div class="ge-english">${phrase.english}</div>`;
   if (phrase.notes) backHtml += `<div class="ge-notes">${phrase.notes}</div>`;
   if (phrase.reply) backHtml += `<div class="ge-notes" style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px"><em>Natural reply:</em> ${phrase.reply.bengali} — ${phrase.reply.english}</div>`;
@@ -6560,32 +6778,32 @@ function renderPhrasesQuestion() {
 
   if (q.type === 'phrases-mc') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
-      <div class="vq-bengali">${q.bengali}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
+      <div class="vq-bengali">${displayBengali(q.bengali, q.roman)}</div>
       <div class="vq-hint">${escHtml(q.roman)}</div>
     `;
     aa.innerHTML = '<div class="mc-options">' +
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-answer="${escapeStr(opt)}" data-action="answer-mc-phrases">${escHtml(opt)}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-phrases\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-phrases">${t("I don't know")}</button>`;
     attachQuizKeyHandler('phq');
 
   } else if (q.type === 'phrases-mc-reverse') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div class="vq-hint">${escHtml(q.english)}</div>
     `;
     aa.innerHTML = '<div class="mc-options">' +
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-answer="${escapeStr(opt)}" data-action="answer-mc-phrases">${opt}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-phrases\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-phrases">${t("I don't know")}</button>`;
     attachQuizKeyHandler('phq');
 
   } else if (q.type === 'phrases-listening') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <button class="listening-play-btn" data-action="speak" data-text="${escapeStr(q.audio)}" aria-label="Play phrase">▶ Play</button>
     `;
     setTimeout(() => speakBengali(q.audio, 0.85), 300);
@@ -6593,33 +6811,33 @@ function renderPhrasesQuestion() {
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-answer="${escapeStr(opt)}" data-action="answer-mc-phrases">${escHtml(opt)}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-phrases\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-phrases">${t("I don't know")}</button>`;
     attachQuizKeyHandler('phq');
 
   } else if (q.type === 'phrases-fib') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
       <div class="vq-hint">${escHtml(q.english)}</div>
     `;
     aa.innerHTML = `<div class="fib-area">
-      <input type="text" class="fib-input" id="phq-fib-input" placeholder="Type romanization…"
+      <input type="text" class="fib-input" id="phq-fib-input" placeholder="${t('Type your answer…')}"
         autocomplete="off" autocapitalize="off">
-      <button class="btn-primary fib-submit" data-action="answer-phrases-fib">Check</button>
+      <button class="btn-primary fib-submit" data-action="answer-phrases-fib">${t('Check')}</button>
     </div>
-    <button class="idk-btn" data-action="dont-know-phrases">I don't know</button>`;
+    <button class="idk-btn" data-action="dont-know-phrases">${t("I don't know")}</button>`;
     setTimeout(() => document.getElementById('phq-fib-input')?.focus(), 100);
 
   } else if (q.type === 'phrases-dialogue') {
     qa.innerHTML = `
-      <div class="quiz-prompt">${q.prompt}</div>
-      <div class="vq-bengali">${q.speaker}</div>
+      <div class="quiz-prompt">${t(q.prompt)}</div>
+      <div class="vq-bengali">${displayBengali(q.speaker, '')}</div>
       <div class="vq-hint">"${escHtml(q.speakerEnglish)}"</div>
     `;
     aa.innerHTML = '<div class="mc-options">' +
       q.options.map((opt, i) =>
         `<button class="mc-btn" data-answer="${escapeStr(opt)}" data-action="answer-mc-phrases">${opt}<span class="mc-key-hint">[${i+1}]</span></button>`
       ).join('') + '</div>' +
-      "<button class=\"idk-btn\" data-action=\"dont-know-phrases\">I don't know</button>";
+      `<button class="idk-btn" data-action="dont-know-phrases">${t("I don't know")}</button>`;
     attachQuizKeyHandler('phq');
   }
 }
@@ -6737,8 +6955,8 @@ function showPhrasesResults() {
     document.getElementById('phr-ring').style.strokeDashoffset = offset;
   }, 100);
   document.getElementById('phr-pct').textContent = pct + '%';
-  const title = pct === 100 ? 'Perfect! 🌟' : pct >= 80 ? 'Great job!' : pct >= 50 ? 'Good effort!' : 'Keep practicing!';
-  document.getElementById('phr-title').textContent = title;
+  const phrTitle = pct === 100 ? t('Perfect! 🌟') : pct >= 80 ? t('Great job!') : pct >= 50 ? t('Good effort!') : t('Keep practicing!');
+  document.getElementById('phr-title').textContent = phrTitle;
   const phid = phqIsMixed ? 'phrases-mixed' : (phqCurrentSituationSlug || 'phrases');
   const phist = progress.quizHistory || (progress.quizHistory = {});
   const phprev = phist[phid] || { best: -1 };
@@ -7183,6 +7401,8 @@ document.addEventListener('click', function(e) {
     case 'open-search': openSearch(); break;
     case 'set-fib-mode': setFibMode(a.mode); break;
     case 'set-listening-mode': setListeningMode(a.mode); break;
+    case 'set-display-mode': setDisplayMode(a.mode); break;
+    case 'toggle-hide-english': toggleHideEnglish(); break;
     case 'set-theme': setThemePalette(a.palette || a.theme); break;
     case 'switch-profile': switchProfile(); break;
     case 'import-progress': importProgress(); break;

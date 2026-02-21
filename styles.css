@@ -1933,3 +1933,56 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   color: var(--text-dim);
   line-height: 1.5;
 }
+
+/* ═══════════════════════════════════
+   DISPLAY MODE — Romanized / Immersion
+   ═══════════════════════════════════ */
+
+/* ── Romanized mode: use latin font, italicize Bengali-turned-roman ── */
+[data-display-mode="romanized"] .letter-display,
+[data-display-mode="romanized"] .quiz-letter,
+[data-display-mode="romanized"] .vq-bengali,
+[data-display-mode="romanized"] .ge-bengali,
+[data-display-mode="romanized"] .vr-bengali,
+[data-display-mode="romanized"] .vc-bengali,
+[data-display-mode="romanized"] .chart-letter,
+[data-display-mode="romanized"] .today-word-bn,
+[data-display-mode="romanized"] #wm-bengali {
+  font-family: inherit;
+  font-style: italic;
+}
+
+/* ── Immersion mode: hide romanized hints, apply Bengali font to UI ── */
+[data-display-mode="immersion"] .vr-roman,
+[data-display-mode="immersion"] .vq-hint,
+[data-display-mode="immersion"] .letter-translit,
+[data-display-mode="immersion"] #vc-roman,
+[data-display-mode="immersion"] #wm-roman,
+[data-display-mode="immersion"] .chart-romanized {
+  display: none;
+}
+[data-display-mode="immersion"] .tab-btn,
+[data-display-mode="immersion"] .btn-primary,
+[data-display-mode="immersion"] .btn-secondary,
+[data-display-mode="immersion"] .quiz-prompt,
+[data-display-mode="immersion"] .back-btn,
+[data-display-mode="immersion"] .nav-btn,
+[data-display-mode="immersion"] .idk-btn,
+[data-display-mode="immersion"] .card-hint,
+[data-display-mode="immersion"] .results-title,
+[data-display-mode="immersion"] .guest-banner,
+[data-display-mode="immersion"] .profile-subtitle {
+  font-family: 'Noto Sans Bengali', sans-serif;
+}
+
+/* ── Hide English meanings (advanced immersion sub-feature) ── */
+[data-hide-english="true"] .vocab-card-english,
+[data-hide-english="true"] .ge-english,
+[data-hide-english="true"] .ps-english,
+[data-hide-english="true"] #wm-english,
+[data-hide-english="true"] .vr-english,
+[data-hide-english="true"] .today-word-en,
+[data-hide-english="true"] .tlc-en {
+  display: none;
+}
+

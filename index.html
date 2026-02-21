@@ -15,7 +15,7 @@
 <div class="profile-screen" id="profile-screen">
   <a href="https://robirahman.com" class="back-to-site">← robirahman.com</a>
   <h1><span>বাংলা</span> শিক্ষা</h1>
-  <p class="profile-subtitle">Choose your profile</p>
+  <p class="profile-subtitle" data-t="Choose your profile">Choose your profile</p>
   <div class="profile-list" id="profile-list"></div>
   <div class="profile-input-wrap" id="profile-input-wrap">
     <input class="profile-input" id="profile-name-input" type="text" placeholder="Enter your name" maxlength="30" autocomplete="off">
@@ -46,20 +46,20 @@
 </nav>
 
 <div class="tab-bar" id="tab-bar" style="display:none">
-  <button class="tab-btn" id="tab-today" data-action="switch-tab" data-tab="today">Today<span class="tab-review-badge" id="today-tab-badge" style="display:none"></span></button>
-  <button class="tab-btn active" data-action="switch-tab" data-tab="alphabet">Alphabet</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="vocabulary">Vocabulary</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="grammar">Grammar</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="numbers">Numbers</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="phrases">Phrases</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="trivia">Trivia</button>
+  <button class="tab-btn" id="tab-today" data-action="switch-tab" data-tab="today"><span data-t="Today">Today</span><span class="tab-review-badge" id="today-tab-badge" style="display:none"></span></button>
+  <button class="tab-btn active" data-action="switch-tab" data-tab="alphabet" data-t="Alphabet">Alphabet</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="vocabulary" data-t="Vocabulary">Vocabulary</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="grammar" data-t="Grammar">Grammar</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="numbers" data-t="Numbers">Numbers</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="phrases" data-t="Phrases">Phrases</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="trivia" data-t="Trivia">Trivia</button>
   <button class="pt-retake-btn" id="pt-retake-btn" style="display:none" data-action="start-placement-test">Retake Placement</button>
   <button class="review-due-btn" id="review-due-btn" style="display:none" data-action="start-review-session">🔔 Review Due (<span id="review-due-count">0</span>)</button>
 </div>
 
 <div id="guest-banner" class="guest-banner" style="display:none">
-  <span>Create a profile to save your progress</span>
-  <button data-action="show-profile-screen" class="guest-banner-btn">Create Profile</button>
+  <span data-t="Create a profile to save your progress">Create a profile to save your progress</span>
+  <button data-action="show-profile-screen" class="guest-banner-btn" data-t="Create Profile">Create Profile</button>
 </div>
 
 <!-- SETTINGS PANEL -->
@@ -89,6 +89,15 @@
       <button class="mode-chip" id="listenmode-text" data-action="set-listening-mode" data-mode="text">Text only</button>
       <button class="mode-chip" id="listenmode-mixed" data-action="set-listening-mode" data-mode="mixed">Text + Audio</button>
       <button class="mode-chip" id="listenmode-listening" data-action="set-listening-mode" data-mode="listening">Audio only</button>
+    </div>
+    <div class="settings-section-label">Display Mode</div>
+    <div class="settings-mode-group">
+      <button class="mode-chip" id="dispmode-standard" data-action="set-display-mode" data-mode="standard">Standard</button>
+      <button class="mode-chip" id="dispmode-romanized" data-action="set-display-mode" data-mode="romanized">Romanized</button>
+      <button class="mode-chip" id="dispmode-immersion" data-action="set-display-mode" data-mode="immersion">নিমজ্জন (Immersion)</button>
+    </div>
+    <div id="hide-english-row" style="display:none">
+      <button class="settings-toggle-btn" data-action="toggle-hide-english" id="settings-hide-english-btn">🙈 Hide English meanings: <span id="hide-english-status">Off</span></button>
     </div>
     <details class="settings-collapsible" id="voice-settings">
       <summary class="settings-section-label settings-collapsible-hdr">Voice</summary>
@@ -266,7 +275,7 @@
 <div class="screen" id="today-screen">
   <div class="hero">
     <h2>আজকের পরিকল্পনা</h2>
-    <p>Today's study plan</p>
+    <p data-t="Today's study plan">Today's study plan</p>
   </div>
   <div id="today-body" style="padding:0 1rem 2rem"></div>
 </div>
@@ -275,7 +284,7 @@
 <div class="screen active" id="home">
   <div class="hero">
     <h2>বাংলা বর্ণমালা</h2>
-    <p>Master the Bengali alphabet step by step</p>
+    <p data-t="Master the Bengali alphabet step by step">Master the Bengali alphabet step by step</p>
   </div>
   <div class="module-grid" id="module-grid"></div>
 </div>
@@ -284,7 +293,7 @@
 <div class="screen" id="vocab-home">
   <div class="hero">
     <h2>শব্দভাণ্ডার</h2>
-    <p>Learn 5,000+ common Bengali words</p>
+    <p data-t="Learn 5,000+ common Bengali words">Learn 5,000+ common Bengali words</p>
   </div>
   <div class="module-grid" id="vocab-module-grid"></div>
 </div>
@@ -487,7 +496,7 @@
 <div class="screen" id="chart">
   <div class="chart-header">
     <button class="back-btn" data-action="show-screen" data-screen="home">← Back</button>
-    <h2>Full Alphabet Chart</h2>
+    <h2 data-t="Full Alphabet Chart">Full Alphabet Chart</h2>
   </div>
   <div id="chart-content"></div>
 </div>
@@ -511,7 +520,7 @@
 <div class="screen" id="grammar-home">
   <div class="hero">
     <h2>ব্যাকরণ</h2>
-    <p>Master Bengali grammar in 36 lessons — including sound changes, reading passages, and Mixed Review</p>
+    <p data-t="Master Bengali grammar in 36 lessons — including sound changes, reading passages, and Mixed Review">Master Bengali grammar in 36 lessons — including sound changes, reading passages, and Mixed Review</p>
   </div>
   <div class="conj-table-section">
     <button class="conj-table-toggle" data-action="toggle-conj-table" aria-expanded="false" id="conj-toggle-btn">
@@ -581,7 +590,7 @@
 
 <!-- NUMBERS HOME -->
 <div class="screen" id="numbers-home">
-  <div class="hero"><h2>সংখ্যা</h2><p>Bengali numerals and number words</p></div>
+  <div class="hero"><h2>সংখ্যা</h2><p data-t="Bengali numerals and number words">Bengali numerals and number words</p></div>
   <div class="module-grid" id="numbers-module-grid"></div>
 </div>
 
@@ -589,7 +598,7 @@
 <div class="screen" id="phrases-home">
   <div class="hero">
     <h2>বাক্যাংশ</h2>
-    <p>Learn conversational phrases for real-life situations</p>
+    <p data-t="Learn conversational phrases for real-life situations">Learn conversational phrases for real-life situations</p>
   </div>
   <div class="module-grid" id="phrases-module-grid"></div>
 </div>
@@ -653,7 +662,7 @@
 <div class="screen" id="trivia-home">
   <div class="hero">
     <h2>বাংলা তথ্য</h2>
-    <p>Test your knowledge of Bengali culture, history, and more</p>
+    <p data-t="Test your knowledge of Bengali culture, history, and more">Test your knowledge of Bengali culture, history, and more</p>
   </div>
   <div class="module-grid" id="trivia-category-grid"></div>
 </div>
