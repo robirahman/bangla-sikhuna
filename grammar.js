@@ -289,7 +289,7 @@ For "করা" (to do): আমি করলাম (ami korlam — I did), ত�
 Some verbs have irregular past forms: যাওয়া → গেলাম (gelam — I went), খাওয়া → খেলাম (khelam — I ate), আসা → এলাম (elam — I came).`,
     examples: [
       { bengali: 'আমি গেলাম', roman: 'ami gelam', english: 'I went' },
-      { bengali: 'তুমি খেলে', roman: 'tumi khele', english: 'You ate' },
+      { bengali: 'তুমি দেখলে', roman: 'tumi dekhle', english: 'You saw' },
       { bengali: 'সে এলো', roman: 'she elo', english: 'He/she came' },
       { bengali: 'আপনি কী করলেন?', roman: 'apni ki korlen?', english: 'What did you do? (formal)' },
       { bengali: 'আমরা দেখলাম', roman: 'amra dekhlam', english: 'We saw' },
@@ -303,7 +303,7 @@ Some verbs have irregular past forms: যাওয়া → গেলাম (ge
       { type: 'word-order', prompt: 'Arrange: "What did you do? (formal)"', words: ['করলেন?', 'কী', 'আপনি'], correct: ['আপনি', 'কী', 'করলেন?'], english: 'What did you do?', roman: 'apni ki korlen?' },
       { type: 'fib', prompt: 'Complete: "আমি ___" (went)', sentence: 'আমি ___', roman: 'ami ___', english: 'I went', acceptable: ['গেলাম', 'gelam'], answer: 'গেলাম' },
       { type: 'translate-mc', prompt: 'The past tense ending for আমি is:', bengali: '-লাম', roman: '-lam', correct: '-লাম (-lam)', options: ['-লাম (-lam)', '-লে (-le)', '-লো (-lo)', '-লেন (-len)'] },
-      { type: 'word-order', prompt: 'Arrange: "You ate"', words: ['খেলে', 'তুমি'], correct: ['তুমি', 'খেলে'], english: 'You ate', roman: 'tumi khele' },
+      { type: 'word-order', prompt: 'Arrange: "You saw"', words: ['দেখলে', 'তুমি'], correct: ['তুমি', 'দেখলে'], english: 'You saw', roman: 'tumi dekhle' },
     ]
   },
 

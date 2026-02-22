@@ -105,7 +105,7 @@ const VOCAB_DATA_RAW = [
 ["তাঁর","tar","his / her / their","pronouns","pronoun","তাঁর নাম রহিম। (tar nam rohim — His name is Rahim.)"],
 ["যার","jar","whose / which","pronouns","pronoun","যার বই এটি? (jar boi eti — Whose book is this?)"],
 ["যারা","jara","who (plural)","pronouns","pronoun","যারা আসবে তারা খাবে। (jara asbe tara khabe — Those who come will eat.)"],
-["সবাই","sbai","everyone / all","pronouns","pronoun","সবাই খুশি। (sbai khushi — Everyone is happy.)"],
+["সবাই","shobai","everyone / all","pronouns","pronoun","সবাই খুশি। (shobai khushi — Everyone is happy.)"],
 ["আমাকে","amake","me","pronouns","pronoun","তুমি আমাকে সাহায্য করবে। (tumi amake sahayyo korbe — You will help me.)"],
 ["কী","ki","what","pronouns","pronoun","তুমি কী চাও? (tumi ki chao — What do you want?)"],
 // ─── NUMBERS ───
@@ -127,7 +127,7 @@ const VOCAB_DATA_RAW = [
 ["ব্যবহার","byabhar","use / usage","verbs","noun","এই যন্ত্রের ব্যবহার সহজ। (ei jontrer byabhar shohoj — The use of this instrument is easy.)"],
 ["ধরে","dhore","holding / catching / assuming","verbs","verb","তিনি হাত ধরে চলেছেন। (tin hat dhore cholechhen — He is walking while holding hands.)"],
 ["হলো","holo","is / was / became","verbs","verb","এটি একটি ভাল দিন হলো। (eti ekti bhal din holo — It was a good day.)"],
-["তৈরি","taiiri","made / created / prepared","verbs","verb","আমরা একটি পরিকল্পনা তৈরি করেছি। (amra ekti porikolpna tairi korechi — We made a plan.)"],
+["তৈরি","tairi","made / created / prepared","verbs","verb","আমরা একটি পরিকল্পনা তৈরি করেছি। (amra ekti porikolpna tairi korechi — We made a plan.)"],
 ["যাচ্ছে","jachhche","is going","verbs","verb","সে স্কুলে যাচ্ছে। (she shkuley jachhche — She is going to school.)"],
 ["চাই","chai","want / desire","verbs","verb","আমি পড়তে চাই। (ami porhte chai — I want to study.)"],
 ["দেয়","dey","gives","verbs","verb","সে সাহায্য দেয়। (she sahayyo dey — He helps.)"],
@@ -219,8 +219,8 @@ const VOCAB_DATA_RAW = [
 ["বলা","bola","to say / to tell","verbs","verb","সত্য কথা বলা ভালো। (sotty kotha bola bhalo — It is good to speak the truth.)"],
 ["করুন","korun","do / make (formal/imperative)","verbs","verb","এটি করুন। (eti korun — Do this.)"],
 ["পড়ে","pore","falls / happens / occurs","verbs","verb","বৃষ্টি পড়ে গেছে। (brishti pore geche — It has rained.)"],
-["হয়েছিল","hoechilos","had happened / had been","verbs","verb","এটি আগে হয়েছিল। (eti age hoechilos — This had happened before.)"],
-["অনুষ্ঠিত","anushthito","held / conducted / organized","verbs","verb","অনুষ্ঠানটি গতকাল অনুষ্ঠিত হয়েছিল। (anusthanto gatkal anushthito hoechilos — The event was held yesterday.)"],
+["হয়েছিল","hoyechhilo","had happened / had been","verbs","verb","এটি আগে হয়েছিল। (eti age hoyechhilo — This had happened before.)"],
+["অনুষ্ঠিত","anushthito","held / conducted / organized","verbs","verb","অনুষ্ঠানটি গতকাল অনুষ্ঠিত হয়েছিল। (anusthanti gatkal anushthito hoyechhilo — The event was held yesterday.)"],
 ["দেখে","dekhe","seeing / watching / looking at","verbs","verb","তিনি আমাকে দেখে হাসলেন। (tin amake dekhe haslen — He laughed upon seeing me.)"],
 ["দেওয়া","deowa","to give","verbs","verb","আমাকে একটু সময় দাও। (amake ektu shomoy dao — Give me a little time.)"],
 ["যেতে","jete","to go","verbs","verb","আমাকে যেতে হবে। (amake jete hobe — I have to go.)"],
@@ -348,7 +348,7 @@ const VOCAB_DATA_RAW = [
 ["যাওয়ার","jawar","of going / going's","verbs","verb","দেশ যাওয়ার আগে বিদায় নিন। (desh jawar age biday nin — Say goodbye before going to the country.)"],
 // ─── FAMILY ───
 ["পরিবারের","paribarer","family's / of the family","family","noun","পরিবারের সকল সদস্য উপস্থিত ছিল। (paribarer sokol shōdoshyo upōsthit chhil — All family members were present.)"],
-["বিয়ে","biē","marriage / wedding","family","noun","তাদের বিয়ে হবে পরের মাসে। (tader biē hōbē pōrer mashe — Their wedding will be next month.)"],
+["বিয়ে","biye","marriage / wedding","family","noun","তাদের বিয়ে হবে পরের মাসে। (tader biye hobe porer mashe — Their wedding will be next month.)"],
 ["মহিলা","mohila","woman / female","family","noun","একজন মহিলা এসেছিলেন। (ekjon mohila esechhhilen — A woman came.)"],
 ["মায়ের","mayer","mother's","family","noun","মায়ের ভালোবাসা অতুলনীয়। (mayer valobasha otulniy — Mother's love is incomparable.)"],
 // ─── ADJECTIVES ───
