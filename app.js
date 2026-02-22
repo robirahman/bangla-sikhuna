@@ -8,6 +8,7 @@ import { GRAMMAR_LESSONS } from './grammar.js';
 import { VOCAB_DATA, VOCAB_CATEGORIES, VOCAB_TOTAL_WORDS } from './vocab.js';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from './trivia.js';
 import { RECIPES } from './recipes.js';
+import { MUSIC } from './music.js';
 
 // ════════════════════════════════════════
 //  DISPLAY MODE — Standard / Romanized / Immersion
@@ -712,6 +713,7 @@ function showScreen(id) {
   if (id === 'today-screen') renderTodayScreen();
   if (id === 'trivia-home') renderTriviaHome();
   if (id === 'recipes-home') renderRecipesHome();
+  if (id === 'music-home') renderMusicHome();
   if (id === 'placement-results') renderPlacementResultsUI();
 }
 
@@ -2181,6 +2183,7 @@ const grammarScreens = ['grammar-home','grammar-lesson','grammar-quiz','grammar-
 const phrasesScreens = ['phrases-home','phrases-situation','phrases-quiz','phrases-results'];
 const readingScreens = ['reading-screen'];
 const recipesScreens = ['recipes-home','recipe-detail','recipe-quiz','recipe-results'];
+const musicScreens = ['music-home','music-detail','music-quiz','music-results'];
 
 function switchTab(tab) {
   currentTab = tab;
@@ -2207,6 +2210,8 @@ function switchTab(tab) {
     showScreen('trivia-home');
   } else if (tab === 'recipes') {
     showScreen('recipes-home');
+  } else if (tab === 'music') {
+    showScreen('music-home');
   } else {
     showScreen('grammar-home');
   }
@@ -7579,6 +7584,242 @@ function showRecipeResults() {
   }
 }
 
+// ════════════════════════════════════════
+//  MUSIC
+// ════════════════════════════════════════
+let _musicCurrentId = null;
+let _musicQuestions = [];
+let _musicQIndex = 0;
+let _musicCorrect = 0;
+let _musicAnswered = false;
+let _musicMissed = [];
+let _musicStartTime = null;
+
+function renderMusicHome() {
+  const grid = document.getElementById('music-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  MUSIC.forEach(song => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = song.quiz.length;
+    let answered = 0;
+    song.quiz.forEach(q => {
+      if ((progress.mastery['mq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'music:' + song.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = song.tags.map(tag =>
+      `<span class="music-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${song.icon}</div>
+      <h3>${escHtml(song.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(song.englishName)}</p>
+      <div class="music-meta">${escHtml(song.artist)} · ${escHtml(song.year)}</div>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'music-view';
+    card.dataset.id = song.id;
+    grid.appendChild(card);
+  });
+}
+
+function showMusicDetail(songId) {
+  const song = MUSIC.find(s => s.id === songId);
+  if (!song) return;
+  _musicCurrentId = songId;
+
+  document.getElementById('md-title').textContent = song.bengaliName + ' — ' + song.englishName;
+  const content = document.getElementById('md-content');
+
+  const tagHtml = song.tags.map(tag =>
+    `<span class="music-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  // Build lyrics lines
+  const lyricsBn = song.lyricsBn.map(l => `<div class="music-lyrics-line">${escHtml(l)}</div>`).join('');
+  const lyricsEn = song.lyricsEn.map(l => `<div class="music-lyrics-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="music-meta">🎤 ${escHtml(song.artist)} · ${escHtml(song.year)}</div>
+    <div class="music-section">
+      <p class="music-desc-bn">${escHtml(song.descBn)}</p>
+      <p class="music-desc-en">${escHtml(song.descEn)}</p>
+    </div>
+    <div class="music-section">
+      <h3 class="music-section-title">🎶 ${t('Lyrics')}</h3>
+      <div class="music-lyrics">
+        <div class="music-lyrics-col music-lyrics-bn">${lyricsBn}</div>
+        <div class="music-lyrics-col music-lyrics-en">${lyricsEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="music-start-quiz" data-id="${escHtml(songId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('music-detail');
+}
+
+function startMusicQuiz(songId) {
+  const song = MUSIC.find(s => s.id === songId);
+  if (!song) return;
+  _musicCurrentId = songId;
+  _musicQuestions = shuffle(song.quiz.slice());
+  _musicQIndex = 0;
+  _musicCorrect = 0;
+  _musicAnswered = false;
+  _musicMissed = [];
+  _musicStartTime = Date.now();
+  document.getElementById('mq-title').textContent = song.bengaliName + ' ' + t('Quiz');
+  showScreen('music-quiz');
+  renderMusicQuestion();
+}
+
+function renderMusicQuestion() {
+  const q = _musicQuestions[_musicQIndex];
+  if (!q) return;
+  _musicAnswered = false;
+
+  const total = _musicQuestions.length;
+  const pct = Math.round((_musicQIndex / total) * 100);
+  document.getElementById('mq-progress-fill').style.width = pct + '%';
+  document.getElementById('mq-score').textContent = toBnDigits(_musicQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('mq-feedback').innerHTML = '';
+  document.getElementById('mq-explanation').style.display = 'none';
+  document.getElementById('mq-explanation').textContent = '';
+  document.getElementById('mq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('mq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="music-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerMusicMC(btn, chosen) {
+  if (_musicAnswered) return;
+  _musicAnswered = true;
+  const q = _musicQuestions[_musicQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#mq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('mq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _musicCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('mq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _musicMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'mq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('mq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('mq-next-btn').style.display = 'inline-block';
+}
+
+function musicNext() {
+  _musicQIndex++;
+  if (_musicQIndex >= _musicQuestions.length) {
+    showMusicResults();
+  } else {
+    _musicAnswered = false;
+    renderMusicQuestion();
+  }
+}
+
+function showMusicResults() {
+  showScreen('music-results');
+  const total = _musicQuestions.length;
+  const pct = total > 0 ? Math.round((_musicCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('mr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('mr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('mr-title').textContent = title;
+
+  const bestKey = 'music:' + _musicCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_musicCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('mr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+
+  const missedEl = document.getElementById('mr-missed');
+  if (missedEl) {
+    if (_musicMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _musicMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
 let triviaCurrentCategory = null;
 let triviaQuestions = [];
 let triviaIndex = 0;
@@ -8037,6 +8278,12 @@ document.addEventListener('click', function(e) {
     case 'recipe-mc':          answerRecipeMC(el, +a.idx); break;
     case 'recipe-next':        recipeNext(); break;
     case 'recipe-retry':       startRecipeQuiz(_recipeCurrentId); break;
+    // Music
+    case 'music-view':        showMusicDetail(a.id); break;
+    case 'music-start-quiz':  startMusicQuiz(a.id); break;
+    case 'music-mc':          answerMusicMC(el, +a.idx); break;
+    case 'music-next':        musicNext(); break;
+    case 'music-retry':       startMusicQuiz(_musicCurrentId); break;
     // Trivia
     case 'trivia-mc':         answerTriviaMC(el, +a.idx); break;
     case 'trivia-submit-fib': answerTriviaFIB(); break;
