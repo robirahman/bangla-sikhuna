@@ -1,4 +1,4 @@
-import { VOWELS, CONSONANTS_VELAR, CONSONANTS_PALATAL, CONSONANTS_RETROFLEX, CONSONANTS_DENTAL, CONSONANTS_LABIAL, CONSONANTS_OTHER, CONSONANTS_SPECIAL, ALL_CONSONANTS, ALL_LETTERS, BENGALI_NUMERALS, BENGALI_NUMBER_NAMES, MATRA_COMBOS, CONJUNCTS, STROKE_HINTS, MODULES, NUMBER_MODULES, READING_PASSAGES, MIXED_CURRICULUM, MIXED_WAVE_SIZE, MIXED_INTRO_BATCH, UNLOCK_THRESHOLD, MIXED_QUIZ_SIZE } from './alphabet.js';
+import { VOWELS, CONSONANTS_VELAR, CONSONANTS_PALATAL, CONSONANTS_RETROFLEX, CONSONANTS_DENTAL, CONSONANTS_LABIAL, CONSONANTS_OTHER, CONSONANTS_SPECIAL, ALL_CONSONANTS, ALL_LETTERS, BENGALI_NUMERALS, BENGALI_NUMBER_NAMES, MATRA_COMBOS, CONJUNCTS, STROKE_HINTS, MODULES, NUMBER_MODULES, READING_PASSAGES, MIXED_CURRICULUM, MIXED_WAVE_SIZE, MIXED_INTRO_BATCH, UNLOCK_THRESHOLD, MIXED_QUIZ_SIZE, PHONEME_PAIRS } from './alphabet.js';
 import { generateStringPair, generateDistractors, shuffle } from './quiz-engine.js';
 import { REVIEW_INTERVALS_MS, MAX_REVIEW_LETTERS, MAX_REVIEW_VOCAB, MAX_REVIEW_GRAMMAR, MAX_REVIEW_PHRASES, FSRS_AGAIN, FSRS_HARD, FSRS_GOOD, FSRS_EASY, fsrsInitS, fsrsInitD, fsrsR, fsrsSAfterRecall, fsrsSAfterForgetting, fsrsNextD, masteryFromFsrs } from './fsrs.js';
 import { getLessonOfDay, passageWordCount } from './today.js';
@@ -2673,14 +2673,23 @@ function launchMixedVocabQuiz() {
 //  VOCAB BROWSE
 // ════════════════════════════════════════
 let vbFilter = null;
+let vbLevelFilter = null;
 let vbPage = 0;
 const VB_PAGE_SIZE = 30;
+const CEFR_LEVELS = [
+  { id: 'A1', label: 'A1', desc: 'Beginner' },
+  { id: 'A2', label: 'A2', desc: 'Elementary' },
+  { id: 'B1', label: 'B1', desc: 'Intermediate' },
+  { id: 'B2', label: 'B2', desc: 'Advanced' },
+];
 
 function openVocabBrowse(cat) {
   vbFilter = cat;
+  vbLevelFilter = null;
   vbPage = 0;
   showScreen('vocab-browse');
   document.getElementById('vb-search').value = '';
+  renderLevelChips();
   renderCatChips();
   renderVocabList();
 }
@@ -2695,6 +2704,23 @@ function renderCatChips() {
       if (count === 0) return '';
       return `<div class="cat-chip ${vbFilter === catId ? 'active' : ''}" data-action="set-vocab-filter" data-catid="${catId}">${cat.icon} ${cat.title} (${count})</div>`;
     }).join('');
+}
+
+function renderLevelChips() {
+  const container = document.getElementById('level-chips');
+  if (!container) return;
+  container.innerHTML = `<div class="level-chip ${vbLevelFilter === null ? 'active' : ''}" data-action="set-vocab-level">All Levels</div>` +
+    CEFR_LEVELS.map(lv => {
+      const count = VOCAB_DATA.filter(w => w.level === lv.id).length;
+      return `<div class="level-chip level-${lv.id} ${vbLevelFilter === lv.id ? 'active' : ''}" data-action="set-vocab-level" data-level="${lv.id}">${lv.label} · ${lv.desc} (${count})</div>`;
+    }).join('');
+}
+
+function setVocabLevel(level) {
+  vbLevelFilter = level || null;
+  vbPage = 0;
+  renderLevelChips();
+  renderVocabList();
 }
 
 function setVocabFilter(cat) {
@@ -2713,6 +2739,7 @@ function getFilteredVocab() {
   const search = (document.getElementById('vb-search')?.value || '').toLowerCase().trim();
   return VOCAB_DATA.filter(w => {
     if (vbFilter && w.category !== vbFilter) return false;
+    if (vbLevelFilter && w.level !== vbLevelFilter) return false;
     if (search) {
       return w.lemma.includes(search) || w.roman.toLowerCase().includes(search) || w.english.toLowerCase().includes(search);
     }
@@ -2768,6 +2795,7 @@ function renderVocabList() {
       <div class="vr-bengali">${displayBengali(w.lemma, w.roman)}</div>
       <div class="vr-roman">${w.roman}</div>
       <div class="vr-english">${w.english}</div>
+      <div class="vr-level level-${w.level}">${w.level}</div>
       <div class="vr-mastery mastery-${m}"></div>
     </div>`;
   }).join('');
@@ -3498,6 +3526,9 @@ function renderConjugationTableUI() {
           }).join('')}
         </tbody>
       </table>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn-primary" data-action="start-conj-quiz">▶ Conjugation Quiz</button>
     </div>`;
   const sel = document.getElementById('conj-verb-select');
   if (sel) sel.onchange = () => setConjugationVerb(sel.value);
@@ -3522,6 +3553,208 @@ function openVerbConjugationFromVocab(lemma) {
   }
   const section = document.querySelector('.conj-table-section');
   if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ════════════════════════════════════════
+//  VERB CONJUGATION QUIZ
+// ════════════════════════════════════════
+const CONJ_PRONOUN_LABELS = { tui: 'তুই (very informal)', tumi: 'তুমি (casual)', apni: 'আপনি (formal)' };
+const CONJ_PRONOUN_KEYS = ['tui', 'tumi', 'apni'];
+
+function _allConjForms() {
+  const forms = [];
+  for (const [verbKey, verb] of Object.entries(VERB_CONJUGATION_DATA)) {
+    for (const [tenseKey, tense] of Object.entries(verb.tenses)) {
+      for (const pKey of CONJ_PRONOUN_KEYS) {
+        forms.push({
+          verb: verb.verb, verbRoman: verb.roman, verbEnglish: verb.english,
+          tenseKey, tenseLabel: tense.label,
+          pronoun: pKey, pronounLabel: CONJ_PRONOUN_LABELS[pKey],
+          bengali: tense.forms[pKey][0], roman: tense.forms[pKey][1],
+        });
+      }
+    }
+  }
+  return forms;
+}
+
+function generateConjugationQuiz() {
+  const allForms = _allConjForms();
+  const selected = shuffle([...allForms]).slice(0, 10);
+  const questions = [];
+
+  selected.forEach((f, i) => {
+    const qTypeRoll = i % 5; // 0,1,2 = MC-form; 3 = MC-identify; 4 = FIB
+
+    if (qTypeRoll <= 2) {
+      // MC: given verb+tense+pronoun → pick correct Bengali form
+      const correct = f.bengali;
+      const distractors = shuffle(allForms
+        .filter(x => x.bengali !== correct)
+        .map(x => x.bengali))
+        .slice(0, 3);
+      questions.push({
+        type: 'mc',
+        prompt: `${f.verb} (${f.verbEnglish}) — ${f.tenseLabel}, ${f.pronounLabel}?`,
+        correct,
+        options: shuffle([correct, ...distractors]),
+        _conjForm: f,
+      });
+    } else if (qTypeRoll === 3) {
+      // MC: given a conjugated form → identify tense + pronoun
+      const correct = `${f.tenseLabel} — ${f.pronounLabel}`;
+      const distractors = shuffle(allForms
+        .filter(x => !(x.tenseKey === f.tenseKey && x.pronoun === f.pronoun))
+        .map(x => `${x.tenseLabel} — ${x.pronounLabel}`))
+        .filter(x => x !== correct);
+      const picks = [...new Set(distractors)].slice(0, 3);
+      questions.push({
+        type: 'mc',
+        prompt: `"${f.bengali}" (${f.verb}) is which form?`,
+        bengali: f.bengali,
+        correct,
+        options: shuffle([correct, ...picks]),
+        _conjForm: f,
+      });
+    } else {
+      // FIB: type the conjugated form
+      const _fibMode = getFibMode();
+      const acceptable = [f.roman.toLowerCase()];
+      const prompt = _fibMode === 'bengali'
+        ? `Type the ${f.pronounLabel} ${f.tenseLabel.toLowerCase()} form of ${f.verb}:`
+        : `Type the romanization for ${f.verb} — ${f.tenseLabel}, ${f.pronounLabel}:`;
+      const answer = _fibMode === 'bengali' ? f.bengali : f.roman;
+      questions.push({
+        type: 'fib',
+        prompt,
+        acceptable,
+        answer,
+        hint: `${f.verbEnglish}`,
+        _conjForm: f,
+      });
+    }
+  });
+
+  return questions;
+}
+
+let conjQuizQuestions = [], conjQuizIndex = 0, conjQuizCorrect = 0, conjQuizMissed = [];
+
+function startConjugationQuiz() {
+  conjQuizQuestions = generateConjugationQuiz();
+  conjQuizIndex = 0;
+  conjQuizCorrect = 0;
+  conjQuizMissed = [];
+  _quizStartTime = Date.now();
+  document.getElementById('vq-title').textContent = 'Conjugation Quiz';
+  showScreen('vocab-quiz');
+  renderConjQuizQuestion();
+  updateStreak();
+}
+
+function renderConjQuizQuestion() {
+  if (conjQuizIndex >= conjQuizQuestions.length) { showConjQuizResults(); return; }
+  vqAnswered = false;
+  const q = conjQuizQuestions[conjQuizIndex];
+
+  document.getElementById('vq-progress-fill').style.width =
+    ((conjQuizIndex / conjQuizQuestions.length) * 100) + '%';
+  document.getElementById('vq-score').textContent = conjQuizCorrect + ' / ' + conjQuizIndex;
+
+  const qa = document.getElementById('vq-question-area');
+  if (q.type === 'mc') {
+    qa.innerHTML = `
+      <div class="quiz-prompt">${escHtml(q.prompt)}</div>
+      ${q.bengali ? `<div class="vq-bengali">${escHtml(q.bengali)}</div>` : ''}
+      <div class="mc-options">
+        ${q.options.map(opt => `<button class="mc-btn" data-action="conj-quiz-mc" data-answer="${escapeStr(opt)}">${escHtml(opt)}</button>`).join('')}
+      </div>`;
+  } else {
+    qa.innerHTML = `
+      <div class="quiz-prompt">${escHtml(q.prompt)}</div>
+      <div class="vq-hint">${escHtml(q.hint)}</div>
+      <input class="fib-input" type="text" id="conj-fib-input" autocomplete="off" placeholder="Type your answer…">
+      <button class="btn-primary" data-action="conj-quiz-fib-submit">Check</button>`;
+    const fibInput = document.getElementById('conj-fib-input');
+    if (fibInput) {
+      fibInput.focus();
+      showBengaliKbd('conj-fib-input');
+      fibInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.querySelector('[data-action="conj-quiz-fib-submit"]')?.click();
+      });
+    }
+  }
+}
+
+function handleConjQuizMC(answer) {
+  if (vqAnswered) return;
+  vqAnswered = true;
+  const q = conjQuizQuestions[conjQuizIndex];
+  const correct = answer === q.correct;
+  if (correct) conjQuizCorrect++;
+  else conjQuizMissed.push(q);
+
+  document.getElementById('vq-question-area').querySelectorAll('.mc-btn').forEach(btn => {
+    const val = btn.getAttribute('data-answer');
+    if (val === q.correct) btn.classList.add('correct');
+    else if (val === answer && !correct) btn.classList.add('wrong');
+    btn.disabled = true;
+  });
+
+  const f = q._conjForm;
+  const feedbackHtml = `<div class="vq-feedback ${correct ? 'correct' : 'wrong'}">${correct ? 'Correct!' : `Answer: ${escHtml(q.correct)}`}</div>
+    <div class="vq-hint" style="margin-top:8px">${escHtml(f.verb)} (${escHtml(f.verbRoman)}) — ${escHtml(f.tenseLabel)}, ${escHtml(f.pronounLabel)}: <strong>${escHtml(f.bengali)}</strong> (${escHtml(f.roman)})</div>`;
+  document.getElementById('vq-question-area').insertAdjacentHTML('beforeend', feedbackHtml);
+
+  setTimeout(() => { conjQuizIndex++; renderConjQuizQuestion(); }, correct ? 1000 : 2000);
+}
+
+function handleConjQuizFIB() {
+  if (vqAnswered) return;
+  const q = conjQuizQuestions[conjQuizIndex];
+  const input = document.getElementById('conj-fib-input');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+  vqAnswered = true;
+  hideBengaliKbd();
+
+  const correct = val === q._conjForm.bengali || q.acceptable.includes(val.toLowerCase());
+  if (correct) conjQuizCorrect++;
+  else conjQuizMissed.push(q);
+
+  const f = q._conjForm;
+  input.disabled = true;
+  input.classList.add(correct ? 'correct' : 'wrong');
+  const feedbackHtml = `<div class="vq-feedback ${correct ? 'correct' : 'wrong'}">${correct ? 'Correct!' : `Answer: ${escHtml(q.answer)}`}</div>
+    <div class="vq-hint" style="margin-top:8px">${escHtml(f.verb)} (${escHtml(f.verbRoman)}) — ${escHtml(f.tenseLabel)}, ${escHtml(f.pronounLabel)}: <strong>${escHtml(f.bengali)}</strong> (${escHtml(f.roman)})</div>`;
+  document.getElementById('vq-question-area').insertAdjacentHTML('beforeend', feedbackHtml);
+
+  setTimeout(() => { conjQuizIndex++; renderConjQuizQuestion(); }, correct ? 1000 : 2500);
+}
+
+function showConjQuizResults() {
+  const elapsed = Math.round((Date.now() - _quizStartTime) / 1000);
+  const pct = Math.round((conjQuizCorrect / conjQuizQuestions.length) * 100);
+  addXP(conjQuizCorrect * 10, 'grammar');
+
+  const qa = document.getElementById('vq-question-area');
+  qa.innerHTML = `
+    <div class="quiz-results">
+      <h2>Conjugation Quiz Complete!</h2>
+      <div class="quiz-results-score">${conjQuizCorrect} / ${conjQuizQuestions.length} correct (${pct}%)</div>
+      <div class="quiz-results-time">Time: ${elapsed}s</div>
+      ${conjQuizMissed.length ? `<div class="quiz-results-missed"><strong>Review these:</strong><ul>${conjQuizMissed.map(q => {
+        const f = q._conjForm;
+        return `<li>${escHtml(f.verb)} — ${escHtml(f.tenseLabel)}, ${escHtml(f.pronounLabel)}: <strong>${escHtml(f.bengali)}</strong> (${escHtml(f.roman)})</li>`;
+      }).join('')}</ul></div>` : ''}
+      <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" data-action="start-conj-quiz">Try Again</button>
+        <button class="nav-btn" data-action="show-screen" data-screen="grammar-home">Back to Grammar</button>
+      </div>
+    </div>`;
+  document.getElementById('vq-progress-fill').style.width = '100%';
+  document.getElementById('vq-score').textContent = conjQuizCorrect + ' / ' + conjQuizQuestions.length;
 }
 
 // ════════════════════════════════════════
@@ -5173,6 +5406,157 @@ function startLetterListening() {
   document.getElementById('quiz-title').textContent = '🎧 Letter Sounds';
   showScreen('quiz'); renderQuestion();
 }
+// ════════════════════════════════════════
+//  PHONEME PAIR DRILLS
+// ════════════════════════════════════════
+let ppQuestions = [], ppIndex = 0, ppCorrect = 0, ppMissed = [];
+
+function _letterLookup(char) {
+  return ALL_LETTERS.find(l => l.letter === char) || { letter: char, name: char, romanized: char, ipa: '', sound: '' };
+}
+
+function generatePhonemePairQuiz() {
+  const pairs = shuffle([...PHONEME_PAIRS]).slice(0, 10);
+  const questions = [];
+
+  pairs.forEach((pair, i) => {
+    const la = _letterLookup(pair.a);
+    const lb = _letterLookup(pair.b);
+    const isListening = i % 5 < 3; // 60% listening, 40% description-match
+
+    if (isListening) {
+      // Listen & identify: play one letter, user picks which of the pair
+      const target = Math.random() < 0.5 ? pair.a : pair.b;
+      questions.push({
+        type: 'phoneme-listen',
+        audio: target,
+        prompt: 'Which letter did you hear?',
+        correct: target,
+        options: shuffle([pair.a, pair.b]),
+        pair, la, lb,
+      });
+    } else {
+      // Description match: show the sound description, pick the letter
+      const target = Math.random() < 0.5 ? la : lb;
+      const desc = target.sound || target.ipa;
+      // Get 2 extra distractors from the other pair member + a random letter
+      const other = target === la ? lb : la;
+      const extras = shuffle(ALL_LETTERS.filter(l => l.letter !== target.letter && l.letter !== other.letter))
+        .slice(0, 2).map(l => l.letter);
+      questions.push({
+        type: 'phoneme-desc',
+        prompt: `Which letter makes this sound: "${desc}"?`,
+        correct: target.letter,
+        options: shuffle([target.letter, other.letter, ...extras]),
+        pair, la, lb,
+      });
+    }
+  });
+
+  return questions;
+}
+
+function startPhonemePairQuiz() {
+  ppQuestions = generatePhonemePairQuiz();
+  ppIndex = 0;
+  ppCorrect = 0;
+  ppMissed = [];
+  _quizStartTime = Date.now();
+  document.getElementById('vq-title').textContent = 'Phoneme Pair Drill';
+  showScreen('vocab-quiz');
+  renderPhonemePairQuestion();
+  updateStreak();
+}
+
+function renderPhonemePairQuestion() {
+  if (ppIndex >= ppQuestions.length) { showPhonemePairResults(); return; }
+  vqAnswered = false;
+  const q = ppQuestions[ppIndex];
+
+  document.getElementById('vq-progress-fill').style.width =
+    ((ppIndex / ppQuestions.length) * 100) + '%';
+  document.getElementById('vq-score').textContent = ppCorrect + ' / ' + ppIndex;
+
+  const qa = document.getElementById('vq-question-area');
+
+  if (q.type === 'phoneme-listen') {
+    qa.innerHTML = `
+      <div class="quiz-prompt">${escHtml(q.prompt)}</div>
+      <div class="listening-controls">
+        <button class="listening-play-btn" data-action="speak" data-text="${escapeStr(q.audio)}">&#9654; Play Sound</button>
+        <button class="slow-audio-btn${_audioSlowMode ? ' active' : ''}" data-action="toggle-slow-audio" title="Play at half speed">&#128034; Slow</button>
+      </div>
+      <div class="mc-options">
+        ${q.options.map(opt => {
+          const lo = _letterLookup(opt);
+          return `<button class="mc-btn phoneme-option" data-action="phoneme-quiz-mc" data-answer="${escapeStr(opt)}">
+            <span class="phoneme-letter">${escHtml(opt)}</span>
+            <span class="phoneme-name">${escHtml(lo.name.split(' ')[0])}</span>
+          </button>`;
+        }).join('')}
+      </div>`;
+    // Auto-play the sound
+    setTimeout(() => speakBengali(q.audio), 300);
+  } else {
+    qa.innerHTML = `
+      <div class="quiz-prompt">${escHtml(q.prompt)}</div>
+      <div class="mc-options">
+        ${q.options.map(opt => {
+          const lo = _letterLookup(opt);
+          return `<button class="mc-btn phoneme-option" data-action="phoneme-quiz-mc" data-answer="${escapeStr(opt)}">
+            <span class="phoneme-letter">${escHtml(opt)}</span>
+            <span class="phoneme-name">${escHtml(lo.name.split(' ')[0])}</span>
+          </button>`;
+        }).join('')}
+      </div>`;
+  }
+}
+
+function handlePhonemePairMC(answer) {
+  if (vqAnswered) return;
+  vqAnswered = true;
+  const q = ppQuestions[ppIndex];
+  const correct = answer === q.correct;
+  if (correct) ppCorrect++;
+  else ppMissed.push(q);
+
+  document.getElementById('vq-question-area').querySelectorAll('.mc-btn').forEach(btn => {
+    const val = btn.getAttribute('data-answer');
+    if (val === q.correct) btn.classList.add('correct');
+    else if (val === answer && !correct) btn.classList.add('wrong');
+    btn.disabled = true;
+  });
+
+  const feedbackHtml = `<div class="vq-feedback ${correct ? 'correct' : 'wrong'}">${correct ? 'Correct!' : `Answer: ${escHtml(q.correct)}`}</div>
+    <div class="vq-hint" style="margin-top:8px"><strong>${escHtml(q.pair.label)}</strong><br>${escHtml(q.pair.hint)}</div>`;
+  document.getElementById('vq-question-area').insertAdjacentHTML('beforeend', feedbackHtml);
+
+  setTimeout(() => { ppIndex++; renderPhonemePairQuestion(); }, correct ? 1200 : 2500);
+}
+
+function showPhonemePairResults() {
+  const elapsed = Math.round((Date.now() - _quizStartTime) / 1000);
+  const pct = Math.round((ppCorrect / ppQuestions.length) * 100);
+  addXP(ppCorrect * 10, 'alphabet');
+
+  const qa = document.getElementById('vq-question-area');
+  qa.innerHTML = `
+    <div class="quiz-results">
+      <h2>Phoneme Drill Complete!</h2>
+      <div class="quiz-results-score">${ppCorrect} / ${ppQuestions.length} correct (${pct}%)</div>
+      <div class="quiz-results-time">Time: ${elapsed}s</div>
+      ${ppMissed.length ? `<div class="quiz-results-missed"><strong>Review these pairs:</strong><ul>${ppMissed.map(q =>
+        `<li><strong>${escHtml(q.pair.label)}</strong> — ${escHtml(q.pair.hint)}</li>`
+      ).join('')}</ul></div>` : ''}
+      <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" data-action="start-phoneme-quiz">Try Again</button>
+        <button class="nav-btn" data-action="show-screen" data-screen="alphabet-home">Back to Alphabet</button>
+      </div>
+    </div>`;
+  document.getElementById('vq-progress-fill').style.width = '100%';
+  document.getElementById('vq-score').textContent = ppCorrect + ' / ' + ppQuestions.length;
+}
+
 function startVocabListening() {
   startVocabListeningForCategory(null);
 }
@@ -5185,7 +5569,7 @@ function startVocabListeningForCategory(catId = null) {
   const words = seen.length >= 4 ? seen : scoped.slice(0, 20);
   if (words.length === 0) return;
 
-  generateVocabQuiz(words);
+  generateVocabQuiz(words, 'listening');
   vqIndex = 0; vqCorrect = 0; vqMissed = [];
   const catTitle = catId ? VOCAB_CATEGORIES[catId]?.title || catId : null;
   document.getElementById('vq-title').textContent = catTitle
@@ -10556,6 +10940,7 @@ document.addEventListener('click', function(e) {
     case 'retry-vocab-quiz': retryVocabQuiz(); break;
     case 'retry-missed-vocab': retryMissedVocab(); break;
     case 'set-vocab-filter': setVocabFilter(a.catid || null); break;
+    case 'set-vocab-level': setVocabLevel(a.level || null); break;
     case 'start-vocab-filter-quiz': startFilteredVocabQuiz(); break;
     case 'show-vocab-detail': showVocabDetail(a.lemma); break;
     case 'show-vocab-detail-search': closeSearch(); showVocabDetail(JSON.parse(a.lemma)); break;
@@ -10579,6 +10964,9 @@ document.addEventListener('click', function(e) {
     case 'retry-missed-grammar': retryMissedGrammar(); break;
     case 'toggle-conj-table': toggleConjTable(); break;
     case 'select-conj-verb': setConjugationVerb(el.value); break;
+    case 'start-conj-quiz': startConjugationQuiz(); break;
+    case 'conj-quiz-mc': handleConjQuizMC(a.answer); break;
+    case 'conj-quiz-fib-submit': handleConjQuizFIB(); break;
     // Phrases
     case 'flip-ps-card': flipPsCard(); break;
     case 'prev-ps-card': prevPsCard(); break;
@@ -10679,6 +11067,8 @@ document.addEventListener('click', function(e) {
     case 'open-verb-conjugation': closeWordModal(); openVerbConjugationFromVocab(el.dataset.lemma); break;
     // Listening
     case 'start-letter-listening': startLetterListening(); break;
+    case 'start-phoneme-quiz': startPhonemePairQuiz(); break;
+    case 'phoneme-quiz-mc': handlePhonemePairMC(a.answer); break;
     // Onboarding
     case 'dismiss-onboarding': dismissOnboarding(); break;
     // Bengali keyboard

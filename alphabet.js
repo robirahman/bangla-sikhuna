@@ -137,6 +137,35 @@ const ALL_CONSONANTS = [
 const ALL_LETTERS = [...VOWELS.map((v) => ({ ...v, type: "vowel" })), ...ALL_CONSONANTS.map((c) => ({ ...c, type: "consonant" }))];
 
 // ════════════════════════════════════════
+//  PHONEME PAIRS (minimal-pair drills)
+// ════════════════════════════════════════
+const PHONEME_PAIRS = [
+  // Retroflex vs Dental (hardest for English speakers)
+  { a: 'ট', b: 'ত', label: 'Retroflex ট vs Dental ত', hint: 'ট: curl tongue back; ত: tongue touches teeth', difficulty: 3 },
+  { a: 'ঠ', b: 'থ', label: 'Retroflex ঠ vs Dental থ', hint: 'ঠ: aspirated retroflex; থ: aspirated dental', difficulty: 3 },
+  { a: 'ড', b: 'দ', label: 'Retroflex ড vs Dental দ', hint: 'ড: curl tongue back; দ: tongue touches teeth', difficulty: 3 },
+  { a: 'ঢ', b: 'ধ', label: 'Retroflex ঢ vs Dental ধ', hint: 'ঢ: aspirated retroflex; ধ: aspirated dental', difficulty: 3 },
+  { a: 'ণ', b: 'ন', label: 'Retroflex ণ vs Dental ন', hint: 'ণ: tongue curled back; ন: tongue at teeth', difficulty: 2 },
+  // Aspirated vs Unaspirated
+  { a: 'ক', b: 'খ', label: 'ক vs খ (aspirated)', hint: 'খ has a puff of air after the k sound', difficulty: 1 },
+  { a: 'গ', b: 'ঘ', label: 'গ vs ঘ (aspirated)', hint: 'ঘ has a puff of air after the g sound', difficulty: 1 },
+  { a: 'চ', b: 'ছ', label: 'চ vs ছ (aspirated)', hint: 'ছ has a puff of air after the ch sound', difficulty: 1 },
+  { a: 'জ', b: 'ঝ', label: 'জ vs ঝ (aspirated)', hint: 'ঝ has a puff of air after the j sound', difficulty: 1 },
+  { a: 'ট', b: 'ঠ', label: 'ট vs ঠ (aspirated)', hint: 'ঠ has a puff of air after the retroflex t', difficulty: 2 },
+  { a: 'ড', b: 'ঢ', label: 'ড vs ঢ (aspirated)', hint: 'ঢ has a puff of air after the retroflex d', difficulty: 2 },
+  { a: 'ত', b: 'থ', label: 'ত vs থ (aspirated)', hint: 'থ has a puff of air after the dental t', difficulty: 1 },
+  { a: 'দ', b: 'ধ', label: 'দ vs ধ (aspirated)', hint: 'ধ has a puff of air after the dental d', difficulty: 1 },
+  { a: 'প', b: 'ফ', label: 'প vs ফ (aspirated)', hint: 'ফ has a puff of air after the p sound', difficulty: 1 },
+  { a: 'ব', b: 'ভ', label: 'ব vs ভ (aspirated)', hint: 'ভ has a puff of air after the b sound', difficulty: 1 },
+  // Similar sibilants
+  { a: 'শ', b: 'ষ', label: 'শ vs ষ (both "sh")', hint: 'Identical in modern Bengali; ষ is historically retroflex', difficulty: 2 },
+  { a: 'শ', b: 'স', label: 'শ (sh) vs স (s)', hint: 'শ = "sh" as in ship; স = "s" as in sun', difficulty: 1 },
+  // Short vs Long vowels
+  { a: 'ই', b: 'ঈ', label: 'Short ই vs Long ঈ', hint: 'ঈ is held longer; both are "ee" sounds', difficulty: 2 },
+  { a: 'উ', b: 'ঊ', label: 'Short উ vs Long ঊ', hint: 'ঊ is held longer; both are "oo" sounds', difficulty: 2 },
+];
+
+// ════════════════════════════════════════
 //  BENGALI NUMERALS (০–৯)
 // ════════════════════════════════════════
 const BENGALI_NUMERALS = [
@@ -1392,4 +1421,5 @@ export {
   MIXED_INTRO_BATCH,
   UNLOCK_THRESHOLD,
   MIXED_QUIZ_SIZE,
+  PHONEME_PAIRS,
 };

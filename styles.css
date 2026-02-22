@@ -394,6 +394,16 @@ nav h1 span { color: var(--accent); }
   border-color: var(--accent); background: rgba(244,165,50,0.08);
 }
 
+/* Phoneme pair drill options */
+.phoneme-option { text-align: center; }
+.phoneme-option .phoneme-letter {
+  display: block; font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1.8rem; font-weight: 700; line-height: 1.2;
+}
+.phoneme-option .phoneme-name {
+  display: block; font-size: 0.75rem; color: var(--text-dim); margin-top: 2px;
+}
+
 /* Fill in the blank */
 .fib-area { max-width: 400px; margin: 0 auto; }
 .fib-input {
@@ -754,6 +764,17 @@ nav h1 span { color: var(--accent); }
   border-radius: 10px; color: var(--text); font-size: 0.95rem; outline: none;
 }
 .vb-search:focus { border-color: var(--accent); }
+.level-chips {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
+}
+.level-chip {
+  padding: 5px 12px; border-radius: 16px; font-size: 0.78rem;
+  cursor: pointer; border: 2px solid rgba(255,255,255,0.08);
+  background: var(--card); color: var(--text-dim); transition: all 0.2s;
+  white-space: nowrap; font-weight: 600;
+}
+.level-chip:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.level-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(244,165,50,0.08); }
 .cat-chips {
   display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;
 }
@@ -767,7 +788,7 @@ nav h1 span { color: var(--accent); }
 .cat-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(244,165,50,0.08); }
 .vocab-list { display: flex; flex-direction: column; gap: 6px; }
 .vocab-row {
-  display: grid; grid-template-columns: 80px 1fr 1fr auto;
+  display: grid; grid-template-columns: 80px 1fr 1fr auto auto;
   align-items: center; gap: 12px; padding: 12px 16px;
   background: var(--card); border-radius: 10px; cursor: pointer;
   border: 2px solid transparent; transition: all 0.15s;
@@ -779,6 +800,14 @@ nav h1 span { color: var(--accent); }
 }
 .vocab-row .vr-roman { color: var(--text-dim); font-size: 0.9rem; }
 .vocab-row .vr-english { font-size: 0.95rem; }
+.vr-level {
+  font-size: 0.7em; padding: 2px 6px; border-radius: 4px;
+  font-weight: 600; text-align: center;
+}
+.level-A1 { background: #58cc02; color: #071a0e; }
+.level-A2 { background: #49c0f8; color: #071a0e; }
+.level-B1 { background: #ffc800; color: #071a0e; }
+.level-B2 { background: #ff6b6b; color: #071a0e; }
 .vocab-row .vr-mastery {
   width: 10px; height: 10px; border-radius: 50%;
 }
@@ -1305,7 +1334,7 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   .tab-btn { padding: 7px 10px; font-size: 0.8rem; }
   .tab-dropdown-toggle { padding: 7px 10px; font-size: 0.8rem; }
   .tab-dropdown-menu .tab-btn { padding: 10px 14px; }
-  .vocab-row { grid-template-columns: 70px 1fr 1fr auto; gap: 8px; padding: 10px 12px; }
+  .vocab-row { grid-template-columns: 70px 1fr 1fr auto auto; gap: 8px; padding: 10px 12px; }
   .vocab-row .vr-bengali { font-size: 1.1rem; }
   .vocab-card-bengali { font-size: 3rem; }
   .vq-bengali { font-size: 3.5rem; }
@@ -1325,14 +1354,15 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   .learn-nav .nav-btn { min-width: 76px; padding: 8px 10px; font-size: 0.85rem; }
   .learn-nav .btn-primary { padding: 10px 18px; }
 
-  /* Vocab browse: stack Bengali + romanization vertically, keep English + mastery dot */
+  /* Vocab browse: stack Bengali + romanization vertically, keep English + level + mastery dot */
   .vocab-row {
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "bengali mastery" "roman mastery" "english mastery";
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "bengali level mastery" "roman level mastery" "english level mastery";
   }
   .vocab-row .vr-bengali { grid-area: bengali; }
   .vocab-row .vr-roman   { grid-area: roman; display: block; font-size: 0.78rem; margin-top: 1px; }
   .vocab-row .vr-english { grid-area: english; }
+  .vocab-row .vr-level   { grid-area: level; align-self: center; }
   .vocab-row .vr-mastery { grid-area: mastery; align-self: center; }
 
   /* Search: allow shrinking below 200px default */

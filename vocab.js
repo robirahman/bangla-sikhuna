@@ -406,6 +406,7 @@ let VOCAB_DATA = VOCAB_DATA_RAW.map(([lemma, roman, english, category, pos, exam
   senseId: senseId || '',
   related: Array.isArray(related) ? related : [],
   freqRank: index + 1,
+  level: index < 500 ? 'A1' : index < 1500 ? 'A2' : index < 3000 ? 'B1' : 'B2',
 }));
 
 
