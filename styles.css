@@ -52,9 +52,9 @@ nav h1 span { color: var(--accent); }
 .screen.active { display:block; }
 
 /* ─── HOME ─── */
-#home .hero, #vocab-home .hero, #grammar-home .hero, #phrases-home .hero, #numbers-home .hero, #today-screen .hero, #reading-screen .hero, #trivia-home .hero, #recipes-home .hero { text-align:center; padding: 40px 0 30px; }
-#home .hero h2, #vocab-home .hero h2, #grammar-home .hero h2, #phrases-home .hero h2, #numbers-home .hero h2, #today-screen .hero h2, #reading-screen .hero h2, #trivia-home .hero h2, #recipes-home .hero h2 { font-size: 2rem; margin-bottom: 8px; }
-#home .hero p, #vocab-home .hero p, #grammar-home .hero p, #phrases-home .hero p, #numbers-home .hero p, #today-screen .hero p, #reading-screen .hero p, #trivia-home .hero p, #recipes-home .hero p { color: var(--text-dim); font-size: 1.05rem; }
+#home .hero, #vocab-home .hero, #grammar-home .hero, #phrases-home .hero, #numbers-home .hero, #today-screen .hero, #reading-screen .hero, #trivia-home .hero, #recipes-home .hero, #music-home .hero, #movies-home .hero, #poetry-home .hero, #sports-home .hero, #proverbs-home .hero, #folktales-home .hero, #festivals-home .hero, #history-home .hero, #travel-home .hero, #conv-home .hero { text-align:center; padding: 40px 0 30px; }
+#home .hero h2, #vocab-home .hero h2, #grammar-home .hero h2, #phrases-home .hero h2, #numbers-home .hero h2, #today-screen .hero h2, #reading-screen .hero h2, #trivia-home .hero h2, #recipes-home .hero h2, #music-home .hero h2, #movies-home .hero h2, #poetry-home .hero h2, #sports-home .hero h2, #proverbs-home .hero h2, #folktales-home .hero h2, #festivals-home .hero h2, #history-home .hero h2, #travel-home .hero h2, #conv-home .hero h2 { font-size: 2rem; margin-bottom: 8px; }
+#home .hero p, #vocab-home .hero p, #grammar-home .hero p, #phrases-home .hero p, #numbers-home .hero p, #today-screen .hero p, #reading-screen .hero p, #trivia-home .hero p, #recipes-home .hero p, #music-home .hero p, #movies-home .hero p, #poetry-home .hero p, #sports-home .hero p, #proverbs-home .hero p, #folktales-home .hero p, #festivals-home .hero p, #history-home .hero p, #travel-home .hero p, #conv-home .hero p { color: var(--text-dim); font-size: 1.05rem; }
 .ge-notes { font-size: 0.82rem; color: var(--text-dim); margin-top: 8px; font-style: italic; line-height: 1.4; }
 /* ─── TODAY SCREEN ─── */
 .today-date { color: var(--text-dim); font-size: 0.85rem; text-align: center; margin-bottom: 16px; }
@@ -2340,6 +2340,423 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   color: var(--text-dim);
   margin-right: 4px;
   margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════
+   FOLK TALES
+   ═══════════════════════════════════ */
+.folktale-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.folktale-section {
+  margin-bottom: 24px;
+}
+.folktale-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.folktale-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.folktale-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.folktale-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .folktale-story {
+    grid-template-columns: 1fr;
+  }
+}
+.folktale-story-col {}
+.folktale-story-line {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.folktale-story-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.folktale-story-en {
+  color: var(--text-dim);
+}
+.folktale-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════
+   FESTIVALS
+   ═══════════════════════════════════ */
+.festival-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.festival-section {
+  margin-bottom: 24px;
+}
+.festival-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.festival-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.festival-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.festival-traditions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .festival-traditions {
+    grid-template-columns: 1fr;
+  }
+}
+.festival-traditions-col {}
+.festival-tradition-line {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.festival-traditions-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.festival-traditions-en {
+  color: var(--text-dim);
+}
+.festival-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════
+   HISTORY
+   ═══════════════════════════════════ */
+.history-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.history-section {
+  margin-bottom: 24px;
+}
+.history-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.history-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.history-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.history-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .history-facts {
+    grid-template-columns: 1fr;
+  }
+}
+.history-facts-col {}
+.history-fact-line {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.history-facts-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.history-facts-en {
+  color: var(--text-dim);
+}
+.history-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════
+   TRAVEL
+   ═══════════════════════════════════ */
+.travel-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.travel-section {
+  margin-bottom: 24px;
+}
+.travel-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.travel-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.travel-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.travel-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .travel-highlights {
+    grid-template-columns: 1fr;
+  }
+}
+.travel-highlights-col {}
+.travel-highlight-line {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.travel-highlights-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.travel-highlights-en {
+  color: var(--text-dim);
+}
+.travel-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════
+   CONVERSATIONS
+   ═══════════════════════════════════ */
+.conv-detail {
+  padding: 0 1rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.conv-section {
+  margin-bottom: 24px;
+}
+.conv-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.conv-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.conv-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.conv-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.conv-dialogue-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.conv-bubble-row {
+  display: flex;
+}
+.conv-bubble-row.left {
+  justify-content: flex-start;
+}
+.conv-bubble-row.right {
+  justify-content: flex-end;
+}
+.conv-bubble {
+  max-width: 80%;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.conv-bubble-row.left .conv-bubble {
+  border-bottom-left-radius: 4px;
+}
+.conv-bubble-row.right .conv-bubble {
+  border-bottom-right-radius: 4px;
+  background: rgba(62,201,122,0.12);
+}
+.conv-speaker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.conv-line-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+.conv-line-en {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.conv-line-roman {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-dim);
+  opacity: 0.7;
+  margin-top: 1px;
+}
+.conv-rp-context {
+  padding: 14px 18px;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 16px;
+}
+.conv-rp-context .conv-speaker {
+  margin-bottom: 6px;
+}
+.conv-rp-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.conv-rp-option {
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--card-bg);
+  border: 2px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: left;
+}
+.conv-rp-option:hover {
+  border-color: var(--accent);
+  background: rgba(62,201,122,0.06);
+}
+.conv-rp-option:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+.rp-text-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.rp-text-en {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.conv-rp-feedback {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.conv-rp-interstitial {
+  text-align: center;
+  padding: 30px 0;
+}
+.conv-rp-interstitial .score-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+@media (max-width: 600px) {
+  .conv-bubble {
+    max-width: 90%;
+  }
 }
 
 /* ═══════════════════════════════════

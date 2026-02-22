@@ -59,6 +59,11 @@
   <button class="tab-btn" data-action="switch-tab" data-tab="poetry" data-t="Poetry">Poetry</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="sports" data-t="Sports">Sports</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="proverbs" data-t="Proverbs">Proverbs</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="folktales" data-t="Folk Tales">Folk Tales</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="festivals" data-t="Festivals">Festivals</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="history" data-t="History">History</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="travel" data-t="Travel">Travel</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="conversations" data-t="Conversations">Conversations</button>
   <button class="pt-retake-btn" id="pt-retake-btn" style="display:none" data-action="start-placement-test" data-t="Retake Placement">Retake Placement</button>
   <button class="review-due-btn" id="review-due-btn" style="display:none" data-action="start-review-session">🔔 <span data-t="Review Due">Review Due</span> (<span id="review-due-count">0</span>)</button>
 </div>
@@ -1037,6 +1042,291 @@
     <button class="nav-btn" data-action="show-screen" data-screen="proverbs-home">Home</button>
   </div>
   <div id="pvr-missed"></div>
+</div>
+
+<!-- FOLKTALES HOME -->
+<div class="screen" id="folktales-home">
+  <div class="hero">
+    <h2>লোককথা</h2>
+    <p data-t="Learn Bengali through folk tales — explore stories, learn vocabulary, and quiz yourself">Learn Bengali through folk tales — explore stories, learn vocabulary, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="folktales-module-grid"></div>
+</div>
+
+<!-- FOLKTALE DETAIL -->
+<div class="screen" id="folktale-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="folktales-home">← Back</button>
+    <h2 id="ft-title">Folk Tale</h2>
+    <div></div>
+  </div>
+  <div class="folktale-detail" id="ft-content"></div>
+</div>
+
+<!-- FOLKTALE QUIZ -->
+<div class="screen" id="folktale-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="folktales-home">← Quit</button>
+    <h2 id="ftq-title">Folk Tale Quiz</h2>
+    <div id="ftq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="ftq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="ftq-question-area"></div>
+  <div id="ftq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="ftq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="ftq-next-btn"
+          data-action="folktale-next" style="display:none">Next →</button>
+</div>
+
+<!-- FOLKTALE RESULTS -->
+<div class="screen" id="folktale-results">
+  <div class="results-circle" id="ftr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="ftr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="ftr-pct">0%</span>
+  </div>
+  <div class="results-title" id="ftr-title">Great job!</div>
+  <div class="results-sub" id="ftr-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="folktale-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="folktales-home">Home</button>
+  </div>
+  <div id="ftr-missed"></div>
+</div>
+
+<!-- FESTIVALS HOME -->
+<div class="screen" id="festivals-home">
+  <div class="hero">
+    <h2>উৎসব</h2>
+    <p data-t="Learn Bengali through festivals — explore traditions, learn vocabulary, and quiz yourself">Learn Bengali through festivals — explore traditions, learn vocabulary, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="festivals-module-grid"></div>
+</div>
+
+<!-- FESTIVAL DETAIL -->
+<div class="screen" id="festival-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="festivals-home">← Back</button>
+    <h2 id="fe-title">Festival</h2>
+    <div></div>
+  </div>
+  <div class="festival-detail" id="fe-content"></div>
+</div>
+
+<!-- FESTIVAL QUIZ -->
+<div class="screen" id="festival-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="festivals-home">← Quit</button>
+    <h2 id="feq-title">Festival Quiz</h2>
+    <div id="feq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="feq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="feq-question-area"></div>
+  <div id="feq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="feq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="feq-next-btn"
+          data-action="festival-next" style="display:none">Next →</button>
+</div>
+
+<!-- FESTIVAL RESULTS -->
+<div class="screen" id="festival-results">
+  <div class="results-circle" id="fer-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="fer-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="fer-pct">0%</span>
+  </div>
+  <div class="results-title" id="fer-title">Great job!</div>
+  <div class="results-sub" id="fer-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="festival-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="festivals-home">Home</button>
+  </div>
+  <div id="fer-missed"></div>
+</div>
+
+<!-- HISTORY HOME -->
+<div class="screen" id="history-home">
+  <div class="hero">
+    <h2>ইতিহাস</h2>
+    <p data-t="Learn Bengali through history — explore events and figures, learn vocabulary, and quiz yourself">Learn Bengali through history — explore events and figures, learn vocabulary, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="history-module-grid"></div>
+</div>
+
+<!-- HISTORY DETAIL -->
+<div class="screen" id="history-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="history-home">← Back</button>
+    <h2 id="hi-title">History</h2>
+    <div></div>
+  </div>
+  <div class="history-detail" id="hi-content"></div>
+</div>
+
+<!-- HISTORY QUIZ -->
+<div class="screen" id="history-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="history-home">← Quit</button>
+    <h2 id="hiq-title">History Quiz</h2>
+    <div id="hiq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="hiq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="hiq-question-area"></div>
+  <div id="hiq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="hiq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="hiq-next-btn"
+          data-action="history-next" style="display:none">Next →</button>
+</div>
+
+<!-- HISTORY RESULTS -->
+<div class="screen" id="history-results">
+  <div class="results-circle" id="hir-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="hir-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="hir-pct">0%</span>
+  </div>
+  <div class="results-title" id="hir-title">Great job!</div>
+  <div class="results-sub" id="hir-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="history-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="history-home">Home</button>
+  </div>
+  <div id="hir-missed"></div>
+</div>
+
+<!-- TRAVEL HOME -->
+<div class="screen" id="travel-home">
+  <div class="hero">
+    <h2>ভ্রমণ</h2>
+    <p data-t="Learn Bengali through travel — explore destinations, learn vocabulary, and quiz yourself">Learn Bengali through travel — explore destinations, learn vocabulary, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="travel-module-grid"></div>
+</div>
+
+<!-- TRAVEL DETAIL -->
+<div class="screen" id="travel-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="travel-home">← Back</button>
+    <h2 id="tr-detail-title">Travel</h2>
+    <div></div>
+  </div>
+  <div class="travel-detail" id="tr-detail-content"></div>
+</div>
+
+<!-- TRAVEL QUIZ -->
+<div class="screen" id="travel-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="travel-home">← Quit</button>
+    <h2 id="trq-title">Travel Quiz</h2>
+    <div id="trq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="trq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="trq-question-area"></div>
+  <div id="trq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="trq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="trq-next-btn"
+          data-action="travel-next" style="display:none">Next →</button>
+</div>
+
+<!-- TRAVEL RESULTS -->
+<div class="screen" id="travel-results">
+  <div class="results-circle" id="trr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="trr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="trr-pct">0%</span>
+  </div>
+  <div class="results-title" id="trr-title">Great job!</div>
+  <div class="results-sub" id="trr-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="travel-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="travel-home">Home</button>
+  </div>
+  <div id="trr-missed"></div>
+</div>
+
+<!-- CONVERSATIONS HOME -->
+<div class="screen" id="conv-home">
+  <div class="hero">
+    <h2>কথোপকথন</h2>
+    <p data-t="Practice Bengali conversations — read dialogues, role-play, and quiz yourself">Practice Bengali conversations — read dialogues, role-play, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="conv-module-grid"></div>
+</div>
+
+<!-- CONVERSATION DIALOGUE -->
+<div class="screen" id="conv-dialogue">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="conv-home">← Back</button>
+    <h2 id="cv-title">Conversation</h2>
+    <div></div>
+  </div>
+  <div class="conv-detail" id="cv-content"></div>
+</div>
+
+<!-- CONVERSATION ROLEPLAY -->
+<div class="screen" id="conv-roleplay">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="conv-home">← Back</button>
+    <h2 id="cvrp-title">Role-play</h2>
+    <div id="cvrp-progress"></div>
+  </div>
+  <div id="cvrp-content" style="padding:0 1rem 2rem;max-width:700px;margin:0 auto"></div>
+</div>
+
+<!-- CONVERSATION QUIZ -->
+<div class="screen" id="conv-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="conv-home">← Quit</button>
+    <h2 id="cvq-title">Conversation Quiz</h2>
+    <div id="cvq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="cvq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="cvq-question-area"></div>
+  <div id="cvq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="cvq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="cvq-next-btn"
+          data-action="conv-next" style="display:none">Next →</button>
+</div>
+
+<!-- CONVERSATION RESULTS -->
+<div class="screen" id="conv-results">
+  <div class="results-circle" id="cvr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="cvr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="cvr-pct">0%</span>
+  </div>
+  <div class="results-title" id="cvr-title">Great job!</div>
+  <div class="results-sub" id="cvr-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="conv-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="conv-home">Home</button>
+  </div>
+  <div id="cvr-missed"></div>
 </div>
 
 <script type="module" src="app.js"></script>

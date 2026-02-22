@@ -13,6 +13,11 @@ import { MOVIES } from './movies.js';
 import { POETRY } from './poetry.js';
 import { SPORTS } from './sports.js';
 import { PROVERBS } from './proverbs.js';
+import { FOLKTALES } from './folktales.js';
+import { FESTIVALS } from './festivals.js';
+import { HISTORY } from './history.js';
+import { TRAVEL } from './travel.js';
+import { CONVERSATIONS } from './conversations.js';
 
 // ════════════════════════════════════════
 //  DISPLAY MODE — Standard / Romanized / Immersion
@@ -32,6 +37,11 @@ const UI_STRINGS_BN = {
   'Poetry': 'কবিতা',
   'Sports': 'খেলাধুলা',
   'Proverbs': 'প্রবাদ',
+  'Folk Tales': 'লোককথা',
+  'Festivals': 'উৎসব',
+  'History': 'ইতিহাস',
+  'Travel': 'ভ্রমণ',
+  'Conversations': 'কথোপকথন',
   // ── Buttons ──
   'Start Quiz →': 'কুইজ শুরু →',
   'Practice Quiz →': 'অনুশীলন কুইজ →',
@@ -62,6 +72,18 @@ const UI_STRINGS_BN = {
   'Learn Bengali through classic poems — read verses, explore poets, and quiz yourself': 'ক্লাসিক কবিতার মাধ্যমে বাংলা শিখুন — পদ্য পড়ুন, কবি জানুন, কুইজ দিন',
   'Learn Bengali through sports and athletes — explore culture, learn vocabulary, and quiz yourself': 'খেলাধুলা ও খেলোয়াড়দের মাধ্যমে বাংলা শিখুন — সংস্কৃতি জানুন, শব্দ শিখুন, কুইজ দিন',
   'Learn Bengali through proverbs and idioms — explore wisdom, learn vocabulary, and quiz yourself': 'প্রবাদ ও বাগধারার মাধ্যমে বাংলা শিখুন — জ্ঞান জানুন, শব্দ শিখুন, কুইজ দিন',
+  'Learn Bengali through folk tales — explore stories, learn vocabulary, and quiz yourself': 'লোককথার মাধ্যমে বাংলা শিখুন — গল্প জানুন, শব্দ শিখুন, কুইজ দিন',
+  'Learn Bengali through festivals — explore traditions, learn vocabulary, and quiz yourself': 'উৎসবের মাধ্যমে বাংলা শিখুন — ঐতিহ্য জানুন, শব্দ শিখুন, কুইজ দিন',
+  'Learn Bengali through history — explore events and figures, learn vocabulary, and quiz yourself': 'ইতিহাসের মাধ্যমে বাংলা শিখুন — ঘটনা ও ব্যক্তিত্ব জানুন, শব্দ শিখুন, কুইজ দিন',
+  'Learn Bengali through travel — explore destinations, learn vocabulary, and quiz yourself': 'ভ্রমণের মাধ্যমে বাংলা শিখুন — গন্তব্য জানুন, শব্দ শিখুন, কুইজ দিন',
+  'Practice Bengali conversations — read dialogues, role-play, and quiz yourself': 'বাংলা কথোপকথন অনুশীলন — সংলাপ পড়ুন, ভূমিকা অভিনয় করুন, কুইজ দিন',
+  'Story': 'গল্প',
+  'Traditions': 'ঐতিহ্য',
+  'Highlights': 'বিশেষত্ব',
+  'Role-play': 'ভূমিকা অভিনয়',
+  'Continue to Quiz': 'কুইজে যান',
+  'See Results': 'ফলাফল দেখুন',
+  'Choose your response:': 'আপনার উত্তর বেছে নিন:',
   'Take Quiz': 'কুইজ দিন',
   'Lyrics': 'গানের কথা',
   'Dialogue': 'সংলাপ',
@@ -735,6 +757,11 @@ function showScreen(id) {
   if (id === 'poetry-home') renderPoetryHome();
   if (id === 'sports-home') renderSportsHome();
   if (id === 'proverbs-home') renderProverbsHome();
+  if (id === 'folktales-home') renderFolktalesHome();
+  if (id === 'festivals-home') renderFestivalsHome();
+  if (id === 'history-home') renderHistoryHome();
+  if (id === 'travel-home') renderTravelHome();
+  if (id === 'conv-home') renderConvHome();
   if (id === 'placement-results') renderPlacementResultsUI();
 }
 
@@ -2209,6 +2236,11 @@ const moviesScreens = ['movies-home','movie-detail','movie-quiz','movie-results'
 const poetryScreens = ['poetry-home','poetry-detail','poetry-quiz','poetry-results'];
 const sportsScreens = ['sports-home','sport-detail','sport-quiz','sport-results'];
 const proverbsScreens = ['proverbs-home','proverb-detail','proverb-quiz','proverb-results'];
+const folktalesScreens = ['folktales-home','folktale-detail','folktale-quiz','folktale-results'];
+const festivalsScreens = ['festivals-home','festival-detail','festival-quiz','festival-results'];
+const historyScreens = ['history-home','history-detail','history-quiz','history-results'];
+const travelScreens = ['travel-home','travel-detail','travel-quiz','travel-results'];
+const conversationsScreens = ['conv-home','conv-dialogue','conv-roleplay','conv-quiz','conv-results'];
 
 function switchTab(tab) {
   currentTab = tab;
@@ -2245,6 +2277,16 @@ function switchTab(tab) {
     showScreen('sports-home');
   } else if (tab === 'proverbs') {
     showScreen('proverbs-home');
+  } else if (tab === 'folktales') {
+    showScreen('folktales-home');
+  } else if (tab === 'festivals') {
+    showScreen('festivals-home');
+  } else if (tab === 'history') {
+    showScreen('history-home');
+  } else if (tab === 'travel') {
+    showScreen('travel-home');
+  } else if (tab === 'conversations') {
+    showScreen('conv-home');
   } else {
     showScreen('grammar-home');
   }
@@ -5586,6 +5628,44 @@ const ACHIEVEMENTS = [
   { id: 'grammar-graduate', icon: '🎓', label: 'Grammar Graduate',   test: () => GRAMMAR_LESSONS.every(l => getLessonProgress(l).pct === 100) },
   { id: 'streak-3',         icon: '🔥', label: 'On a Roll',          test: () => progress.streak >= 3 },
   { id: 'streak-7',         icon: '💪', label: 'Week Warrior',       test: () => progress.streak >= 7 },
+  { id: 'xp-500',           icon: '💎', label: 'XP Hunter',          test: () => progress.xp >= 500 },
+  { id: 'xp-1000',          icon: '👑', label: 'XP Legend',           test: () => progress.xp >= 1000 },
+  { id: 'streak-14',        icon: '🔥', label: 'Two-Week Streak',    test: () => progress.streak >= 14 },
+  { id: 'streak-30',        icon: '🏅', label: 'Monthly Dedication', test: () => progress.streak >= 30 },
+  { id: 'word-100',         icon: '📖', label: 'Word Explorer',      test: () => VOCAB_DATA.filter(w => getVocabMastery(w) >= 3).length >= 100 },
+  { id: 'word-200',         icon: '📚', label: 'Word Scholar',       test: () => VOCAB_DATA.filter(w => getVocabMastery(w) >= 3).length >= 200 },
+  { id: 'culture-5',        icon: '🌏', label: 'Culture Explorer',   test: () => {
+    const mods = ['movies:', 'music:', 'recipes:', 'poetry:', 'sports:', 'proverbs:', 'folktales:', 'festivals:', 'history:', 'travel:'];
+    return mods.filter(prefix => Object.keys(progress.quizHistory || {}).some(k => k.startsWith(prefix))).length >= 5;
+  }},
+  { id: 'culture-all',      icon: '🎭', label: 'Culture Master',     test: () => {
+    const mods = ['movies:', 'music:', 'recipes:', 'poetry:', 'sports:', 'proverbs:', 'folktales:', 'festivals:', 'history:', 'travel:'];
+    return mods.every(prefix => Object.keys(progress.quizHistory || {}).some(k => k.startsWith(prefix)));
+  }},
+  { id: 'conv-first',       icon: '💬', label: 'First Conversation', test: () => Object.keys(progress.mastery || {}).some(k => k.startsWith('cvrp:') && progress.mastery[k] >= 1) },
+  { id: 'conv-5',           icon: '🗣️', label: 'Chatterbox',         test: () => {
+    const done = new Set();
+    Object.keys(progress.mastery || {}).forEach(k => { if (k.startsWith('cvrp:') && progress.mastery[k] >= 1) done.add(k); });
+    return done.size >= 5;
+  }},
+  { id: 'grammar-5',        icon: '✏️', label: 'Grammar Student',    test: () => GRAMMAR_LESSONS.filter(l => getLessonProgress(l).pct === 100).length >= 5 },
+  { id: 'writing-10',       icon: '✍️', label: 'Script Writer',      test: () => Object.keys(progress.mastery || {}).filter(k => k.startsWith('canvas:') && progress.mastery[k] >= 1).length >= 10 },
+  { id: 'phrase-3',         icon: '💡', label: 'Phrase Learner',     test: () => {
+    const sits = PHRASES_SITUATIONS || [];
+    return sits.filter(s => {
+      const phrases = (PHRASES_DATA || []).filter(p => p.situation === s.id);
+      return phrases.length > 0 && phrases.every(p => getPhraseMastery(p.id) >= 3);
+    }).length >= 3;
+  }},
+  { id: 'all-tabs',         icon: '⭐', label: 'Explorer',            test: () => {
+    const tabs = ['folktales:', 'festivals:', 'history:', 'travel:', 'conversations:'];
+    const hist = progress.quizHistory || {};
+    return tabs.every(prefix => Object.keys(hist).some(k => k.startsWith(prefix)));
+  }},
+  { id: 'perfect-quiz',     icon: '💯', label: 'Perfect Score',      test: () => {
+    const hist = progress.quizHistory || {};
+    return Object.values(hist).some(v => v.best === 100);
+  }},
 ];
 
 let _achToastTimer = null;
@@ -8790,6 +8870,1328 @@ function showProverbResults() {
   }
 }
 
+// ════════════════════════════════════════
+//  FOLK TALES MODULE
+// ════════════════════════════════════════
+let _folktaleCurrentId = null;
+let _folktaleQuestions = [];
+let _folktaleQIndex = 0;
+let _folktaleCorrect = 0;
+let _folktaleAnswered = false;
+let _folktaleMissed = [];
+let _folktaleStartTime = null;
+
+function renderFolktalesHome() {
+  const grid = document.getElementById('folktales-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  FOLKTALES.forEach(tale => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = tale.quiz.length;
+    let answered = 0;
+    tale.quiz.forEach(q => {
+      if ((progress.mastery['ftq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'folktales:' + tale.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = tale.tags.map(tag =>
+      `<span class="folktale-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${tale.icon}</div>
+      <h3>${escHtml(tale.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(tale.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'folktale-view';
+    card.dataset.id = tale.id;
+    grid.appendChild(card);
+  });
+}
+
+function showFolktaleDetail(taleId) {
+  const tale = FOLKTALES.find(m => m.id === taleId);
+  if (!tale) return;
+  _folktaleCurrentId = taleId;
+
+  document.getElementById('ft-title').textContent = tale.bengaliName + ' — ' + tale.englishName;
+  const content = document.getElementById('ft-content');
+
+  const tagHtml = tale.tags.map(tag =>
+    `<span class="folktale-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  const storyBn = tale.storyBn.map(l => `<div class="folktale-story-line">${escHtml(l)}</div>`).join('');
+  const storyEn = tale.storyEn.map(l => `<div class="folktale-story-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="folktale-section">
+      <p class="folktale-desc-bn">${escHtml(tale.descBn)}</p>
+      <p class="folktale-desc-en">${escHtml(tale.descEn)}</p>
+    </div>
+    <div class="folktale-section">
+      <h3 class="folktale-section-title">📖 ${t('Story')}</h3>
+      <div class="folktale-story">
+        <div class="folktale-story-col folktale-story-bn">${storyBn}</div>
+        <div class="folktale-story-col folktale-story-en">${storyEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="folktale-start-quiz" data-id="${escHtml(taleId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('folktale-detail');
+}
+
+function startFolktaleQuiz(taleId) {
+  const tale = FOLKTALES.find(m => m.id === taleId);
+  if (!tale) return;
+  _folktaleCurrentId = taleId;
+  _folktaleQuestions = shuffle(tale.quiz.slice());
+  _folktaleQIndex = 0;
+  _folktaleCorrect = 0;
+  _folktaleAnswered = false;
+  _folktaleMissed = [];
+  _folktaleStartTime = Date.now();
+  document.getElementById('ftq-title').textContent = tale.bengaliName + ' ' + t('Quiz');
+  showScreen('folktale-quiz');
+  renderFolktaleQuestion();
+}
+
+function renderFolktaleQuestion() {
+  const q = _folktaleQuestions[_folktaleQIndex];
+  if (!q) return;
+  _folktaleAnswered = false;
+
+  const total = _folktaleQuestions.length;
+  const pct = Math.round((_folktaleQIndex / total) * 100);
+  document.getElementById('ftq-progress-fill').style.width = pct + '%';
+  document.getElementById('ftq-score').textContent = toBnDigits(_folktaleQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('ftq-feedback').innerHTML = '';
+  document.getElementById('ftq-explanation').style.display = 'none';
+  document.getElementById('ftq-explanation').textContent = '';
+  document.getElementById('ftq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('ftq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="folktale-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerFolktaleMC(btn, chosen) {
+  if (_folktaleAnswered) return;
+  _folktaleAnswered = true;
+  const q = _folktaleQuestions[_folktaleQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#ftq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('ftq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _folktaleCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('ftq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _folktaleMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'ftq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('ftq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('ftq-next-btn').style.display = 'inline-block';
+}
+
+function folktaleNext() {
+  _folktaleQIndex++;
+  if (_folktaleQIndex >= _folktaleQuestions.length) {
+    showFolktaleResults();
+  } else {
+    _folktaleAnswered = false;
+    renderFolktaleQuestion();
+  }
+}
+
+function showFolktaleResults() {
+  showScreen('folktale-results');
+  const total = _folktaleQuestions.length;
+  const pct = total > 0 ? Math.round((_folktaleCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('ftr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('ftr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('ftr-title').textContent = title;
+
+  const bestKey = 'folktales:' + _folktaleCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_folktaleCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('ftr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+  checkAchievements();
+
+  const missedEl = document.getElementById('ftr-missed');
+  if (missedEl) {
+    if (_folktaleMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _folktaleMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
+// ════════════════════════════════════════
+//  FESTIVALS MODULE
+// ════════════════════════════════════════
+let _festivalCurrentId = null;
+let _festivalQuestions = [];
+let _festivalQIndex = 0;
+let _festivalCorrect = 0;
+let _festivalAnswered = false;
+let _festivalMissed = [];
+let _festivalStartTime = null;
+
+function renderFestivalsHome() {
+  const grid = document.getElementById('festivals-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  FESTIVALS.forEach(fest => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = fest.quiz.length;
+    let answered = 0;
+    fest.quiz.forEach(q => {
+      if ((progress.mastery['feq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'festivals:' + fest.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = fest.tags.map(tag =>
+      `<span class="festival-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${fest.icon}</div>
+      <h3>${escHtml(fest.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(fest.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'festival-view';
+    card.dataset.id = fest.id;
+    grid.appendChild(card);
+  });
+}
+
+function showFestivalDetail(festId) {
+  const fest = FESTIVALS.find(m => m.id === festId);
+  if (!fest) return;
+  _festivalCurrentId = festId;
+
+  document.getElementById('fe-title').textContent = fest.bengaliName + ' — ' + fest.englishName;
+  const content = document.getElementById('fe-content');
+
+  const tagHtml = fest.tags.map(tag =>
+    `<span class="festival-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  const tradBn = fest.traditionsBn.map(l => `<div class="festival-tradition-line">${escHtml(l)}</div>`).join('');
+  const tradEn = fest.traditionsEn.map(l => `<div class="festival-tradition-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="festival-section">
+      <p class="festival-desc-bn">${escHtml(fest.descBn)}</p>
+      <p class="festival-desc-en">${escHtml(fest.descEn)}</p>
+    </div>
+    <div class="festival-section">
+      <h3 class="festival-section-title">🎊 ${t('Traditions')}</h3>
+      <div class="festival-traditions">
+        <div class="festival-traditions-col festival-traditions-bn">${tradBn}</div>
+        <div class="festival-traditions-col festival-traditions-en">${tradEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="festival-start-quiz" data-id="${escHtml(festId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('festival-detail');
+}
+
+function startFestivalQuiz(festId) {
+  const fest = FESTIVALS.find(m => m.id === festId);
+  if (!fest) return;
+  _festivalCurrentId = festId;
+  _festivalQuestions = shuffle(fest.quiz.slice());
+  _festivalQIndex = 0;
+  _festivalCorrect = 0;
+  _festivalAnswered = false;
+  _festivalMissed = [];
+  _festivalStartTime = Date.now();
+  document.getElementById('feq-title').textContent = fest.bengaliName + ' ' + t('Quiz');
+  showScreen('festival-quiz');
+  renderFestivalQuestion();
+}
+
+function renderFestivalQuestion() {
+  const q = _festivalQuestions[_festivalQIndex];
+  if (!q) return;
+  _festivalAnswered = false;
+
+  const total = _festivalQuestions.length;
+  const pct = Math.round((_festivalQIndex / total) * 100);
+  document.getElementById('feq-progress-fill').style.width = pct + '%';
+  document.getElementById('feq-score').textContent = toBnDigits(_festivalQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('feq-feedback').innerHTML = '';
+  document.getElementById('feq-explanation').style.display = 'none';
+  document.getElementById('feq-explanation').textContent = '';
+  document.getElementById('feq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('feq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="festival-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerFestivalMC(btn, chosen) {
+  if (_festivalAnswered) return;
+  _festivalAnswered = true;
+  const q = _festivalQuestions[_festivalQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#feq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('feq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _festivalCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('feq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _festivalMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'feq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('feq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('feq-next-btn').style.display = 'inline-block';
+}
+
+function festivalNext() {
+  _festivalQIndex++;
+  if (_festivalQIndex >= _festivalQuestions.length) {
+    showFestivalResults();
+  } else {
+    _festivalAnswered = false;
+    renderFestivalQuestion();
+  }
+}
+
+function showFestivalResults() {
+  showScreen('festival-results');
+  const total = _festivalQuestions.length;
+  const pct = total > 0 ? Math.round((_festivalCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('fer-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('fer-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('fer-title').textContent = title;
+
+  const bestKey = 'festivals:' + _festivalCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_festivalCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('fer-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+  checkAchievements();
+
+  const missedEl = document.getElementById('fer-missed');
+  if (missedEl) {
+    if (_festivalMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _festivalMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
+// ════════════════════════════════════════
+//  HISTORY MODULE
+// ════════════════════════════════════════
+let _historyCurrentId = null;
+let _historyQuestions = [];
+let _historyQIndex = 0;
+let _historyCorrect = 0;
+let _historyAnswered = false;
+let _historyMissed = [];
+let _historyStartTime = null;
+
+function renderHistoryHome() {
+  const grid = document.getElementById('history-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  HISTORY.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = item.quiz.length;
+    let answered = 0;
+    item.quiz.forEach(q => {
+      if ((progress.mastery['hiq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'history:' + item.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = item.tags.map(tag =>
+      `<span class="history-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${item.icon}</div>
+      <h3>${escHtml(item.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(item.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'history-view';
+    card.dataset.id = item.id;
+    grid.appendChild(card);
+  });
+}
+
+function showHistoryDetail(itemId) {
+  const item = HISTORY.find(m => m.id === itemId);
+  if (!item) return;
+  _historyCurrentId = itemId;
+
+  document.getElementById('hi-title').textContent = item.bengaliName + ' — ' + item.englishName;
+  const content = document.getElementById('hi-content');
+
+  const tagHtml = item.tags.map(tag =>
+    `<span class="history-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  const factsBn = item.factsBn.map(l => `<div class="history-fact-line">${escHtml(l)}</div>`).join('');
+  const factsEn = item.factsEn.map(l => `<div class="history-fact-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="history-section">
+      <p class="history-desc-bn">${escHtml(item.descBn)}</p>
+      <p class="history-desc-en">${escHtml(item.descEn)}</p>
+    </div>
+    <div class="history-section">
+      <h3 class="history-section-title">📜 ${t('Key Facts')}</h3>
+      <div class="history-facts">
+        <div class="history-facts-col history-facts-bn">${factsBn}</div>
+        <div class="history-facts-col history-facts-en">${factsEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="history-start-quiz" data-id="${escHtml(itemId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('history-detail');
+}
+
+function startHistoryQuiz(itemId) {
+  const item = HISTORY.find(m => m.id === itemId);
+  if (!item) return;
+  _historyCurrentId = itemId;
+  _historyQuestions = shuffle(item.quiz.slice());
+  _historyQIndex = 0;
+  _historyCorrect = 0;
+  _historyAnswered = false;
+  _historyMissed = [];
+  _historyStartTime = Date.now();
+  document.getElementById('hiq-title').textContent = item.bengaliName + ' ' + t('Quiz');
+  showScreen('history-quiz');
+  renderHistoryQuestion();
+}
+
+function renderHistoryQuestion() {
+  const q = _historyQuestions[_historyQIndex];
+  if (!q) return;
+  _historyAnswered = false;
+
+  const total = _historyQuestions.length;
+  const pct = Math.round((_historyQIndex / total) * 100);
+  document.getElementById('hiq-progress-fill').style.width = pct + '%';
+  document.getElementById('hiq-score').textContent = toBnDigits(_historyQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('hiq-feedback').innerHTML = '';
+  document.getElementById('hiq-explanation').style.display = 'none';
+  document.getElementById('hiq-explanation').textContent = '';
+  document.getElementById('hiq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('hiq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="history-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerHistoryMC(btn, chosen) {
+  if (_historyAnswered) return;
+  _historyAnswered = true;
+  const q = _historyQuestions[_historyQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#hiq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('hiq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _historyCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('hiq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _historyMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'hiq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('hiq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('hiq-next-btn').style.display = 'inline-block';
+}
+
+function historyNext() {
+  _historyQIndex++;
+  if (_historyQIndex >= _historyQuestions.length) {
+    showHistoryResults();
+  } else {
+    _historyAnswered = false;
+    renderHistoryQuestion();
+  }
+}
+
+function showHistoryResults() {
+  showScreen('history-results');
+  const total = _historyQuestions.length;
+  const pct = total > 0 ? Math.round((_historyCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('hir-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('hir-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('hir-title').textContent = title;
+
+  const bestKey = 'history:' + _historyCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_historyCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('hir-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+  checkAchievements();
+
+  const missedEl = document.getElementById('hir-missed');
+  if (missedEl) {
+    if (_historyMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _historyMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
+// ════════════════════════════════════════
+//  TRAVEL MODULE
+// ════════════════════════════════════════
+let _travelCurrentId = null;
+let _travelQuestions = [];
+let _travelQIndex = 0;
+let _travelCorrect = 0;
+let _travelAnswered = false;
+let _travelMissed = [];
+let _travelStartTime = null;
+
+function renderTravelHome() {
+  const grid = document.getElementById('travel-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  TRAVEL.forEach(dest => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = dest.quiz.length;
+    let answered = 0;
+    dest.quiz.forEach(q => {
+      if ((progress.mastery['trq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'travel:' + dest.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = dest.tags.map(tag =>
+      `<span class="travel-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${dest.icon}</div>
+      <h3>${escHtml(dest.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(dest.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'travel-view';
+    card.dataset.id = dest.id;
+    grid.appendChild(card);
+  });
+}
+
+function showTravelDetail(destId) {
+  const dest = TRAVEL.find(m => m.id === destId);
+  if (!dest) return;
+  _travelCurrentId = destId;
+
+  document.getElementById('tr-detail-title').textContent = dest.bengaliName + ' — ' + dest.englishName;
+  const content = document.getElementById('tr-detail-content');
+
+  const tagHtml = dest.tags.map(tag =>
+    `<span class="travel-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  const highBn = dest.highlightsBn.map(l => `<div class="travel-highlight-line">${escHtml(l)}</div>`).join('');
+  const highEn = dest.highlightsEn.map(l => `<div class="travel-highlight-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="travel-section">
+      <p class="travel-desc-bn">${escHtml(dest.descBn)}</p>
+      <p class="travel-desc-en">${escHtml(dest.descEn)}</p>
+    </div>
+    <div class="travel-section">
+      <h3 class="travel-section-title">🌟 ${t('Highlights')}</h3>
+      <div class="travel-highlights">
+        <div class="travel-highlights-col travel-highlights-bn">${highBn}</div>
+        <div class="travel-highlights-col travel-highlights-en">${highEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="travel-start-quiz" data-id="${escHtml(destId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('travel-detail');
+}
+
+function startTravelQuiz(destId) {
+  const dest = TRAVEL.find(m => m.id === destId);
+  if (!dest) return;
+  _travelCurrentId = destId;
+  _travelQuestions = shuffle(dest.quiz.slice());
+  _travelQIndex = 0;
+  _travelCorrect = 0;
+  _travelAnswered = false;
+  _travelMissed = [];
+  _travelStartTime = Date.now();
+  document.getElementById('trq-title').textContent = dest.bengaliName + ' ' + t('Quiz');
+  showScreen('travel-quiz');
+  renderTravelQuestion();
+}
+
+function renderTravelQuestion() {
+  const q = _travelQuestions[_travelQIndex];
+  if (!q) return;
+  _travelAnswered = false;
+
+  const total = _travelQuestions.length;
+  const pct = Math.round((_travelQIndex / total) * 100);
+  document.getElementById('trq-progress-fill').style.width = pct + '%';
+  document.getElementById('trq-score').textContent = toBnDigits(_travelQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('trq-feedback').innerHTML = '';
+  document.getElementById('trq-explanation').style.display = 'none';
+  document.getElementById('trq-explanation').textContent = '';
+  document.getElementById('trq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('trq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="travel-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerTravelMC(btn, chosen) {
+  if (_travelAnswered) return;
+  _travelAnswered = true;
+  const q = _travelQuestions[_travelQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#trq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('trq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _travelCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('trq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _travelMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'trq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('trq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('trq-next-btn').style.display = 'inline-block';
+}
+
+function travelNext() {
+  _travelQIndex++;
+  if (_travelQIndex >= _travelQuestions.length) {
+    showTravelResults();
+  } else {
+    _travelAnswered = false;
+    renderTravelQuestion();
+  }
+}
+
+function showTravelResults() {
+  showScreen('travel-results');
+  const total = _travelQuestions.length;
+  const pct = total > 0 ? Math.round((_travelCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('trr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('trr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('trr-title').textContent = title;
+
+  const bestKey = 'travel:' + _travelCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_travelCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('trr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+  checkAchievements();
+
+  const missedEl = document.getElementById('trr-missed');
+  if (missedEl) {
+    if (_travelMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _travelMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
+// ════════════════════════════════════════
+//  CONVERSATIONS MODULE
+// ════════════════════════════════════════
+let _convCurrentId = null;
+let _convQuestions = [];
+let _convQIndex = 0;
+let _convCorrect = 0;
+let _convAnswered = false;
+let _convMissed = [];
+let _convStartTime = null;
+let _convRpExchanges = [];
+let _convRpIndex = 0;
+let _convRpCorrect = 0;
+let _convRpAnswered = false;
+let _convRpTotal = 0;
+let _convRpStartTime = null;
+let _convMode = 'quiz'; // 'quiz' or 'roleplay'
+
+function renderConvHome() {
+  const grid = document.getElementById('conv-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  CONVERSATIONS.forEach(conv => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const quizTotal = conv.quiz.length;
+    let quizAnswered = 0;
+    conv.quiz.forEach(q => {
+      if ((progress.mastery['cvq:' + q.id] || 0) >= 1) quizAnswered++;
+    });
+    const rpTotal = conv.roleplay.length;
+    let rpAnswered = 0;
+    conv.roleplay.forEach(rp => {
+      if ((progress.mastery['cvrp:' + rp.id] || 0) >= 1) rpAnswered++;
+    });
+    const totalAll = quizTotal + rpTotal;
+    const answeredAll = quizAnswered + rpAnswered;
+    const pct = totalAll > 0 ? Math.round((answeredAll / totalAll) * 100) : 0;
+
+    const bestKey = 'conversations:' + conv.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = conv.tags.map(tag =>
+      `<span class="conv-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${conv.icon}</div>
+      <h3>${escHtml(conv.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(conv.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answeredAll)}/${toBnDigits(totalAll)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'conv-view';
+    card.dataset.id = conv.id;
+    grid.appendChild(card);
+  });
+}
+
+function showConvDetail(convId) {
+  const conv = CONVERSATIONS.find(c => c.id === convId);
+  if (!conv) return;
+  _convCurrentId = convId;
+
+  document.getElementById('cv-title').textContent = conv.bengaliName + ' — ' + conv.englishName;
+  const content = document.getElementById('cv-content');
+
+  const tagHtml = conv.tags.map(tag =>
+    `<span class="conv-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  let dialogueHtml = '<div class="conv-dialogue-area">';
+  conv.dialogue.forEach((line, i) => {
+    const side = i % 2 === 0 ? 'left' : 'right';
+    dialogueHtml += `
+      <div class="conv-bubble-row ${side}">
+        <div class="conv-bubble">
+          <div class="conv-speaker">${escHtml(line.speakerBn)} (${escHtml(line.speaker)})</div>
+          <div class="conv-line-bn">${escHtml(line.lineBn)}</div>
+          <div class="conv-line-en">${escHtml(line.lineEn)}</div>
+          <div class="conv-line-roman">${escHtml(line.romanized)}</div>
+        </div>
+      </div>
+    `;
+  });
+  dialogueHtml += '</div>';
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="conv-section">
+      <p class="conv-desc-bn">${escHtml(conv.descBn)}</p>
+      <p class="conv-desc-en">${escHtml(conv.descEn)}</p>
+    </div>
+    <div class="conv-section">
+      <h3 class="conv-section-title">💬 ${t('Dialogue')}</h3>
+      ${dialogueHtml}
+    </div>
+    <div style="text-align:center;margin:24px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-primary" data-action="conv-start-roleplay" data-id="${escHtml(convId)}" style="font-size:1.05rem;padding:14px 32px">
+        🎭 ${t('Role-play')}
+      </button>
+      <button class="btn-primary" data-action="conv-start-quiz" data-id="${escHtml(convId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('conv-dialogue');
+}
+
+function startConvRoleplay(convId) {
+  const conv = CONVERSATIONS.find(c => c.id === convId);
+  if (!conv) return;
+  _convCurrentId = convId;
+  _convRpExchanges = conv.roleplay.slice(); // don't shuffle — maintain conversation order
+  _convRpIndex = 0;
+  _convRpCorrect = 0;
+  _convRpAnswered = false;
+  _convRpTotal = _convRpExchanges.length;
+  _convRpStartTime = Date.now();
+  _convMode = 'roleplay';
+  document.getElementById('cvrp-title').textContent = conv.bengaliName + ' — ' + t('Role-play');
+  showScreen('conv-roleplay');
+  renderConvRpExchange();
+}
+
+function renderConvRpExchange() {
+  const ex = _convRpExchanges[_convRpIndex];
+  if (!ex) return;
+  _convRpAnswered = false;
+
+  document.getElementById('cvrp-progress').textContent = toBnDigits(_convRpIndex + 1) + ' / ' + toBnDigits(_convRpTotal);
+
+  const area = document.getElementById('cvrp-content');
+  let html = `
+    <div class="conv-rp-context">
+      <div class="conv-speaker">🗣️</div>
+      <div class="conv-line-bn">${escHtml(ex.contextBn)}</div>
+      <div class="conv-line-en">${escHtml(ex.contextEn)}</div>
+    </div>
+    <div style="font-size:0.85rem;color:var(--text-dim);margin-bottom:10px">${t('Choose your response:')}</div>
+    <div class="conv-rp-options">
+  `;
+  ex.options.forEach((opt, i) => {
+    html += `<button class="conv-rp-option" data-action="conv-rp-choice" data-idx="${i}">
+      <div class="rp-text-bn">${escHtml(opt.textBn)}</div>
+      <div class="rp-text-en">${escHtml(opt.textEn)}</div>
+    </button>`;
+  });
+  html += '</div><div id="conv-rp-feedback-area"></div>';
+  area.innerHTML = html;
+}
+
+function answerConvRpChoice(btn, idx) {
+  if (_convRpAnswered) return;
+  _convRpAnswered = true;
+  const ex = _convRpExchanges[_convRpIndex];
+  if (!ex) return;
+
+  const opt = ex.options[idx];
+  const btns = document.querySelectorAll('.conv-rp-option');
+  btns.forEach(b => { b.disabled = true; });
+
+  if (opt.correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    _convRpCorrect++;
+    addXP(2);
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    // Highlight correct options
+    btns.forEach((b, i) => {
+      if (ex.options[i].correct) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+      }
+    });
+  }
+
+  const feedbackBn = opt.feedbackBn || '';
+  const feedbackEn = opt.feedbackEn || '';
+  const fbArea = document.getElementById('conv-rp-feedback-area');
+  const color = opt.correct ? 'var(--accent)' : 'var(--wrong)';
+  fbArea.innerHTML = `
+    <div class="conv-rp-feedback" style="background:${opt.correct ? 'rgba(62,201,122,0.1)' : 'rgba(232,80,80,0.1)'}; border:1px solid ${color}">
+      <div style="font-weight:600;color:${color};margin-bottom:4px">${opt.correct ? '✓ ' + t('Correct!') : '✗ ' + t('Incorrect')}</div>
+      <div style="color:var(--text);font-size:0.88rem">${escHtml(feedbackBn)}</div>
+      <div style="color:var(--text-dim);font-size:0.82rem">${escHtml(feedbackEn)}</div>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn-primary" data-action="conv-rp-next" style="padding:10px 28px">${t('Continue →')}</button>
+    </div>
+  `;
+
+  const masteryKey = 'cvrp:' + ex.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (opt.correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+  saveProgress();
+}
+
+function convRpNext() {
+  _convRpIndex++;
+  if (_convRpIndex >= _convRpExchanges.length) {
+    // Show interstitial
+    const pct = _convRpTotal > 0 ? Math.round((_convRpCorrect / _convRpTotal) * 100) : 0;
+    const area = document.getElementById('cvrp-content');
+    area.innerHTML = `
+      <div class="conv-rp-interstitial">
+        <div style="font-size:2.5rem;margin-bottom:12px">🎭</div>
+        <div class="score-text">${t('Role-play')}: ${toBnDigits(_convRpCorrect)}/${toBnDigits(_convRpTotal)} (${toBnDigits(pct)}%)</div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px">
+          <button class="btn-primary" data-action="conv-start-quiz" data-id="${escHtml(_convCurrentId)}" style="padding:12px 28px">📝 ${t('Continue to Quiz')}</button>
+          <button class="nav-btn" data-action="show-screen" data-screen="conv-home" style="padding:12px 28px">${t('Home')}</button>
+        </div>
+      </div>
+    `;
+
+    const bestKey = 'conv-rp:' + _convCurrentId;
+    const hist = progress.quizHistory || (progress.quizHistory = {});
+    const prev = hist[bestKey] || { best: -1 };
+    if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+    addXP(1);
+    updateNav();
+    checkAchievements();
+  } else {
+    _convRpAnswered = false;
+    renderConvRpExchange();
+  }
+}
+
+function startConvQuiz(convId) {
+  const conv = CONVERSATIONS.find(c => c.id === convId);
+  if (!conv) return;
+  _convCurrentId = convId;
+  _convQuestions = shuffle(conv.quiz.slice());
+  _convQIndex = 0;
+  _convCorrect = 0;
+  _convAnswered = false;
+  _convMissed = [];
+  _convStartTime = Date.now();
+  _convMode = 'quiz';
+  document.getElementById('cvq-title').textContent = conv.bengaliName + ' ' + t('Quiz');
+  showScreen('conv-quiz');
+  renderConvQuestion();
+}
+
+function renderConvQuestion() {
+  const q = _convQuestions[_convQIndex];
+  if (!q) return;
+  _convAnswered = false;
+
+  const total = _convQuestions.length;
+  const pct = Math.round((_convQIndex / total) * 100);
+  document.getElementById('cvq-progress-fill').style.width = pct + '%';
+  document.getElementById('cvq-score').textContent = toBnDigits(_convQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('cvq-feedback').innerHTML = '';
+  document.getElementById('cvq-explanation').style.display = 'none';
+  document.getElementById('cvq-explanation').textContent = '';
+  document.getElementById('cvq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('cvq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="conv-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerConvMC(btn, chosen) {
+  if (_convAnswered) return;
+  _convAnswered = true;
+  const q = _convQuestions[_convQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#cvq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('cvq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _convCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('cvq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _convMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'cvq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('cvq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('cvq-next-btn').style.display = 'inline-block';
+}
+
+function convNext() {
+  _convQIndex++;
+  if (_convQIndex >= _convQuestions.length) {
+    showConvResults();
+  } else {
+    _convAnswered = false;
+    renderConvQuestion();
+  }
+}
+
+function showConvResults() {
+  showScreen('conv-results');
+  const total = _convQuestions.length;
+  const pct = total > 0 ? Math.round((_convCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('cvr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('cvr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('cvr-title').textContent = title;
+
+  const bestKey = 'conversations:' + _convCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_convCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('cvr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+  checkAchievements();
+
+  const missedEl = document.getElementById('cvr-missed');
+  if (missedEl) {
+    if (_convMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _convMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
 let triviaCurrentCategory = null;
 let triviaQuestions = [];
 let triviaIndex = 0;
@@ -9278,6 +10680,39 @@ document.addEventListener('click', function(e) {
     case 'proverb-mc':         answerProverbMC(el, +a.idx); break;
     case 'proverb-next':       proverbNext(); break;
     case 'proverb-retry':      startProverbQuiz(_proverbCurrentId); break;
+    // Folk Tales
+    case 'folktale-view':       showFolktaleDetail(a.id); break;
+    case 'folktale-start-quiz': startFolktaleQuiz(a.id); break;
+    case 'folktale-mc':         answerFolktaleMC(el, +a.idx); break;
+    case 'folktale-next':       folktaleNext(); break;
+    case 'folktale-retry':      startFolktaleQuiz(_folktaleCurrentId); break;
+    // Festivals
+    case 'festival-view':       showFestivalDetail(a.id); break;
+    case 'festival-start-quiz': startFestivalQuiz(a.id); break;
+    case 'festival-mc':         answerFestivalMC(el, +a.idx); break;
+    case 'festival-next':       festivalNext(); break;
+    case 'festival-retry':      startFestivalQuiz(_festivalCurrentId); break;
+    // History
+    case 'history-view':        showHistoryDetail(a.id); break;
+    case 'history-start-quiz':  startHistoryQuiz(a.id); break;
+    case 'history-mc':          answerHistoryMC(el, +a.idx); break;
+    case 'history-next':        historyNext(); break;
+    case 'history-retry':       startHistoryQuiz(_historyCurrentId); break;
+    // Travel
+    case 'travel-view':         showTravelDetail(a.id); break;
+    case 'travel-start-quiz':   startTravelQuiz(a.id); break;
+    case 'travel-mc':           answerTravelMC(el, +a.idx); break;
+    case 'travel-next':         travelNext(); break;
+    case 'travel-retry':        startTravelQuiz(_travelCurrentId); break;
+    // Conversations
+    case 'conv-view':           showConvDetail(a.id); break;
+    case 'conv-start-roleplay': startConvRoleplay(a.id); break;
+    case 'conv-rp-choice':      answerConvRpChoice(el, +a.idx); break;
+    case 'conv-rp-next':        convRpNext(); break;
+    case 'conv-start-quiz':     startConvQuiz(a.id); break;
+    case 'conv-mc':             answerConvMC(el, +a.idx); break;
+    case 'conv-next':           convNext(); break;
+    case 'conv-retry':          startConvQuiz(_convCurrentId); break;
     // Trivia
     case 'trivia-mc':         answerTriviaMC(el, +a.idx); break;
     case 'trivia-submit-fib': answerTriviaFIB(); break;
