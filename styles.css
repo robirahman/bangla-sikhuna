@@ -208,7 +208,7 @@ nav h1 span { color: var(--accent); }
   border-radius: 50%;
   background: rgba(255,255,255,0.15);
   border: none;
-  color: #fff;
+  color: var(--text);
   font-size: 1.1rem;
   cursor: pointer;
   display: flex;
@@ -280,13 +280,13 @@ nav h1 span { color: var(--accent); }
 .card-sound-btn {
   margin-top: 1rem;
   background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid var(--border);
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
   font-size: 1.1rem;
   cursor: pointer;
-  color: #fff;
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -317,7 +317,7 @@ nav h1 span { color: var(--accent); }
 .badge-special { background: rgba(232,120,65,0.15); color: var(--special); }
 .badge-numeral      { background: rgba(244,165,50,0.15); color: var(--accent); }
 .badge-number-name  { background: rgba(200,184,71,0.15); color: var(--gold); }
-.badge-matra        { background: rgba(120,200,120,0.15); color: #4caf6e; }
+.badge-matra        { background: rgba(120,200,120,0.15); color: var(--accent); }
 
 .letter-name { font-size: 1.4rem; font-weight: 600; margin-bottom: 6px; }
 .letter-translit { font-size: 1.1rem; color: var(--text-dim); margin-bottom: 4px; }
@@ -1433,7 +1433,7 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
 .sri-add-btn:hover { background: rgba(244,165,50,0.28); }
 .sri-add-btn.added { background: rgba(100,220,100,0.12); border-color: rgba(100,220,100,0.4); color: #6dc97a; }
 .search-divider {
-  height: 1px; background: rgba(255,255,255,0.06); margin: 4px 0;
+  height: 1px; background: var(--border); margin: 4px 0;
 }
 
 /* ─── LIGHT MODE ─── */
@@ -1450,6 +1450,9 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   --vowel: #1a9a7a;
   --consonant: #3a7a28;
   --special: #c07810;
+  --border: rgba(0,0,0,0.12);
+  --shadow: 0 4px 24px rgba(0,0,0,0.1);
+  --muted: rgba(13,33,22,0.45);
 }
 
 /* ── Cultural palette themes ────────────────────────────────────────────── */
@@ -1527,6 +1530,8 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
 [data-theme="light"] .progress-panel,
 [data-theme="light"] .stats-panel { box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
 [data-theme="light"] .idk-btn { border-color: rgba(0,0,0,0.15); }
+[data-theme="light"] .btn-primary:hover { background: #168040; }
+[data-theme="light"] .card-sound-btn { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); }
 
 /* ─── NAV THEME BUTTON ─── */
 .nav-theme-btn {
