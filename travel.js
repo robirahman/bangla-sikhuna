@@ -474,11 +474,11 @@ const TRAVEL = [
       },
       {
         id: 'kuakata-2',
-        prompt: 'What does সূর্যোদয় mean?',
-        promptBn: 'সূর্যোদয় শব্দের অর্থ কী?',
-        options: ['Sunrise', 'Sunset', 'Eclipse', 'Noon'],
+        prompt: 'What does দিগন্ত mean?',
+        promptBn: 'দিগন্ত শব্দের অর্থ কী?',
+        options: ['Horizon', 'Shore', 'Tide', 'Wave'],
         correct: 0,
-        explanation: 'সূর্যোদয় (surjodoy) = sunrise. সূর্য (sun) + উদয় (rising).',
+        explanation: 'দিগন্ত (digonto) = horizon. Kuakata is famous for its unobstructed দিগন্ত view.',
       },
       {
         id: 'kuakata-3',
