@@ -2082,6 +2082,75 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
 }
 
 /* ═══════════════════════════════════
+   MOVIES
+   ═══════════════════════════════════ */
+.movie-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.movie-section {
+  margin-bottom: 24px;
+}
+.movie-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.movie-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.movie-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.movie-dialogue {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .movie-dialogue {
+    grid-template-columns: 1fr;
+  }
+}
+.movie-dialogue-col {}
+.movie-dialogue-line {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.movie-dialogue-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.movie-dialogue-en {
+  color: var(--text-dim);
+}
+.movie-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.movie-meta {
+  font-size: 0.84rem;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════
    DISPLAY MODE — Romanized / Immersion
    ═══════════════════════════════════ */
 

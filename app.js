@@ -9,6 +9,7 @@ import { VOCAB_DATA, VOCAB_CATEGORIES, VOCAB_TOTAL_WORDS } from './vocab.js';
 import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from './trivia.js';
 import { RECIPES } from './recipes.js';
 import { MUSIC } from './music.js';
+import { MOVIES } from './movies.js';
 
 // ════════════════════════════════════════
 //  DISPLAY MODE — Standard / Romanized / Immersion
@@ -24,6 +25,7 @@ const UI_STRINGS_BN = {
   'Phrases': 'বাক্যাংশ',
   'Trivia': 'তথ্য',
   'Recipes': 'রান্নাঘর',
+  'Movies': 'চলচ্চিত্র',
   // ── Buttons ──
   'Start Quiz →': 'কুইজ শুরু →',
   'Practice Quiz →': 'অনুশীলন কুইজ →',
@@ -49,7 +51,11 @@ const UI_STRINGS_BN = {
   'Learn conversational phrases for real-life situations': 'দৈনন্দিন পরিস্থিতির জন্য কথোপকথনের বাক্যাংশ শিখুন',
   'Test your knowledge of Bengali culture, history, and more': 'বাংলা সংস্কৃতি, ইতিহাস ইত্যাদি সম্পর্কে জ্ঞান যাচাই করুন',
   'Learn Bengali through classic recipes — read, cook, and quiz yourself': 'ঐতিহ্যবাহী রেসিপি দিয়ে বাংলা শিখুন — পড়ুন, রান্না করুন, কুইজ দিন',
+  'Learn Bengali through classic songs — read lyrics, explore culture, and quiz yourself': 'ক্লাসিক গানের মাধ্যমে বাংলা শিখুন — গানের কথা পড়ুন, সংস্কৃতি জানুন, কুইজ দিন',
+  'Learn Bengali through classic films — explore stories, dialogue, and quiz yourself': 'ক্লাসিক চলচ্চিত্রের মাধ্যমে বাংলা শিখুন — গল্প জানুন, সংলাপ পড়ুন, কুইজ দিন',
   'Take Quiz': 'কুইজ দিন',
+  'Lyrics': 'গানের কথা',
+  'Dialogue': 'সংলাপ',
   'Ingredients': 'উপকরণ',
   'Instructions': 'প্রণালি',
   'Quiz': 'কুইজ',
@@ -714,6 +720,7 @@ function showScreen(id) {
   if (id === 'trivia-home') renderTriviaHome();
   if (id === 'recipes-home') renderRecipesHome();
   if (id === 'music-home') renderMusicHome();
+  if (id === 'movies-home') renderMoviesHome();
   if (id === 'placement-results') renderPlacementResultsUI();
 }
 
@@ -2184,6 +2191,7 @@ const phrasesScreens = ['phrases-home','phrases-situation','phrases-quiz','phras
 const readingScreens = ['reading-screen'];
 const recipesScreens = ['recipes-home','recipe-detail','recipe-quiz','recipe-results'];
 const musicScreens = ['music-home','music-detail','music-quiz','music-results'];
+const moviesScreens = ['movies-home','movie-detail','movie-quiz','movie-results'];
 
 function switchTab(tab) {
   currentTab = tab;
@@ -2212,6 +2220,8 @@ function switchTab(tab) {
     showScreen('recipes-home');
   } else if (tab === 'music') {
     showScreen('music-home');
+  } else if (tab === 'movies') {
+    showScreen('movies-home');
   } else {
     showScreen('grammar-home');
   }
@@ -7820,6 +7830,242 @@ function showMusicResults() {
   }
 }
 
+// ════════════════════════════════════════
+//  MOVIES
+// ════════════════════════════════════════
+let _movieCurrentId = null;
+let _movieQuestions = [];
+let _movieQIndex = 0;
+let _movieCorrect = 0;
+let _movieAnswered = false;
+let _movieMissed = [];
+let _movieStartTime = null;
+
+function renderMoviesHome() {
+  const grid = document.getElementById('movies-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  MOVIES.forEach(movie => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = movie.quiz.length;
+    let answered = 0;
+    movie.quiz.forEach(q => {
+      if ((progress.mastery['mvq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'movies:' + movie.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = movie.tags.map(tag =>
+      `<span class="movie-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${movie.icon}</div>
+      <h3>${escHtml(movie.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(movie.englishName)}</p>
+      <div class="movie-meta">🎬 ${escHtml(movie.director)} · ${escHtml(movie.year)}</div>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'movie-view';
+    card.dataset.id = movie.id;
+    grid.appendChild(card);
+  });
+}
+
+function showMovieDetail(movieId) {
+  const movie = MOVIES.find(m => m.id === movieId);
+  if (!movie) return;
+  _movieCurrentId = movieId;
+
+  document.getElementById('mv-title').textContent = movie.bengaliName + ' — ' + movie.englishName;
+  const content = document.getElementById('mv-content');
+
+  const tagHtml = movie.tags.map(tag =>
+    `<span class="movie-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  // Build dialogue lines
+  const dialogueBn = movie.dialogueBn.map(l => `<div class="movie-dialogue-line">${escHtml(l)}</div>`).join('');
+  const dialogueEn = movie.dialogueEn.map(l => `<div class="movie-dialogue-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="movie-meta">🎬 ${escHtml(movie.directorBn)} (${escHtml(movie.director)}) · ${escHtml(movie.year)}</div>
+    <div class="movie-section">
+      <p class="movie-desc-bn">${escHtml(movie.descBn)}</p>
+      <p class="movie-desc-en">${escHtml(movie.descEn)}</p>
+    </div>
+    <div class="movie-section">
+      <h3 class="movie-section-title">🎭 ${t('Dialogue')}</h3>
+      <div class="movie-dialogue">
+        <div class="movie-dialogue-col movie-dialogue-bn">${dialogueBn}</div>
+        <div class="movie-dialogue-col movie-dialogue-en">${dialogueEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="movie-start-quiz" data-id="${escHtml(movieId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('movie-detail');
+}
+
+function startMovieQuiz(movieId) {
+  const movie = MOVIES.find(m => m.id === movieId);
+  if (!movie) return;
+  _movieCurrentId = movieId;
+  _movieQuestions = shuffle(movie.quiz.slice());
+  _movieQIndex = 0;
+  _movieCorrect = 0;
+  _movieAnswered = false;
+  _movieMissed = [];
+  _movieStartTime = Date.now();
+  document.getElementById('mvq-title').textContent = movie.bengaliName + ' ' + t('Quiz');
+  showScreen('movie-quiz');
+  renderMovieQuestion();
+}
+
+function renderMovieQuestion() {
+  const q = _movieQuestions[_movieQIndex];
+  if (!q) return;
+  _movieAnswered = false;
+
+  const total = _movieQuestions.length;
+  const pct = Math.round((_movieQIndex / total) * 100);
+  document.getElementById('mvq-progress-fill').style.width = pct + '%';
+  document.getElementById('mvq-score').textContent = toBnDigits(_movieQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('mvq-feedback').innerHTML = '';
+  document.getElementById('mvq-explanation').style.display = 'none';
+  document.getElementById('mvq-explanation').textContent = '';
+  document.getElementById('mvq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('mvq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="movie-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerMovieMC(btn, chosen) {
+  if (_movieAnswered) return;
+  _movieAnswered = true;
+  const q = _movieQuestions[_movieQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#mvq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('mvq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _movieCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('mvq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _movieMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'mvq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('mvq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('mvq-next-btn').style.display = 'inline-block';
+}
+
+function movieNext() {
+  _movieQIndex++;
+  if (_movieQIndex >= _movieQuestions.length) {
+    showMovieResults();
+  } else {
+    _movieAnswered = false;
+    renderMovieQuestion();
+  }
+}
+
+function showMovieResults() {
+  showScreen('movie-results');
+  const total = _movieQuestions.length;
+  const pct = total > 0 ? Math.round((_movieCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('mvr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('mvr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('mvr-title').textContent = title;
+
+  const bestKey = 'movies:' + _movieCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_movieCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('mvr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+
+  const missedEl = document.getElementById('mvr-missed');
+  if (missedEl) {
+    if (_movieMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _movieMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
 let triviaCurrentCategory = null;
 let triviaQuestions = [];
 let triviaIndex = 0;
@@ -8284,6 +8530,12 @@ document.addEventListener('click', function(e) {
     case 'music-mc':          answerMusicMC(el, +a.idx); break;
     case 'music-next':        musicNext(); break;
     case 'music-retry':       startMusicQuiz(_musicCurrentId); break;
+    // Movies
+    case 'movie-view':        showMovieDetail(a.id); break;
+    case 'movie-start-quiz':  startMovieQuiz(a.id); break;
+    case 'movie-mc':          answerMovieMC(el, +a.idx); break;
+    case 'movie-next':        movieNext(); break;
+    case 'movie-retry':       startMovieQuiz(_movieCurrentId); break;
     // Trivia
     case 'trivia-mc':         answerTriviaMC(el, +a.idx); break;
     case 'trivia-submit-fib': answerTriviaFIB(); break;
