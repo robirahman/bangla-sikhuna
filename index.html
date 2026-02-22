@@ -56,6 +56,9 @@
   <button class="tab-btn" data-action="switch-tab" data-tab="recipes" data-t="Recipes">Recipes</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="music" data-t="Music">Music</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="movies" data-t="Movies">Movies</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="poetry" data-t="Poetry">Poetry</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="sports" data-t="Sports">Sports</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="proverbs" data-t="Proverbs">Proverbs</button>
   <button class="pt-retake-btn" id="pt-retake-btn" style="display:none" data-action="start-placement-test" data-t="Retake Placement">Retake Placement</button>
   <button class="review-due-btn" id="review-due-btn" style="display:none" data-action="start-review-session">🔔 <span data-t="Review Due">Review Due</span> (<span id="review-due-count">0</span>)</button>
 </div>
@@ -869,6 +872,171 @@
     <button class="nav-btn" data-action="show-screen" data-screen="movies-home">Home</button>
   </div>
   <div id="mvr-missed"></div>
+</div>
+
+<!-- POETRY HOME -->
+<div class="screen" id="poetry-home">
+  <div class="hero">
+    <h2>কবিতা</h2>
+    <p data-t="Learn Bengali through classic poems — read verses, explore poets, and quiz yourself">Learn Bengali through classic poems — read verses, explore poets, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="poetry-module-grid"></div>
+</div>
+
+<!-- POETRY DETAIL -->
+<div class="screen" id="poetry-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="poetry-home">← Back</button>
+    <h2 id="po-title">Poem</h2>
+    <div></div>
+  </div>
+  <div class="poetry-detail" id="po-content"></div>
+</div>
+
+<!-- POETRY QUIZ -->
+<div class="screen" id="poetry-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="poetry-home">← Quit</button>
+    <h2 id="poq-title">Poetry Quiz</h2>
+    <div id="poq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="poq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="poq-question-area"></div>
+  <div id="poq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="poq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="poq-next-btn"
+          data-action="poetry-next" style="display:none">Next →</button>
+</div>
+
+<!-- POETRY RESULTS -->
+<div class="screen" id="poetry-results">
+  <div class="results-circle" id="por-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="por-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="por-pct">0%</span>
+  </div>
+  <div class="results-title" id="por-title">Great job!</div>
+  <div class="results-sub" id="por-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="poetry-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="poetry-home">Home</button>
+  </div>
+  <div id="por-missed"></div>
+</div>
+
+<!-- SPORTS HOME -->
+<div class="screen" id="sports-home">
+  <div class="hero">
+    <h2>খেলাধুলা</h2>
+    <p data-t="Learn Bengali through sports and athletes — explore culture, learn vocabulary, and quiz yourself">Learn Bengali through sports and athletes — explore culture, learn vocabulary, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="sports-module-grid"></div>
+</div>
+
+<!-- SPORT DETAIL -->
+<div class="screen" id="sport-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="sports-home">← Back</button>
+    <h2 id="sp-title">Sport</h2>
+    <div></div>
+  </div>
+  <div class="sport-detail" id="sp-content"></div>
+</div>
+
+<!-- SPORT QUIZ -->
+<div class="screen" id="sport-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="sports-home">← Quit</button>
+    <h2 id="spq-title">Sport Quiz</h2>
+    <div id="spq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="spq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="spq-question-area"></div>
+  <div id="spq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="spq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="spq-next-btn"
+          data-action="sport-next" style="display:none">Next →</button>
+</div>
+
+<!-- SPORT RESULTS -->
+<div class="screen" id="sport-results">
+  <div class="results-circle" id="spr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="spr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="spr-pct">0%</span>
+  </div>
+  <div class="results-title" id="spr-title">Great job!</div>
+  <div class="results-sub" id="spr-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="sport-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="sports-home">Home</button>
+  </div>
+  <div id="spr-missed"></div>
+</div>
+
+<!-- PROVERBS HOME -->
+<div class="screen" id="proverbs-home">
+  <div class="hero">
+    <h2>প্রবাদ ও বাগধারা</h2>
+    <p data-t="Learn Bengali through proverbs and idioms — explore wisdom, learn vocabulary, and quiz yourself">Learn Bengali through proverbs and idioms — explore wisdom, learn vocabulary, and quiz yourself</p>
+  </div>
+  <div class="module-grid" id="proverbs-module-grid"></div>
+</div>
+
+<!-- PROVERB DETAIL -->
+<div class="screen" id="proverb-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="proverbs-home">← Back</button>
+    <h2 id="pv-title">Proverb</h2>
+    <div></div>
+  </div>
+  <div class="proverb-detail" id="pv-content"></div>
+</div>
+
+<!-- PROVERB QUIZ -->
+<div class="screen" id="proverb-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="proverbs-home">← Quit</button>
+    <h2 id="pvq-title">Proverb Quiz</h2>
+    <div id="pvq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="pvq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="pvq-question-area"></div>
+  <div id="pvq-feedback" style="padding:0 1rem;min-height:2rem"></div>
+  <div id="pvq-explanation" class="trivia-explanation" style="display:none"></div>
+  <button class="btn-primary quiz-next-btn" id="pvq-next-btn"
+          data-action="proverb-next" style="display:none">Next →</button>
+</div>
+
+<!-- PROVERB RESULTS -->
+<div class="screen" id="proverb-results">
+  <div class="results-circle" id="pvr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="pvr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="pvr-pct">0%</span>
+  </div>
+  <div class="results-title" id="pvr-title">Great job!</div>
+  <div class="results-sub" id="pvr-sub">You scored 3/3</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="proverb-retry">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="proverbs-home">Home</button>
+  </div>
+  <div id="pvr-missed"></div>
 </div>
 
 <script type="module" src="app.js"></script>

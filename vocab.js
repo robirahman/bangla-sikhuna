@@ -358,9 +358,41 @@ const VOCAB_DATA_RAW = [
 ["নিশ্চিত","nischit","certain / sure / definite","adjectives","adjective","তিনি নিশ্চিত যে সে আসবে। (tin nischit je se asbe — He is certain that he will come.)"],
 ["ভারতীয়","bharotio","Indian","adjectives","adjective","তিনি একজন ভারতীয় নাগরিক। (tin ekjon bharotio nagrik — He is an Indian citizen.)"],
 ["এত","et","so much / so many / this much","adjectives","adjective","এত দিন আমরা অপেক্ষা করেছি। (et din amra opekkha korech — We have waited so long.)"],
+// ─── Romance, Flirting & Marriage ───
+["ভালোবাসা","bhalobasha","love","romance","noun","ভালোবাসা সব কিছু জয় করে। (bhalobasha shob kichhu joy kore — Love conquers all.)","",[{"ref":"ভালোবাসি","type":"derived"},{"ref":"প্রেম","type":"synonym"}]],
+["প্রেম","prem","romantic love / romance","romance","noun","প্রেম অন্ধ। (prem ondho — Love is blind.)"],
+["ভালোবাসি","bhalobashi","I love (you)","romance","verb","আমি তোমাকে ভালোবাসি। (ami tomake bhalobashi — I love you.)","",[{"ref":"ভালোবাসা","type":"derived"}]],
+["প্রেমিক","premik","lover / boyfriend","romance","noun","সে আমার প্রেমিক। (she amar premik — He is my boyfriend.)","",[{"ref":"প্রেমিকা","type":"derived"}]],
+["প্রেমিকা","premika","lover / girlfriend","romance","noun","সে আমার প্রেমিকা। (she amar premika — She is my girlfriend.)","",[{"ref":"প্রেমিক","type":"derived"}]],
+["বিয়ে","biye","marriage / wedding","romance","noun","তাদের বিয়ে আগামী মাসে। (tader biye agami mashe — Their wedding is next month.)","",[{"ref":"বর","type":"compound"},{"ref":"কনে","type":"compound"}]],
+["বর","bor","groom / bridegroom","romance","noun","বর খুব সুন্দর দেখাচ্ছে। (bor khub shundor dekhachhe — The groom looks very handsome.)","",[{"ref":"কনে","type":"compound"}]],
+["কনে","kone","bride","romance","noun","কনে লাল শাড়ি পরেছে। (kone lal shari porechhe — The bride is wearing a red sari.)","",[{"ref":"বর","type":"compound"}]],
+["স্বামী","shami","husband","romance","noun","তার স্বামী ডাক্তার। (tar shami daktar — Her husband is a doctor.)","",[{"ref":"স্ত্রী","type":"compound"}]],
+["স্ত্রী","stri","wife","romance","noun","তার স্ত্রী শিক্ষিকা। (tar stri shikkhika — His wife is a teacher.)","",[{"ref":"স্বামী","type":"compound"}]],
+["চুম্বন","chumbon","kiss","romance","noun","সে তার কপালে চুম্বন দিল। (she tar kopale chumbon dilo — He/she kissed on the forehead.)"],
+["আলিঙ্গন","alingon","embrace / hug","romance","noun","তারা একে অপরকে আলিঙ্গন করল। (tara eke oporke alingon korlo — They embraced each other.)"],
+["হৃদয়","hridoy","heart","romance","noun","তুমি আমার হৃদয়ে আছো। (tumi amar hridoye achho — You are in my heart.)"],
+["সুন্দর","shundor","beautiful / handsome","romance","adjective","তুমি খুব সুন্দর। (tumi khub shundor — You are very beautiful.)"],
+["সুন্দরী","shundori","beautiful woman","romance","noun","সে একজন সুন্দরী। (she ekjon shundori — She is a beautiful woman.)",[{ref:"সুন্দর",type:"derived"}]],
+["প্রণয়","pronoy","courtship / love affair","romance","noun","তাদের প্রণয়ের গল্প অনেকেই জানে। (tader pronoyer golpo onekei jane — Many know their love story.)"],
+["এনগেজমেন্ট","engejment","engagement","romance","noun","আমাদের এনগেজমেন্ট হয়ে গেছে। (amader engejment hoye gechhe — Our engagement is done.)"],
+["বাগদান","bagdan","betrothal / engagement (formal)","romance","noun","বাগদানের পর বিয়ের তারিখ ঠিক হবে। (bagdaner por biyer tarikh thik hobe — After the betrothal, the wedding date will be fixed.)"],
+["মিষ্টি","mishti","sweet / cute","romance","adjective","তোমার হাসি খুব মিষ্টি। (tomar hashi khub mishti — Your smile is very sweet.)"],
+["হাসি","hashi","smile / laughter","romance","noun","তোমার হাসি দেখলে মন ভালো হয়ে যায়। (tomar hashi dekhle mon bhalo hoye jay — Seeing your smile makes me happy.)"],
+["দাম্পত্য","dampotyo","married life / conjugal","romance","noun","তাদের দাম্পত্য জীবন সুখের। (tader dampotyo jibon shukher — Their married life is happy.)"],
+["বিবাহ","bibaho","marriage (formal)","romance","noun","বিবাহ একটি পবিত্র বন্ধন। (bibaho ekti pobitro bondhon — Marriage is a sacred bond.)",[{ref:"বিয়ে",type:"synonym"}]],
+["মন","mon","mind / heart (emotional)","romance","noun","তুমি আমার মন কেড়ে নিয়েছো। (tumi amar mon kere niyechho — You have stolen my heart.)"],
+["মনের মানুষ","moner manush","soulmate / beloved","romance","noun","তুমি আমার মনের মানুষ। (tumi amar moner manush — You are my soulmate.)"],
+["বিরহ","biroho","separation / longing","romance","noun","বিরহ খুব কষ্টের। (biroho khub koshter — Separation is very painful.)"],
+["অপেক্ষা","opekkha","waiting / anticipation","romance","noun","তোমার জন্য অপেক্ষা করছি। (tomar jonno opekkha korchhi — I am waiting for you.)"],
+["মায়া","maya","affection / attachment","romance","noun","তোমার মায়া ছাড়তে পারি না। (tomar maya charte pari na — I can't let go of my affection for you.)"],
+["দম্পতি","dompoti","couple / married pair","romance","noun","তারা একটি সুখী দম্পতি। (tara ekti shukhi dompoti — They are a happy couple.)"],
+["জীবনসঙ্গী","jibonshongi","life partner","romance","noun","সবাই ভালো জীবনসঙ্গী চায়। (shobai bhalo jibonshongi chay — Everyone wants a good life partner.)"],
+["গোলাপ","golap","rose","romance","noun","সে তাকে একটি লাল গোলাপ দিল। (she take ekti lal golap dilo — He gave her a red rose.)"],
+["উপহার","upohar","gift / present","romance","noun","এটি তোমার জন্য উপহার। (eti tomar jonno upohar — This is a gift for you.)"],
 ];
 
-const VOCAB_TOTAL_WORDS = 4399; // updated by build_vocab_packs.py
+const VOCAB_TOTAL_WORDS = 4429; // updated by build_vocab_packs.py
 
 // VOCAB_DATA is mutable so lazy-loaded packs can be appended at runtime.
 // Pack 0 is inlined here; packs 1-3 are fetched from vocab-pack-N.json.
@@ -405,6 +437,7 @@ const VOCAB_CATEGORIES = {
   "health":      { title:"Health & Medicine", icon:"🏥", color:"#ff6b6b" },
   "technology":  { title:"Technology", icon:"💻", color:"#49c0f8" },
   "phrases":     { title:"Useful Phrases", icon:"💬", color:"#58cc02" },
+  "romance":     { title:"Romance & Marriage", icon:"💕", color:"#ff6b6b" },
 };
 
 

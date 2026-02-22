@@ -685,16 +685,14 @@ nav h1 span { color: var(--accent); }
 
 /* ─── TAB BAR ─── */
 .tab-bar {
-  display: flex; gap: 0; background: var(--card);
+  display: flex; flex-wrap: wrap; gap: 0; background: var(--card);
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  padding: 0 24px; position: sticky; top: 56px; z-index: 99;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding: 0 16px; position: sticky; top: 56px; z-index: 99;
+  justify-content: center;
 }
-.tab-bar::-webkit-scrollbar { display: none; }
-.tab-bar { scrollbar-width: none; }
 .tab-btn {
   background: none; border: none; color: var(--text-dim);
-  padding: 12px 20px; font-size: 0.95rem; cursor: pointer;
+  padding: 9px 14px; font-size: 0.88rem; cursor: pointer;
   border-bottom: 3px solid transparent; transition: all 0.2s;
   font-weight: 600;
 }
@@ -1273,8 +1271,8 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   nav { padding: 12px 16px; }
   .screen { padding: 16px; }
   .flashcard-face { padding: 24px; }
-  .tab-bar { padding: 0 12px; }
-  .tab-btn { padding: 10px 14px; font-size: 0.85rem; }
+  .tab-bar { padding: 0 8px; }
+  .tab-btn { padding: 7px 10px; font-size: 0.8rem; }
   .vocab-row { grid-template-columns: 70px 1fr 1fr auto; gap: 8px; padding: 10px 12px; }
   .vocab-row .vr-bengali { font-size: 1.1rem; }
   .vocab-card-bengali { font-size: 3rem; }
@@ -1289,9 +1287,6 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   .back-to-site-nav { display: none; }
   .streak-bar { display: none; }
   .nav-stats { gap: 12px; }
-
-  /* Tabs: scroll horizontally instead of overflowing */
-  .tab-btn { flex-shrink: 0; white-space: nowrap; }
 
   /* Learn nav: shrink buttons so all three fit on a 320px screen */
   .learn-nav { gap: 8px; }
@@ -2148,6 +2143,203 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   font-size: 0.84rem;
   color: var(--text-dim);
   margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════
+   POETRY
+   ═══════════════════════════════════ */
+.poetry-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.poetry-section {
+  margin-bottom: 24px;
+}
+.poetry-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.poetry-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.poetry-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.poetry-verses {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .poetry-verses {
+    grid-template-columns: 1fr;
+  }
+}
+.poetry-verses-col {}
+.poetry-verse-line {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.poetry-verses-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.poetry-verses-en {
+  color: var(--text-dim);
+}
+.poetry-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.poetry-meta {
+  font-size: 0.84rem;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════
+   SPORTS
+   ═══════════════════════════════════ */
+.sport-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.sport-section {
+  margin-bottom: 24px;
+}
+.sport-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.sport-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.sport-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.sport-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .sport-facts {
+    grid-template-columns: 1fr;
+  }
+}
+.sport-facts-col {}
+.sport-fact-line {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.sport-facts-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.sport-facts-en {
+  color: var(--text-dim);
+}
+.sport-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════
+   PROVERBS
+   ═══════════════════════════════════ */
+.proverb-detail {
+  padding: 0 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.proverb-section {
+  margin-bottom: 24px;
+}
+.proverb-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.proverb-desc-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.proverb-desc-en {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.proverb-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .proverb-list {
+    grid-template-columns: 1fr;
+  }
+}
+.proverb-list-col {}
+.proverb-item {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.proverb-list-bn {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  color: var(--text);
+}
+.proverb-list-en {
+  color: var(--text-dim);
+}
+.proverb-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-dim);
+  margin-right: 4px;
+  margin-bottom: 4px;
 }
 
 /* ═══════════════════════════════════

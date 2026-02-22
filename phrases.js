@@ -1,4 +1,4 @@
-// Bengali Common Phrases — 12 situational categories, ~144 phrases total
+// Bengali Common Phrases — 13 situational categories, ~169 phrases total
 // Format follows grammar.js pattern for consistency.
 
 // ════════════════════════════════════════
@@ -17,6 +17,7 @@ const PHRASES_SITUATIONS = [
   { slug: "health", title: "Health & Emergencies", icon: "🏥", desc: "Describe symptoms and get help in emergencies" },
   { slug: "social", title: "Social Conversation", icon: "💬", desc: "Small talk, opinions, and social expressions" },
   { slug: "numbers", title: "Numbers in Context", icon: "🔢", desc: "Count, give prices, ages, and phone numbers" },
+  { slug: "romance", title: "Romance & Marriage", icon: "💕", desc: "Express affection, flirt, compliment, and discuss relationships" },
 ];
 
 // Wave unlock order — earlier situations unlock first.
@@ -34,6 +35,7 @@ const PHRASES_WAVE_ORDER = [
   "health",
   "social",
   "numbers",
+  "romance",
 ];
 
 // ════════════════════════════════════════
@@ -1148,6 +1150,203 @@ const PHRASES_DATA = [
     bengali: "অর্ধেক, দ্বিগুণ",
     roman: "ordhek, dwiguno",
     english: "Half, double",
+  },
+
+  // ════════════════════════════════════════
+  //  ROMANCE & MARRIAGE
+  // ════════════════════════════════════════
+  {
+    id: "rom-i-love-you",
+    situation: "romance",
+    bengali: "আমি তোমাকে ভালোবাসি",
+    roman: "ami tomake bhalobashi",
+    english: "I love you (informal tumi)",
+    notes: "তোমাকে = you (objective). Use তোমাকে with someone close.",
+    reply: { bengali: "আমিও তোমাকে ভালোবাসি", roman: "amio tomake bhalobashi", english: "I love you too" },
+  },
+  {
+    id: "rom-i-love-you-formal",
+    situation: "romance",
+    bengali: "আমি আপনাকে ভালোবাসি",
+    roman: "ami apnake bhalobashi",
+    english: "I love you (formal apni)",
+    notes: "আপনাকে is the formal/respectful form — used early in courtship or with elders.",
+  },
+  {
+    id: "rom-i-like-you",
+    situation: "romance",
+    bengali: "তুমি আমার ভালো লাগো",
+    roman: "tumi amar bhalo lago",
+    english: "I like you / I'm attracted to you",
+    notes: "ভালো লাগা is softer than ভালোবাসা — more like 'I fancy you.'",
+  },
+  {
+    id: "rom-you-are-beautiful",
+    situation: "romance",
+    bengali: "তুমি খুব সুন্দর",
+    roman: "tumi khub shundor",
+    english: "You are very beautiful / handsome",
+    reply: { bengali: "ধন্যবাদ, তুমিও", roman: "dhonnobad, tumio", english: "Thank you, you too" },
+  },
+  {
+    id: "rom-your-smile",
+    situation: "romance",
+    bengali: "তোমার হাসি খুব মিষ্টি",
+    roman: "tomar hashi khub mishti",
+    english: "Your smile is very sweet",
+  },
+  {
+    id: "rom-your-eyes",
+    situation: "romance",
+    bengali: "তোমার চোখ দুটো খুব সুন্দর",
+    roman: "tomar chokh duto khub shundor",
+    english: "Your eyes are very beautiful",
+  },
+  {
+    id: "rom-miss-you",
+    situation: "romance",
+    bengali: "তোমাকে খুব মনে পড়ে",
+    roman: "tomake khub mone pore",
+    english: "I miss you very much",
+    reply: { bengali: "আমারও তোমাকে মনে পড়ে", roman: "amaro tomake mone pore", english: "I miss you too" },
+  },
+  {
+    id: "rom-thinking-of-you",
+    situation: "romance",
+    bengali: "আমি তোমার কথা ভাবছি",
+    roman: "ami tomar kotha bhabchhi",
+    english: "I'm thinking of you",
+  },
+  {
+    id: "rom-want-to-meet",
+    situation: "romance",
+    bengali: "তোমার সাথে দেখা করতে চাই",
+    roman: "tomar shathe dekha korte chai",
+    english: "I want to meet you / see you",
+    reply: { bengali: "আমিও, কখন দেখা হবে?", roman: "amio, kokhon dekha hobe?", english: "Me too, when shall we meet?" },
+  },
+  {
+    id: "rom-go-out",
+    situation: "romance",
+    bengali: "আমার সাথে বাইরে যাবে?",
+    roman: "amar shathe baire jabe?",
+    english: "Will you go out with me?",
+    reply: { bengali: "হ্যাঁ, চলো!", roman: "hae, cholo!", english: "Yes, let's go!" },
+  },
+  {
+    id: "rom-dinner",
+    situation: "romance",
+    bengali: "আজ রাতে একসাথে খেতে যাবে?",
+    roman: "aj rate ekshathe khete jabe?",
+    english: "Will you go for dinner together tonight?",
+    notes: "একসাথে = together. A classic way to ask someone on a date.",
+  },
+  {
+    id: "rom-are-you-single",
+    situation: "romance",
+    bengali: "তুমি কি একা?",
+    roman: "tumi ki eka?",
+    english: "Are you single? (lit. are you alone?)",
+    notes: "একা means alone/single. A casual way to ask about relationship status.",
+  },
+  {
+    id: "rom-are-you-married",
+    situation: "romance",
+    bengali: "আপনার কি বিয়ে হয়েছে?",
+    roman: "apnar ki biye hoyechhe?",
+    english: "Are you married? (formal)",
+    reply: { bengali: "হ্যাঁ, আমার বিয়ে হয়েছে", roman: "hae, amar biye hoyechhe", english: "Yes, I am married" },
+  },
+  {
+    id: "rom-will-you-marry",
+    situation: "romance",
+    bengali: "তুমি কি আমাকে বিয়ে করবে?",
+    roman: "tumi ki amake biye korbe?",
+    english: "Will you marry me?",
+    notes: "বিয়ে করা = to marry. This is how a proposal is typically phrased.",
+    reply: { bengali: "হ্যাঁ, আমি রাজি!", roman: "hae, ami raji!", english: "Yes, I agree!" },
+  },
+  {
+    id: "rom-my-heart",
+    situation: "romance",
+    bengali: "তুমি আমার মনের মানুষ",
+    roman: "tumi amar moner manush",
+    english: "You are my soulmate (lit. person of my heart)",
+    notes: "মনের মানুষ is a deeply romantic Bengali expression for one's beloved.",
+  },
+  {
+    id: "rom-cant-live-without",
+    situation: "romance",
+    bengali: "তোমাকে ছাড়া আমি বাঁচতে পারি না",
+    roman: "tomake chhara ami bachte pari na",
+    english: "I can't live without you",
+  },
+  {
+    id: "rom-stole-my-heart",
+    situation: "romance",
+    bengali: "তুমি আমার মন কেড়ে নিয়েছো",
+    roman: "tumi amar mon kere niyechho",
+    english: "You have stolen my heart",
+  },
+  {
+    id: "rom-engagement",
+    situation: "romance",
+    bengali: "আমাদের এনগেজমেন্ট হয়ে গেছে",
+    roman: "amader engejment hoye gechhe",
+    english: "We are engaged",
+    reply: { bengali: "অভিনন্দন!", roman: "obhinondon!", english: "Congratulations!" },
+  },
+  {
+    id: "rom-wedding-invite",
+    situation: "romance",
+    bengali: "আমাদের বিয়েতে আপনাকে আমন্ত্রণ জানাচ্ছি",
+    roman: "amader biyete apnake amontrono janachhi",
+    english: "You are invited to our wedding",
+    reply: { bengali: "অবশ্যই আসব!", roman: "obosshoi ashbo!", english: "Of course I'll come!" },
+  },
+  {
+    id: "rom-happy-married",
+    situation: "romance",
+    bengali: "বিবাহিত জীবনের শুভেচ্ছা",
+    roman: "bibahito jiboner shubhechha",
+    english: "Best wishes for married life",
+  },
+  {
+    id: "rom-looking-nice",
+    situation: "romance",
+    bengali: "আজ তোমাকে খুব সুন্দর লাগছে",
+    roman: "aj tomake khub shundor lagchhe",
+    english: "You look very beautiful/handsome today",
+  },
+  {
+    id: "rom-gift-for-you",
+    situation: "romance",
+    bengali: "এটা তোমার জন্য",
+    roman: "eta tomar jonno",
+    english: "This is for you (giving a gift)",
+    reply: { bengali: "কী সুন্দর! ধন্যবাদ!", roman: "ki shundor! dhonnobad!", english: "How beautiful! Thank you!" },
+  },
+  {
+    id: "rom-love-at-first-sight",
+    situation: "romance",
+    bengali: "প্রথম দেখাতেই প্রেম",
+    roman: "prothom dekhatei prem",
+    english: "Love at first sight",
+    notes: "প্রথম = first, দেখা = seeing. A common romantic expression.",
+  },
+  {
+    id: "rom-holding-hands",
+    situation: "romance",
+    bengali: "আমার হাত ধরো",
+    roman: "amar hat dhoro",
+    english: "Hold my hand",
+  },
+  {
+    id: "rom-wait-for-you",
+    situation: "romance",
+    bengali: "আমি তোমার জন্য অপেক্ষা করব",
+    roman: "ami tomar jonno opekkha korbo",
+    english: "I will wait for you",
   },
 ];
 

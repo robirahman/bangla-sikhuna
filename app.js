@@ -10,6 +10,9 @@ import { TRIVIA_CATEGORIES, TRIVIA_QUESTIONS } from './trivia.js';
 import { RECIPES } from './recipes.js';
 import { MUSIC } from './music.js';
 import { MOVIES } from './movies.js';
+import { POETRY } from './poetry.js';
+import { SPORTS } from './sports.js';
+import { PROVERBS } from './proverbs.js';
 
 // ════════════════════════════════════════
 //  DISPLAY MODE — Standard / Romanized / Immersion
@@ -26,6 +29,9 @@ const UI_STRINGS_BN = {
   'Trivia': 'তথ্য',
   'Recipes': 'রান্নাঘর',
   'Movies': 'চলচ্চিত্র',
+  'Poetry': 'কবিতা',
+  'Sports': 'খেলাধুলা',
+  'Proverbs': 'প্রবাদ',
   // ── Buttons ──
   'Start Quiz →': 'কুইজ শুরু →',
   'Practice Quiz →': 'অনুশীলন কুইজ →',
@@ -53,9 +59,14 @@ const UI_STRINGS_BN = {
   'Learn Bengali through classic recipes — read, cook, and quiz yourself': 'ঐতিহ্যবাহী রেসিপি দিয়ে বাংলা শিখুন — পড়ুন, রান্না করুন, কুইজ দিন',
   'Learn Bengali through classic songs — read lyrics, explore culture, and quiz yourself': 'ক্লাসিক গানের মাধ্যমে বাংলা শিখুন — গানের কথা পড়ুন, সংস্কৃতি জানুন, কুইজ দিন',
   'Learn Bengali through classic films — explore stories, dialogue, and quiz yourself': 'ক্লাসিক চলচ্চিত্রের মাধ্যমে বাংলা শিখুন — গল্প জানুন, সংলাপ পড়ুন, কুইজ দিন',
+  'Learn Bengali through classic poems — read verses, explore poets, and quiz yourself': 'ক্লাসিক কবিতার মাধ্যমে বাংলা শিখুন — পদ্য পড়ুন, কবি জানুন, কুইজ দিন',
+  'Learn Bengali through sports and athletes — explore culture, learn vocabulary, and quiz yourself': 'খেলাধুলা ও খেলোয়াড়দের মাধ্যমে বাংলা শিখুন — সংস্কৃতি জানুন, শব্দ শিখুন, কুইজ দিন',
+  'Learn Bengali through proverbs and idioms — explore wisdom, learn vocabulary, and quiz yourself': 'প্রবাদ ও বাগধারার মাধ্যমে বাংলা শিখুন — জ্ঞান জানুন, শব্দ শিখুন, কুইজ দিন',
   'Take Quiz': 'কুইজ দিন',
   'Lyrics': 'গানের কথা',
   'Dialogue': 'সংলাপ',
+  'Verses': 'পদ্য',
+  'Key Facts': 'মূল তথ্য',
   'Ingredients': 'উপকরণ',
   'Instructions': 'প্রণালি',
   'Quiz': 'কুইজ',
@@ -721,6 +732,9 @@ function showScreen(id) {
   if (id === 'recipes-home') renderRecipesHome();
   if (id === 'music-home') renderMusicHome();
   if (id === 'movies-home') renderMoviesHome();
+  if (id === 'poetry-home') renderPoetryHome();
+  if (id === 'sports-home') renderSportsHome();
+  if (id === 'proverbs-home') renderProverbsHome();
   if (id === 'placement-results') renderPlacementResultsUI();
 }
 
@@ -2192,6 +2206,9 @@ const readingScreens = ['reading-screen'];
 const recipesScreens = ['recipes-home','recipe-detail','recipe-quiz','recipe-results'];
 const musicScreens = ['music-home','music-detail','music-quiz','music-results'];
 const moviesScreens = ['movies-home','movie-detail','movie-quiz','movie-results'];
+const poetryScreens = ['poetry-home','poetry-detail','poetry-quiz','poetry-results'];
+const sportsScreens = ['sports-home','sport-detail','sport-quiz','sport-results'];
+const proverbsScreens = ['proverbs-home','proverb-detail','proverb-quiz','proverb-results'];
 
 function switchTab(tab) {
   currentTab = tab;
@@ -2222,6 +2239,12 @@ function switchTab(tab) {
     showScreen('music-home');
   } else if (tab === 'movies') {
     showScreen('movies-home');
+  } else if (tab === 'poetry') {
+    showScreen('poetry-home');
+  } else if (tab === 'sports') {
+    showScreen('sports-home');
+  } else if (tab === 'proverbs') {
+    showScreen('proverbs-home');
   } else {
     showScreen('grammar-home');
   }
@@ -8066,6 +8089,707 @@ function showMovieResults() {
   }
 }
 
+// ════════════════════════════════════════
+//  POETRY
+// ════════════════════════════════════════
+let _poetryCurrentId = null;
+let _poetryQuestions = [];
+let _poetryQIndex = 0;
+let _poetryCorrect = 0;
+let _poetryAnswered = false;
+let _poetryMissed = [];
+let _poetryStartTime = null;
+
+function renderPoetryHome() {
+  const grid = document.getElementById('poetry-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  POETRY.forEach(poem => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = poem.quiz.length;
+    let answered = 0;
+    poem.quiz.forEach(q => {
+      if ((progress.mastery['poq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'poetry:' + poem.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = poem.tags.map(tag =>
+      `<span class="poetry-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${poem.icon}</div>
+      <h3>${escHtml(poem.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(poem.englishName)}</p>
+      <div class="poetry-meta">✍️ ${escHtml(poem.poet)} · ${escHtml(poem.year)}</div>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'poetry-view';
+    card.dataset.id = poem.id;
+    grid.appendChild(card);
+  });
+}
+
+function showPoetryDetail(poemId) {
+  const poem = POETRY.find(m => m.id === poemId);
+  if (!poem) return;
+  _poetryCurrentId = poemId;
+
+  document.getElementById('po-title').textContent = poem.bengaliName + ' — ' + poem.englishName;
+  const content = document.getElementById('po-content');
+
+  const tagHtml = poem.tags.map(tag =>
+    `<span class="poetry-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  const versesBn = poem.versesBn.map(l => `<div class="poetry-verse-line">${escHtml(l)}</div>`).join('');
+  const versesEn = poem.versesEn.map(l => `<div class="poetry-verse-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="poetry-meta">✍️ ${escHtml(poem.poetBn)} (${escHtml(poem.poet)}) · ${escHtml(poem.year)}</div>
+    <div class="poetry-section">
+      <p class="poetry-desc-bn">${escHtml(poem.descBn)}</p>
+      <p class="poetry-desc-en">${escHtml(poem.descEn)}</p>
+    </div>
+    <div class="poetry-section">
+      <h3 class="poetry-section-title">📜 ${t('Verses')}</h3>
+      <div class="poetry-verses">
+        <div class="poetry-verses-col poetry-verses-bn">${versesBn}</div>
+        <div class="poetry-verses-col poetry-verses-en">${versesEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="poetry-start-quiz" data-id="${escHtml(poemId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('poetry-detail');
+}
+
+function startPoetryQuiz(poemId) {
+  const poem = POETRY.find(m => m.id === poemId);
+  if (!poem) return;
+  _poetryCurrentId = poemId;
+  _poetryQuestions = shuffle(poem.quiz.slice());
+  _poetryQIndex = 0;
+  _poetryCorrect = 0;
+  _poetryAnswered = false;
+  _poetryMissed = [];
+  _poetryStartTime = Date.now();
+  document.getElementById('poq-title').textContent = poem.bengaliName + ' ' + t('Quiz');
+  showScreen('poetry-quiz');
+  renderPoetryQuestion();
+}
+
+function renderPoetryQuestion() {
+  const q = _poetryQuestions[_poetryQIndex];
+  if (!q) return;
+  _poetryAnswered = false;
+
+  const total = _poetryQuestions.length;
+  const pct = Math.round((_poetryQIndex / total) * 100);
+  document.getElementById('poq-progress-fill').style.width = pct + '%';
+  document.getElementById('poq-score').textContent = toBnDigits(_poetryQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('poq-feedback').innerHTML = '';
+  document.getElementById('poq-explanation').style.display = 'none';
+  document.getElementById('poq-explanation').textContent = '';
+  document.getElementById('poq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('poq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="poetry-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerPoetryMC(btn, chosen) {
+  if (_poetryAnswered) return;
+  _poetryAnswered = true;
+  const q = _poetryQuestions[_poetryQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#poq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('poq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _poetryCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('poq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _poetryMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'poq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('poq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('poq-next-btn').style.display = 'inline-block';
+}
+
+function poetryNext() {
+  _poetryQIndex++;
+  if (_poetryQIndex >= _poetryQuestions.length) {
+    showPoetryResults();
+  } else {
+    _poetryAnswered = false;
+    renderPoetryQuestion();
+  }
+}
+
+function showPoetryResults() {
+  showScreen('poetry-results');
+  const total = _poetryQuestions.length;
+  const pct = total > 0 ? Math.round((_poetryCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('por-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('por-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('por-title').textContent = title;
+
+  const bestKey = 'poetry:' + _poetryCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_poetryCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('por-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+
+  const missedEl = document.getElementById('por-missed');
+  if (missedEl) {
+    if (_poetryMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _poetryMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
+// ════════════════════════════════════════
+//  SPORTS
+// ════════════════════════════════════════
+let _sportCurrentId = null;
+let _sportQuestions = [];
+let _sportQIndex = 0;
+let _sportCorrect = 0;
+let _sportAnswered = false;
+let _sportMissed = [];
+let _sportStartTime = null;
+
+function renderSportsHome() {
+  const grid = document.getElementById('sports-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  SPORTS.forEach(sport => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = sport.quiz.length;
+    let answered = 0;
+    sport.quiz.forEach(q => {
+      if ((progress.mastery['spq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'sports:' + sport.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = sport.tags.map(tag =>
+      `<span class="sport-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${sport.icon}</div>
+      <h3>${escHtml(sport.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(sport.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'sport-view';
+    card.dataset.id = sport.id;
+    grid.appendChild(card);
+  });
+}
+
+function showSportDetail(sportId) {
+  const sport = SPORTS.find(m => m.id === sportId);
+  if (!sport) return;
+  _sportCurrentId = sportId;
+
+  document.getElementById('sp-title').textContent = sport.bengaliName + ' — ' + sport.englishName;
+  const content = document.getElementById('sp-content');
+
+  const tagHtml = sport.tags.map(tag =>
+    `<span class="sport-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  const factsBn = sport.factsBn.map(l => `<div class="sport-fact-line">${escHtml(l)}</div>`).join('');
+  const factsEn = sport.factsEn.map(l => `<div class="sport-fact-line">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="sport-section">
+      <p class="sport-desc-bn">${escHtml(sport.descBn)}</p>
+      <p class="sport-desc-en">${escHtml(sport.descEn)}</p>
+    </div>
+    <div class="sport-section">
+      <h3 class="sport-section-title">📋 ${t('Key Facts')}</h3>
+      <div class="sport-facts">
+        <div class="sport-facts-col sport-facts-bn">${factsBn}</div>
+        <div class="sport-facts-col sport-facts-en">${factsEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="sport-start-quiz" data-id="${escHtml(sportId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('sport-detail');
+}
+
+function startSportQuiz(sportId) {
+  const sport = SPORTS.find(m => m.id === sportId);
+  if (!sport) return;
+  _sportCurrentId = sportId;
+  _sportQuestions = shuffle(sport.quiz.slice());
+  _sportQIndex = 0;
+  _sportCorrect = 0;
+  _sportAnswered = false;
+  _sportMissed = [];
+  _sportStartTime = Date.now();
+  document.getElementById('spq-title').textContent = sport.bengaliName + ' ' + t('Quiz');
+  showScreen('sport-quiz');
+  renderSportQuestion();
+}
+
+function renderSportQuestion() {
+  const q = _sportQuestions[_sportQIndex];
+  if (!q) return;
+  _sportAnswered = false;
+
+  const total = _sportQuestions.length;
+  const pct = Math.round((_sportQIndex / total) * 100);
+  document.getElementById('spq-progress-fill').style.width = pct + '%';
+  document.getElementById('spq-score').textContent = toBnDigits(_sportQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('spq-feedback').innerHTML = '';
+  document.getElementById('spq-explanation').style.display = 'none';
+  document.getElementById('spq-explanation').textContent = '';
+  document.getElementById('spq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('spq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="sport-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerSportMC(btn, chosen) {
+  if (_sportAnswered) return;
+  _sportAnswered = true;
+  const q = _sportQuestions[_sportQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#spq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('spq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _sportCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('spq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _sportMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'spq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('spq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('spq-next-btn').style.display = 'inline-block';
+}
+
+function sportNext() {
+  _sportQIndex++;
+  if (_sportQIndex >= _sportQuestions.length) {
+    showSportResults();
+  } else {
+    _sportAnswered = false;
+    renderSportQuestion();
+  }
+}
+
+function showSportResults() {
+  showScreen('sport-results');
+  const total = _sportQuestions.length;
+  const pct = total > 0 ? Math.round((_sportCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('spr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('spr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('spr-title').textContent = title;
+
+  const bestKey = 'sports:' + _sportCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_sportCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('spr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+
+  const missedEl = document.getElementById('spr-missed');
+  if (missedEl) {
+    if (_sportMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _sportMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
+// ════════════════════════════════════════
+//  PROVERBS
+// ════════════════════════════════════════
+let _proverbCurrentId = null;
+let _proverbQuestions = [];
+let _proverbQIndex = 0;
+let _proverbCorrect = 0;
+let _proverbAnswered = false;
+let _proverbMissed = [];
+let _proverbStartTime = null;
+
+function renderProverbsHome() {
+  const grid = document.getElementById('proverbs-module-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  PROVERBS.forEach(proverb => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const total = proverb.quiz.length;
+    let answered = 0;
+    proverb.quiz.forEach(q => {
+      if ((progress.mastery['pvq:' + q.id] || 0) >= 1) answered++;
+    });
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    const bestKey = 'proverbs:' + proverb.id;
+    const best = progress.quizHistory && progress.quizHistory[bestKey] ? progress.quizHistory[bestKey].best : -1;
+    const bestLabel = best >= 0 ? ` · ${t('Best:')} ${toBnDigits(best)}%` : '';
+
+    const tagHtml = proverb.tags.map(tag =>
+      `<span class="proverb-tag">${escHtml(tag)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div class="module-icon">${proverb.icon}</div>
+      <h3>${escHtml(proverb.bengaliName)}</h3>
+      <p style="margin:4px 0 2px;font-size:0.88rem;color:var(--text-dim)">${escHtml(proverb.englishName)}</p>
+      <div style="margin-bottom:8px">${tagHtml}</div>
+      <div class="module-progress"><div class="module-progress-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+      <div class="progress-label">${toBnDigits(answered)}/${toBnDigits(total)} ${t('Quiz')}${bestLabel}</div>
+    `;
+    card.dataset.action = 'proverb-view';
+    card.dataset.id = proverb.id;
+    grid.appendChild(card);
+  });
+}
+
+function showProverbDetail(proverbId) {
+  const proverb = PROVERBS.find(m => m.id === proverbId);
+  if (!proverb) return;
+  _proverbCurrentId = proverbId;
+
+  document.getElementById('pv-title').textContent = proverb.bengaliName + ' — ' + proverb.englishName;
+  const content = document.getElementById('pv-content');
+
+  const tagHtml = proverb.tags.map(tag =>
+    `<span class="proverb-tag">${escHtml(tag)}</span>`
+  ).join(' ');
+
+  const proverbsBn = proverb.proverbsBn.map(l => `<div class="proverb-item">${escHtml(l)}</div>`).join('');
+  const proverbsEn = proverb.proverbsEn.map(l => `<div class="proverb-item">${escHtml(l)}</div>`).join('');
+
+  content.innerHTML = `
+    <div style="margin-bottom:8px">${tagHtml}</div>
+    <div class="proverb-section">
+      <p class="proverb-desc-bn">${escHtml(proverb.descBn)}</p>
+      <p class="proverb-desc-en">${escHtml(proverb.descEn)}</p>
+    </div>
+    <div class="proverb-section">
+      <h3 class="proverb-section-title">📝 ${t('Proverbs')}</h3>
+      <div class="proverb-list">
+        <div class="proverb-list-col proverb-list-bn">${proverbsBn}</div>
+        <div class="proverb-list-col proverb-list-en">${proverbsEn}</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0">
+      <button class="btn-primary" data-action="proverb-start-quiz" data-id="${escHtml(proverbId)}" style="font-size:1.05rem;padding:14px 32px">
+        📝 ${t('Take Quiz')}
+      </button>
+    </div>
+  `;
+
+  showScreen('proverb-detail');
+}
+
+function startProverbQuiz(proverbId) {
+  const proverb = PROVERBS.find(m => m.id === proverbId);
+  if (!proverb) return;
+  _proverbCurrentId = proverbId;
+  _proverbQuestions = shuffle(proverb.quiz.slice());
+  _proverbQIndex = 0;
+  _proverbCorrect = 0;
+  _proverbAnswered = false;
+  _proverbMissed = [];
+  _proverbStartTime = Date.now();
+  document.getElementById('pvq-title').textContent = proverb.bengaliName + ' ' + t('Quiz');
+  showScreen('proverb-quiz');
+  renderProverbQuestion();
+}
+
+function renderProverbQuestion() {
+  const q = _proverbQuestions[_proverbQIndex];
+  if (!q) return;
+  _proverbAnswered = false;
+
+  const total = _proverbQuestions.length;
+  const pct = Math.round((_proverbQIndex / total) * 100);
+  document.getElementById('pvq-progress-fill').style.width = pct + '%';
+  document.getElementById('pvq-score').textContent = toBnDigits(_proverbQIndex + 1) + ' / ' + toBnDigits(total);
+  document.getElementById('pvq-feedback').innerHTML = '';
+  document.getElementById('pvq-explanation').style.display = 'none';
+  document.getElementById('pvq-explanation').textContent = '';
+  document.getElementById('pvq-next-btn').style.display = 'none';
+
+  const prompt = getDisplayMode() === 'immersion' && q.promptBn ? q.promptBn : q.prompt;
+  const indices = q.options.map((_, i) => i);
+  const shuffled = shuffle(indices);
+  q._shuffledIndices = shuffled;
+  const area = document.getElementById('pvq-question-area');
+  let html = '<div class="quiz-question-text" style="font-size:1.05rem;margin-bottom:1rem;line-height:1.5">' + escHtml(prompt) + '</div>';
+  html += '<div class="quiz-options">';
+  shuffled.forEach((origIdx, displayIdx) => {
+    html += `<button class="option-btn" data-action="proverb-mc" data-idx="${displayIdx}">${escHtml(q.options[origIdx])}</button>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function answerProverbMC(btn, chosen) {
+  if (_proverbAnswered) return;
+  _proverbAnswered = true;
+  const q = _proverbQuestions[_proverbQIndex];
+  if (!q) return;
+
+  const btns = document.querySelectorAll('#pvq-question-area .option-btn');
+  btns.forEach(b => { b.disabled = true; });
+
+  const shuffledIndices = q._shuffledIndices || q.options.map((_, i) => i);
+  const chosenOrigIdx = shuffledIndices[chosen];
+  const correct = (chosenOrigIdx === q.correct);
+  const correctDisplayIdx = shuffledIndices.indexOf(q.correct);
+
+  if (correct) {
+    btn.style.background = 'rgba(62,201,122,0.25)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--accent)';
+    document.getElementById('pvq-feedback').innerHTML = '<span style="color:var(--accent);font-weight:600">✓ ' + t('Correct!') + ' +2 XP</span>';
+    addXP(2);
+    _proverbCorrect++;
+  } else {
+    btn.style.background = 'rgba(232,80,80,0.2)';
+    btn.style.borderColor = 'var(--wrong)';
+    btn.style.color = 'var(--wrong)';
+    btns.forEach((b, i) => {
+      if (i === correctDisplayIdx) {
+        b.style.background = 'rgba(62,201,122,0.25)';
+        b.style.borderColor = 'var(--accent)';
+        b.style.color = 'var(--accent)';
+      }
+    });
+    document.getElementById('pvq-feedback').innerHTML = '<span style="color:var(--wrong);font-weight:600">✗ ' + t('Incorrect') + '</span>';
+    _proverbMissed.push({ answer: q.options[q.correct] });
+  }
+
+  const masteryKey = 'pvq:' + q.id;
+  if (!progress.mastery[masteryKey]) progress.mastery[masteryKey] = 0;
+  if (correct) {
+    progress.mastery[masteryKey] = Math.min(2, (progress.mastery[masteryKey] || 0) + 1);
+  }
+
+  if (q.explanation) {
+    const expEl = document.getElementById('pvq-explanation');
+    expEl.textContent = q.explanation;
+    expEl.style.display = 'block';
+  }
+
+  saveProgress();
+  document.getElementById('pvq-next-btn').style.display = 'inline-block';
+}
+
+function proverbNext() {
+  _proverbQIndex++;
+  if (_proverbQIndex >= _proverbQuestions.length) {
+    showProverbResults();
+  } else {
+    _proverbAnswered = false;
+    renderProverbQuestion();
+  }
+}
+
+function showProverbResults() {
+  showScreen('proverb-results');
+  const total = _proverbQuestions.length;
+  const pct = total > 0 ? Math.round((_proverbCorrect / total) * 100) : 0;
+
+  setTimeout(() => {
+    const offset = 452.4 * (1 - pct / 100);
+    const ring = document.getElementById('pvr-ring');
+    if (ring) ring.style.strokeDashoffset = offset;
+  }, 100);
+
+  document.getElementById('pvr-pct').textContent = toBnDigits(pct) + '%';
+
+  const title = pct === 100 ? t('Perfect!') + ' 🌟' : pct >= 67 ? t('Great job!') : t('Keep practicing!');
+  document.getElementById('pvr-title').textContent = title;
+
+  const bestKey = 'proverbs:' + _proverbCurrentId;
+  const hist = progress.quizHistory || (progress.quizHistory = {});
+  const prev = hist[bestKey] || { best: -1 };
+  if (pct > prev.best) { hist[bestKey] = { best: pct }; saveProgress(); }
+
+  const subParts = [t('You scored') + ' ' + toBnDigits(_proverbCorrect) + '/' + toBnDigits(total)];
+  if (pct > prev.best && prev.best >= 0) subParts.push('🌟 ' + t('New best!'));
+  else if (prev.best >= 0 && prev.best > pct) subParts.push(t('Best:') + ' ' + toBnDigits(prev.best) + '%');
+  document.getElementById('pvr-sub').textContent = subParts.join(' · ');
+
+  addXP(1);
+  updateNav();
+
+  const missedEl = document.getElementById('pvr-missed');
+  if (missedEl) {
+    if (_proverbMissed.length === 0) {
+      missedEl.innerHTML = '';
+    } else {
+      missedEl.innerHTML = '<div class="missed-section"><div class="missed-title">' + t('Review these') + '</div>' +
+        _proverbMissed.map(m => `<div class="missed-item"><span class="missed-answer">${escHtml(m.answer)}</span></div>`).join('') +
+        '</div>';
+    }
+  }
+}
+
 let triviaCurrentCategory = null;
 let triviaQuestions = [];
 let triviaIndex = 0;
@@ -8536,6 +9260,24 @@ document.addEventListener('click', function(e) {
     case 'movie-mc':          answerMovieMC(el, +a.idx); break;
     case 'movie-next':        movieNext(); break;
     case 'movie-retry':       startMovieQuiz(_movieCurrentId); break;
+    // Poetry
+    case 'poetry-view':        showPoetryDetail(a.id); break;
+    case 'poetry-start-quiz':  startPoetryQuiz(a.id); break;
+    case 'poetry-mc':          answerPoetryMC(el, +a.idx); break;
+    case 'poetry-next':        poetryNext(); break;
+    case 'poetry-retry':       startPoetryQuiz(_poetryCurrentId); break;
+    // Sports
+    case 'sport-view':         showSportDetail(a.id); break;
+    case 'sport-start-quiz':   startSportQuiz(a.id); break;
+    case 'sport-mc':           answerSportMC(el, +a.idx); break;
+    case 'sport-next':         sportNext(); break;
+    case 'sport-retry':        startSportQuiz(_sportCurrentId); break;
+    // Proverbs
+    case 'proverb-view':       showProverbDetail(a.id); break;
+    case 'proverb-start-quiz': startProverbQuiz(a.id); break;
+    case 'proverb-mc':         answerProverbMC(el, +a.idx); break;
+    case 'proverb-next':       proverbNext(); break;
+    case 'proverb-retry':      startProverbQuiz(_proverbCurrentId); break;
     // Trivia
     case 'trivia-mc':         answerTriviaMC(el, +a.idx); break;
     case 'trivia-submit-fib': answerTriviaFIB(); break;
