@@ -42,6 +42,10 @@ const UI_STRINGS_BN = {
   'History': 'ইতিহাস',
   'Travel': 'ভ্রমণ',
   'Conversations': 'কথোপকথন',
+  // ── Tab group labels ──
+  'Basics': 'মৌলিক',
+  'Culture': 'সংস্কৃতি',
+  'Explore': 'অন্বেষণ',
   // ── Buttons ──
   'Start Quiz →': 'কুইজ শুরু →',
   'Practice Quiz →': 'অনুশীলন কুইজ →',
@@ -2243,12 +2247,35 @@ const historyScreens = ['history-home','history-detail','history-quiz','history-
 const travelScreens = ['travel-home','travel-detail','travel-quiz','travel-results'];
 const conversationsScreens = ['conv-home','conv-dialogue','conv-roleplay','conv-quiz','conv-results'];
 
+function closeAllTabDropdowns() {
+  document.querySelectorAll('.tab-dropdown.open').forEach(dd => dd.classList.remove('open'));
+}
+
+function toggleTabDropdown(group) {
+  const menu = document.getElementById('tab-group-' + group);
+  if (!menu) return;
+  const dd = menu.closest('.tab-dropdown');
+  const wasOpen = dd.classList.contains('open');
+  closeAllTabDropdowns();
+  if (!wasOpen) dd.classList.add('open');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.tab-dropdown')) closeAllTabDropdowns();
+});
+
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(btn => {
     const isActive = btn.dataset.tab === tab;
     btn.classList.toggle('active', isActive);
-    if (isActive) btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+  });
+  // Highlight the dropdown toggle whose group contains the active tab
+  document.querySelectorAll('.tab-dropdown-toggle').forEach(toggle => {
+    const menu = toggle.nextElementSibling;
+    const hasActive = menu && menu.querySelector('.tab-btn.active');
+    toggle.classList.toggle('has-active', !!hasActive);
   });
   if (tab === 'today') {
     showScreen('today-screen');
@@ -4700,14 +4727,14 @@ function applyPlacementResults() {
   // Show retake button
   document.getElementById('pt-retake-btn').style.display = '';
 
-  switchTab('alphabet');
+  switchTab('today');
 }
 
 function discardPlacementResults() {
   progress.placementTaken = true;
   saveProgress();
   document.getElementById('tab-bar').style.display = '';
-  switchTab('alphabet');
+  switchTab('today');
 }
 
 function updatePlacementRetakeButton() {
@@ -4903,7 +4930,7 @@ function enterAppAsGuest() {
   applyDisplayMode();
   updateNav();
   updatePlacementRetakeButton();
-  switchTab('alphabet');
+  switchTab('today');
   document.getElementById('guest-banner').style.display = '';
 }
 
@@ -4918,7 +4945,7 @@ function enterApp() {
   applyDisplayMode();
   updateNav();
   updatePlacementRetakeButton();
-  switchTab('alphabet');
+  switchTab('today');
   // Show onboarding for first-time users
   if (!progress.seenOnboarding) {
     document.getElementById('onboarding-modal').style.display = 'flex';
@@ -5888,8 +5915,9 @@ function ensureReadingUI() {
     readingBtn.setAttribute('data-t', 'Reading');
     readingBtn.textContent = t('Reading');
     const phrasesBtn = tabBar.querySelector('[data-tab="phrases"]');
-    if (phrasesBtn && phrasesBtn.nextSibling) tabBar.insertBefore(readingBtn, phrasesBtn.nextSibling);
-    else tabBar.appendChild(readingBtn);
+    const insertParent = phrasesBtn ? phrasesBtn.parentNode : tabBar;
+    if (phrasesBtn && phrasesBtn.nextSibling) insertParent.insertBefore(readingBtn, phrasesBtn.nextSibling);
+    else insertParent.appendChild(readingBtn);
   } else if (tabBar) {
     readingBtn = tabBar.querySelector('[data-tab="reading"]');
     if (readingBtn) readingBtn.textContent = t('Reading');
@@ -10476,7 +10504,8 @@ document.addEventListener('click', function(e) {
   const a = el.dataset;
   switch (a.action) {
     // Navigation
-    case 'switch-tab': switchTab(a.tab); break;
+    case 'switch-tab': closeAllTabDropdowns(); switchTab(a.tab); break;
+    case 'toggle-tab-group': toggleTabDropdown(a.group); break;
     case 'show-screen': showScreen(a.screen); break;
     case 'go-module-home': goModuleHome(); break;
     case 'dismiss-error': switchTab(currentTab); break;

@@ -698,6 +698,36 @@ nav h1 span { color: var(--accent); }
 }
 .tab-btn:hover { color: var(--text); }
 .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-dropdown { position: relative; }
+.tab-dropdown-toggle {
+  background: none; border: none; color: var(--text-dim);
+  padding: 9px 14px; font-size: 0.88rem; cursor: pointer;
+  border-bottom: 3px solid transparent; transition: all 0.2s;
+  font-weight: 600; display: flex; align-items: center; gap: 4px;
+}
+.tab-dropdown-toggle:hover { color: var(--text); }
+.tab-dropdown-toggle.has-active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-dd-arrow { font-size: 0.7rem; transition: transform 0.2s; }
+.tab-dropdown.open .tab-dd-arrow { transform: rotate(180deg); }
+.tab-dropdown-menu {
+  display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  background: var(--card); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 200; min-width: 160px;
+  padding: 6px 0;
+}
+.tab-dropdown.open .tab-dropdown-menu { display: block; }
+.tab-dropdown-menu .tab-btn {
+  display: block; width: 100%; text-align: left;
+  padding: 10px 18px; border-bottom: none; font-size: 0.88rem;
+  border-radius: 0;
+}
+.tab-dropdown-menu .tab-btn:hover { background: var(--card-hover); }
+.tab-dropdown-menu .tab-btn.active {
+  color: var(--accent); border-bottom: none;
+  background: rgba(62,201,122,0.08);
+}
 
 /* ─── GUEST BANNER ─── */
 .guest-banner {
@@ -1273,6 +1303,8 @@ details[open] > .settings-collapsible-hdr::after { transform: rotate(90deg); }
   .flashcard-face { padding: 24px; }
   .tab-bar { padding: 0 8px; }
   .tab-btn { padding: 7px 10px; font-size: 0.8rem; }
+  .tab-dropdown-toggle { padding: 7px 10px; font-size: 0.8rem; }
+  .tab-dropdown-menu .tab-btn { padding: 10px 14px; }
   .vocab-row { grid-template-columns: 70px 1fr 1fr auto; gap: 8px; padding: 10px 12px; }
   .vocab-row .vr-bengali { font-size: 1.1rem; }
   .vocab-card-bengali { font-size: 3rem; }

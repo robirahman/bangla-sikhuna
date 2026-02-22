@@ -46,24 +46,37 @@
 </nav>
 
 <div class="tab-bar" id="tab-bar" role="tablist" aria-label="Module navigation" style="display:none">
-  <button class="tab-btn" id="tab-today" data-action="switch-tab" data-tab="today"><span data-t="Today">Today</span><span class="tab-review-badge" id="today-tab-badge" style="display:none"></span></button>
-  <button class="tab-btn active" data-action="switch-tab" data-tab="alphabet" data-t="Alphabet">Alphabet</button>
+  <button class="tab-btn active" id="tab-today" data-action="switch-tab" data-tab="today"><span data-t="Today">Today</span><span class="tab-review-badge" id="today-tab-badge" style="display:none"></span></button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="alphabet" data-t="Alphabet">Alphabet</button>
+  <button class="tab-btn" data-action="switch-tab" data-tab="numbers" data-t="Numbers">Numbers</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="vocabulary" data-t="Vocabulary">Vocabulary</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="grammar" data-t="Grammar">Grammar</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="numbers" data-t="Numbers">Numbers</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="phrases" data-t="Phrases">Phrases</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="trivia" data-t="Trivia">Trivia</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="recipes" data-t="Recipes">Recipes</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="music" data-t="Music">Music</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="movies" data-t="Movies">Movies</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="poetry" data-t="Poetry">Poetry</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="sports" data-t="Sports">Sports</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="proverbs" data-t="Proverbs">Proverbs</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="folktales" data-t="Folk Tales">Folk Tales</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="festivals" data-t="Festivals">Festivals</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="history" data-t="History">History</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="travel" data-t="Travel">Travel</button>
-  <button class="tab-btn" data-action="switch-tab" data-tab="conversations" data-t="Conversations">Conversations</button>
+
+  <div class="tab-dropdown">
+    <button class="tab-dropdown-toggle" data-action="toggle-tab-group" data-group="culture"><span data-t="Culture">Culture</span> <span class="tab-dd-arrow">▾</span></button>
+    <div class="tab-dropdown-menu" id="tab-group-culture">
+      <button class="tab-btn" data-action="switch-tab" data-tab="music" data-t="Music">Music</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="movies" data-t="Movies">Movies</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="poetry" data-t="Poetry">Poetry</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="folktales" data-t="Folk Tales">Folk Tales</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="proverbs" data-t="Proverbs">Proverbs</button>
+    </div>
+  </div>
+
+  <div class="tab-dropdown">
+    <button class="tab-dropdown-toggle" data-action="toggle-tab-group" data-group="explore"><span data-t="Explore">Explore</span> <span class="tab-dd-arrow">▾</span></button>
+    <div class="tab-dropdown-menu" id="tab-group-explore">
+      <button class="tab-btn" data-action="switch-tab" data-tab="sports" data-t="Sports">Sports</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="recipes" data-t="Recipes">Recipes</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="festivals" data-t="Festivals">Festivals</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="history" data-t="History">History</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="travel" data-t="Travel">Travel</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="trivia" data-t="Trivia">Trivia</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="conversations" data-t="Conversations">Conversations</button>
+    </div>
+  </div>
+
   <button class="pt-retake-btn" id="pt-retake-btn" style="display:none" data-action="start-placement-test" data-t="Retake Placement">Retake Placement</button>
   <button class="review-due-btn" id="review-due-btn" style="display:none" data-action="start-review-session">🔔 <span data-t="Review Due">Review Due</span> (<span id="review-due-count">0</span>)</button>
 </div>
