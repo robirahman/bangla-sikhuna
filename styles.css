@@ -52,9 +52,9 @@ nav h1 span { color: var(--accent); }
 .screen.active { display:block; }
 
 /* ─── HOME ─── */
-#home .hero, #vocab-home .hero, #grammar-home .hero, #phrases-home .hero, #numbers-home .hero, #today-screen .hero, #reading-screen .hero, #trivia-home .hero, #recipes-home .hero, #music-home .hero, #movies-home .hero, #poetry-home .hero, #sports-home .hero, #proverbs-home .hero, #folktales-home .hero, #festivals-home .hero, #history-home .hero, #travel-home .hero, #conv-home .hero { text-align:center; padding: 40px 0 30px; }
-#home .hero h2, #vocab-home .hero h2, #grammar-home .hero h2, #phrases-home .hero h2, #numbers-home .hero h2, #today-screen .hero h2, #reading-screen .hero h2, #trivia-home .hero h2, #recipes-home .hero h2, #music-home .hero h2, #movies-home .hero h2, #poetry-home .hero h2, #sports-home .hero h2, #proverbs-home .hero h2, #folktales-home .hero h2, #festivals-home .hero h2, #history-home .hero h2, #travel-home .hero h2, #conv-home .hero h2 { font-size: 2rem; margin-bottom: 8px; }
-#home .hero p, #vocab-home .hero p, #grammar-home .hero p, #phrases-home .hero p, #numbers-home .hero p, #today-screen .hero p, #reading-screen .hero p, #trivia-home .hero p, #recipes-home .hero p, #music-home .hero p, #movies-home .hero p, #poetry-home .hero p, #sports-home .hero p, #proverbs-home .hero p, #folktales-home .hero p, #festivals-home .hero p, #history-home .hero p, #travel-home .hero p, #conv-home .hero p { color: var(--text-dim); font-size: 1.05rem; }
+.screen .hero { text-align:center; padding: 40px 0 30px; }
+.screen .hero h2 { font-size: 2rem; margin-bottom: 8px; }
+.screen .hero p { color: var(--text-dim); font-size: 1.05rem; }
 .ge-notes { font-size: 0.82rem; color: var(--text-dim); margin-top: 8px; font-style: italic; line-height: 1.4; }
 /* ─── TODAY SCREEN ─── */
 .today-date { color: var(--text-dim); font-size: 0.85rem; text-align: center; margin-bottom: 16px; }

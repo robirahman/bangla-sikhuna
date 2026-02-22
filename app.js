@@ -740,7 +740,8 @@ function _removePw(name) { localStorage.removeItem(_pwKey(name)); }
 // ════════════════════════════════════════
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
   if (id === 'home') renderHome();
   if (id === 'chart') renderChart();
   if (id === 'numbers-home') renderNumbersHome();
@@ -1022,7 +1023,7 @@ function _buildCalendarDateQuestions(n) {
   const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
   const qs = [];
   for (let i = 0; i < n; i++) {
-    const day = 1 + Math.floor(Math.random() * 28);
+    const day = 1 + Math.floor(Math.random() * 30);
     const month = Math.floor(Math.random() * 12);
     const year = 1952 + Math.floor(Math.random() * 75);
     const dateBn = `${_arTobn(day)} ${months[month]} ${_arTobn(year)}`;
@@ -2586,7 +2587,8 @@ function buildMixedVocabSession() {
   const quiz = prioritized.slice(0, Math.min(VMIX_QUIZ_SIZE, poolWithPriority.length));
   // Remove from priority queue words that have been quizzed (mastery > 0)
   if (priorityLemmas.length > 0) {
-    progress.vmixPriority = priorityLemmas.filter(l => getVocabMastery(l) === 0);
+    const masteredLemmas = new Set(priorityWords.filter(w => getVocabMastery(w) > 0).map(w => w.lemma));
+    progress.vmixPriority = priorityLemmas.filter(l => !masteredLemmas.has(l));
     saveProgress();
   }
   return { teach, quiz, unlocked, total: VMIX_CURRICULUM.length };

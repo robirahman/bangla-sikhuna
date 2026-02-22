@@ -21,8 +21,8 @@
     <input class="profile-input" id="profile-name-input" type="text" placeholder="Enter your name" maxlength="30" autocomplete="off">
     <input class="profile-input" id="profile-pw-input" type="password" placeholder="Set a password (optional)" maxlength="50" autocomplete="new-password">
     <div class="profile-input-actions">
-      <button class="btn-primary" id="profile-create-btn" data-action="create-profile">Start</button>
-      <button class="btn-cancel" id="profile-cancel-btn" data-action="cancel-new-profile">Cancel</button>
+      <button class="btn-primary" id="profile-create-btn" data-action="create-profile" aria-label="Create profile and start learning">Start</button>
+      <button class="btn-cancel" id="profile-cancel-btn" data-action="cancel-new-profile" aria-label="Cancel profile creation">Cancel</button>
     </div>
   </div>
 </div>
@@ -45,7 +45,7 @@
   </div>
 </nav>
 
-<div class="tab-bar" id="tab-bar" style="display:none">
+<div class="tab-bar" id="tab-bar" role="tablist" aria-label="Module navigation" style="display:none">
   <button class="tab-btn" id="tab-today" data-action="switch-tab" data-tab="today"><span data-t="Today">Today</span><span class="tab-review-badge" id="today-tab-badge" style="display:none"></span></button>
   <button class="tab-btn active" data-action="switch-tab" data-tab="alphabet" data-t="Alphabet">Alphabet</button>
   <button class="tab-btn" data-action="switch-tab" data-tab="vocabulary" data-t="Vocabulary">Vocabulary</button>
@@ -1392,7 +1392,7 @@
 </div>
 
 
-<div id="achievement-toast" class="achievement-toast" aria-live="polite">
+<div id="achievement-toast" class="achievement-toast" role="status" aria-live="polite">
   <div class="ach-icon" id="ach-toast-icon">🎯</div>
   <div class="ach-text">
     <div class="ach-label">Achievement Unlocked</div>
