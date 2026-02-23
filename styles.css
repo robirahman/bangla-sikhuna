@@ -808,6 +808,10 @@ nav h1 span { color: var(--accent); }
 .level-A2 { background: #49c0f8; color: #071a0e; }
 .level-B1 { background: #ffc800; color: #071a0e; }
 .level-B2 { background: #ff6b6b; color: #071a0e; }
+[data-theme="light"] .level-A1 { background: #3da600; }
+[data-theme="light"] .level-A2 { background: #0095d9; }
+[data-theme="light"] .level-B1 { background: #d4a000; }
+[data-theme="light"] .level-B2 { background: #d44040; }
 .vocab-row .vr-mastery {
   width: 10px; height: 10px; border-radius: 50%;
 }
@@ -829,6 +833,15 @@ nav h1 span { color: var(--accent); }
 }
 .vocab-card-english { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
 .vocab-card-cat { font-size: 0.85rem; color: var(--text-dim); }
+.vocab-card-origin {
+  display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px;
+  font-weight: 600; margin-top: 6px; color: #fff;
+}
+.origin-sanskrit  { background: #9b59b6; }
+.origin-persian   { background: #e67e22; }
+.origin-english   { background: #3498db; }
+.origin-dravidian  { background: #1abc9c; }
+.origin-native    { background: #2ecc71; }
 
 /* ─── VOCAB QUIZ ─── */
 .vq-bengali {

@@ -2,7 +2,7 @@
 // Data files use stale-while-revalidate so deploys are reflected on next load.
 // Other same-origin assets use cache-first for offline support.
 // Bump CACHE_VERSION to force full cache refresh after major updates.
-const CACHE_VERSION = "bengali-v5";
+const CACHE_VERSION = "bengali-v6";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
@@ -17,10 +17,27 @@ const PRECACHE_URLS = [
   "./vocab-pack-3.json",
   "./recipes.js",
   "./manifest.json",
+  "./alphabet.js",
+  "./conversations.js",
+  "./festivals.js",
+  "./folktales.js",
+  "./fsrs.js",
+  "./history.js",
+  "./idioms.js",
+  "./movies.js",
+  "./music.js",
+  "./poetry.js",
+  "./proverbs.js",
+  "./quiz-engine.js",
+  "./sports.js",
+  "./today.js",
+  "./travel.js",
+  "./trivia.js",
+  "./ui-utils.js",
 ];
 
 // Data files that change between deploys — use stale-while-revalidate
-const DATA_FILE_RE = /\/(vocab\.js|grammar\.js|phrases\.js|vocab-pack-\d+\.json)(\?.*)?$/;
+const DATA_FILE_RE = /\/(vocab\.js|grammar\.js|phrases\.js|alphabet\.js|vocab-pack-\d+\.json)(\?.*)?$/;
 
 function cacheAndReturn(request, response) {
   if (!response || response.status !== 200 || response.type === "opaque") return response;

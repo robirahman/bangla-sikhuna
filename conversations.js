@@ -560,6 +560,153 @@ const CONVERSATIONS = [
       { id: 'janbahone-3', prompt: 'What is a "সিএনজি" in Bangladesh?', promptBn: 'বাংলাদেশে "সিএনজি" কী?', options: ['A three-wheeled auto-rickshaw running on CNG', 'A type of bus', 'A bicycle', 'A train'], correct: 0, explanation: '"সিএনজি" (CNG) = a three-wheeled auto-rickshaw that runs on compressed natural gas, very common in Dhaka.' },
     ]
   },
+  /* ─── 7. চায়ের দোকানে — At the Tea Stall (Branching) ──────────────────── */
+  {
+    id: 'chayer-dokane',
+    bengaliName: 'চায়ের দোকানে',
+    englishName: 'At the Tea Stall (Branching)',
+    icon: '☕',
+    tags: ['কথোপকথন', 'শাখা', 'Branching'],
+    descBn: 'চায়ের দোকানে আড্ডা — আপনার উত্তর অনুযায়ী কথোপকথন বদলে যাবে!',
+    descEn: 'Chatting at a tea stall — the conversation changes based on your choices!',
+    dialogue: [
+      { speaker: 'You', speakerBn: 'আপনি', lineBn: 'ভাই, এক কাপ চা দিন।', lineEn: 'Brother, give me a cup of tea.', romanized: 'Bhai, ek kap cha din.' },
+      { speaker: 'Stallkeeper', speakerBn: 'দোকানদার', lineBn: 'লাল চা না দুধ চা?', lineEn: 'Red tea or milk tea?', romanized: 'Lal cha na dudh cha?' },
+      { speaker: 'You', speakerBn: 'আপনি', lineBn: 'দুধ চা দিন, চিনি কম।', lineEn: 'Milk tea, less sugar.', romanized: 'Dudh cha din, chini kom.' },
+      { speaker: 'Stallkeeper', speakerBn: 'দোকানদার', lineBn: 'সিঙ্গারা বা পিঠা খাবেন?', lineEn: 'Would you like samosa or pitha?', romanized: 'Singara ba pitha khaben?' },
+    ],
+    roleplay: [
+      {
+        id: 'chayer-rp0',
+        contextBn: 'দোকানদার বলছে: "কী দেব ভাই?"',
+        contextEn: 'The stallkeeper says: "What can I get you?"',
+        options: [
+          { textBn: 'এক কাপ চা দিন।', textEn: 'Give me a cup of tea.', correct: true, feedbackBn: 'দারুণ! চা অর্ডার করতে পারছেন।', feedbackEn: 'Great! You can order tea.', next: 1 },
+          { textBn: 'একটু বসতে পারি?', textEn: 'Can I sit for a bit?', correct: true, feedbackBn: 'ঠিক আছে! কিন্তু কিছু অর্ডার করতে হবে।', feedbackEn: 'Okay! But you should order something.', next: 2 },
+          { textBn: 'ট্রেনের টিকিট দিন।', textEn: 'Give me a train ticket.', correct: false, feedbackBn: 'এটা চায়ের দোকান, ট্রেন স্টেশন নয়!', feedbackEn: 'This is a tea stall, not a train station!' },
+        ]
+      },
+      {
+        id: 'chayer-rp1',
+        contextBn: 'দোকানদার বলছে: "লাল চা না দুধ চা?"',
+        contextEn: 'The stallkeeper says: "Red tea or milk tea?"',
+        options: [
+          { textBn: 'দুধ চা দিন, চিনি কম।', textEn: 'Milk tea, less sugar.', correct: true, feedbackBn: 'চমৎকার! পছন্দ মতো চা চাইতে পারছেন।', feedbackEn: 'Excellent! You can customize your tea order.', next: 3 },
+          { textBn: 'লাল চা, আদা দিয়ে।', textEn: 'Red tea, with ginger.', correct: true, feedbackBn: 'ভালো! আদা চা খুব জনপ্রিয়।', feedbackEn: 'Good! Ginger tea is very popular.', next: 3 },
+          { textBn: 'কফি দিন।', textEn: 'Give me coffee.', correct: false, feedbackBn: 'এটা চায়ের দোকান, কফি সাধারণত থাকে না।', feedbackEn: 'This is a tea stall, they usually don\'t have coffee.' },
+        ]
+      },
+      {
+        id: 'chayer-rp2',
+        contextBn: 'দোকানদার বলছে: "হ্যাঁ বসুন। কিছু খাবেন?"',
+        contextEn: 'The stallkeeper says: "Yes, sit down. Will you have something?"',
+        options: [
+          { textBn: 'হ্যাঁ, এক কাপ চা আর একটা সিঙ্গারা।', textEn: 'Yes, a cup of tea and a samosa.', correct: true, feedbackBn: 'দারুণ! চা আর নাস্তা দুটোই অর্ডার করেছেন।', feedbackEn: 'Great! You ordered both tea and a snack.', next: 4 },
+          { textBn: 'না, শুধু পানি দিন।', textEn: 'No, just give me water.', correct: true, feedbackBn: 'ঠিক আছে, পানি চাওয়া স্বাভাবিক।', feedbackEn: 'Okay, asking for water is natural.', next: 4 },
+          { textBn: 'আমি কিছু খাব না।', textEn: 'I won\'t eat anything.', correct: false, feedbackBn: 'দোকানে বসলে কিছু না কিছু অর্ডার করা ভদ্রতা।', feedbackEn: 'It\'s polite to order something when sitting at a stall.' },
+        ]
+      },
+      {
+        id: 'chayer-rp3',
+        contextBn: 'দোকানদার বলছে: "সিঙ্গারা বা পিঠা খাবেন?"',
+        contextEn: 'The stallkeeper says: "Would you like samosa or pitha?"',
+        options: [
+          { textBn: 'একটা সিঙ্গারা দিন।', textEn: 'Give me a samosa.', correct: true, feedbackBn: 'ভালো পছন্দ! সিঙ্গারা চায়ের সাথে জমে।', feedbackEn: 'Good choice! Samosa goes well with tea.' },
+          { textBn: 'না, শুধু চা যথেষ্ট।', textEn: 'No, just tea is enough.', correct: true, feedbackBn: 'ঠিক আছে, প্রত্যাখ্যান করতেও জানতে হয়।', feedbackEn: 'Okay, it\'s good to know how to decline politely.' },
+          { textBn: 'পিঠা কী? বুঝিনি।', textEn: 'What is pitha? I didn\'t understand.', correct: true, feedbackBn: 'ভালো প্রশ্ন! পিঠা হলো বাংলার ঐতিহ্যবাহী মিষ্টি।', feedbackEn: 'Good question! Pitha is a traditional Bengali sweet/cake.' },
+        ]
+      },
+      {
+        id: 'chayer-rp4',
+        contextBn: 'চায়ের দোকানে আপনার পাশের লোক বলছে: "কোথায় থাকেন?"',
+        contextEn: 'The person next to you says: "Where do you live?"',
+        options: [
+          { textBn: 'আমি মিরপুরে থাকি।', textEn: 'I live in Mirpur.', correct: true, feedbackBn: 'দারুণ! নিজের এলাকা বলতে পারছেন।', feedbackEn: 'Great! You can tell where you live.' },
+          { textBn: 'আমি বিদেশ থেকে এসেছি, বাংলা শিখছি।', textEn: 'I came from abroad, I\'m learning Bengali.', correct: true, feedbackBn: 'চমৎকার! খোলামেলা পরিচয় দেওয়া ভালো।', feedbackEn: 'Excellent! Being open about yourself is great.' },
+          { textBn: 'সেটা বলব না।', textEn: 'I won\'t tell you.', correct: false, feedbackBn: 'চায়ের দোকানে আড্ডায় এমন বলা ভদ্রতা নয়।', feedbackEn: 'That\'s not polite when chatting at a tea stall.' },
+        ]
+      },
+    ],
+    quiz: [
+      { id: 'chayer-1', prompt: 'What is "লাল চা"?', promptBn: '"লাল চা" মানে কী?', options: ['Red / black tea (without milk)', 'Green tea', 'Iced tea', 'Herbal tea'], correct: 0, explanation: '"লাল চা" (lal cha) = red tea, which is black tea served without milk. Very common in Bangladesh.' },
+      { id: 'chayer-2', prompt: 'What does "চিনি কম" mean?', promptBn: '"চিনি কম" অর্থ কী?', options: ['Less sugar', 'More sugar', 'No sugar', 'Sweet'], correct: 0, explanation: '"চিনি কম" (chini kom) = less sugar. Use this when ordering tea.' },
+      { id: 'chayer-3', prompt: 'What is a "সিঙ্গারা"?', promptBn: '"সিঙ্গারা" কী?', options: ['A fried pastry similar to samosa', 'A sweet dessert', 'A type of rice dish', 'A drink'], correct: 0, explanation: '"সিঙ্গারা" (singara) is a triangular fried pastry filled with spiced potatoes or meat, similar to a samosa.' },
+    ]
+  },
+
+  /* ─── 8. হারিয়ে গেছি — Lost in the City (Branching) ──────────────────── */
+  {
+    id: 'hariye-gechi',
+    bengaliName: 'হারিয়ে গেছি',
+    englishName: 'Lost in the City (Branching)',
+    icon: '🗺️',
+    tags: ['দিকনির্দেশনা', 'শাখা', 'Branching'],
+    descBn: 'শহরে পথ হারিয়ে যাওয়ার কথোপকথন — আপনার উত্তর অনুযায়ী সাহায্য পাবেন!',
+    descEn: 'Getting lost in the city — the help you receive depends on your choices!',
+    dialogue: [
+      { speaker: 'You', speakerBn: 'আপনি', lineBn: 'এক্সকিউজ মি, আমি পথ হারিয়ে ফেলেছি।', lineEn: 'Excuse me, I\'m lost.', romanized: 'Excuse me, ami poth hariye felechhi.' },
+      { speaker: 'Passerby', speakerBn: 'পথচারী', lineBn: 'কোথায় যেতে চান?', lineEn: 'Where do you want to go?', romanized: 'Kothay jete chan?' },
+      { speaker: 'You', speakerBn: 'আপনি', lineBn: 'শাহবাগ মোড় কোন দিকে?', lineEn: 'Which way is Shahbag intersection?', romanized: 'Shahbag mor kon dike?' },
+      { speaker: 'Passerby', speakerBn: 'পথচারী', lineBn: 'সোজা যান, তারপর ডানে ঘুরুন।', lineEn: 'Go straight, then turn right.', romanized: 'Shoja jan, tarpor dane ghurun.' },
+    ],
+    roleplay: [
+      {
+        id: 'hariye-rp0',
+        contextBn: 'আপনি একটি ব্যস্ত রাস্তায় দাঁড়িয়ে আছেন। পথ চিনতে পারছেন না। কী করবেন?',
+        contextEn: 'You are standing on a busy road. You can\'t find your way. What do you do?',
+        options: [
+          { textBn: 'পাশের একজনকে বলি — ভাই, একটু সাহায্য করবেন?', textEn: 'I ask someone — Brother, can you help me?', correct: true, feedbackBn: 'দারুণ! বাংলায় সাহায্য চাইতে পারছেন।', feedbackEn: 'Great! You can ask for help in Bengali.', next: 1 },
+          { textBn: 'রিকশাওয়ালাকে বলি — শাহবাগ যাবেন?', textEn: 'I ask a rickshaw driver — Will you go to Shahbag?', correct: true, feedbackBn: 'ভালো! রিকশায় গন্তব্যে যেতে পারবেন।', feedbackEn: 'Good! You can take a rickshaw to your destination.', next: 3 },
+          { textBn: 'চুপচাপ একাই হাঁটতে থাকি।', textEn: 'I keep walking silently on my own.', correct: false, feedbackBn: 'পথ না জানলে কাউকে জিজ্ঞেস করা ভালো।', feedbackEn: 'It\'s better to ask someone if you don\'t know the way.' },
+        ]
+      },
+      {
+        id: 'hariye-rp1',
+        contextBn: 'পথচারী বলছে: "কোথায় যেতে চান?"',
+        contextEn: 'The passerby says: "Where do you want to go?"',
+        options: [
+          { textBn: 'শাহবাগ মোড় কোন দিকে?', textEn: 'Which way is Shahbag intersection?', correct: true, feedbackBn: 'চমৎকার! গন্তব্য নির্দিষ্ট করে দিক জিজ্ঞেস করতে পারছেন।', feedbackEn: 'Excellent! You can ask for a specific direction.', next: 2 },
+          { textBn: 'কাছে কোনো হোটেল আছে?', textEn: 'Is there a hotel nearby?', correct: true, feedbackBn: 'ভালো! বিকল্প জায়গা খুঁজছেন।', feedbackEn: 'Good! You\'re looking for an alternative place.', next: 4 },
+          { textBn: 'জানি না কোথায় যাচ্ছি।', textEn: 'I don\'t know where I\'m going.', correct: false, feedbackBn: 'একটা গন্তব্য ঠিক করুন, তাহলে সাহায্য পাবেন।', feedbackEn: 'Decide on a destination so people can help you.' },
+        ]
+      },
+      {
+        id: 'hariye-rp2',
+        contextBn: 'পথচারী বলছে: "সোজা যান, তারপর ডানে ঘুরুন। মিনিট দশেক লাগবে।"',
+        contextEn: 'The passerby says: "Go straight, then turn right. It will take about ten minutes."',
+        options: [
+          { textBn: 'ধন্যবাদ, ভাই! অনেক উপকার হলো।', textEn: 'Thank you, brother! That was very helpful.', correct: true, feedbackBn: 'দারুণ! কৃতজ্ঞতা প্রকাশ করতে পারছেন।', feedbackEn: 'Great! You can express gratitude.' },
+          { textBn: 'বামে না ডানে? আবার বলুন?', textEn: 'Left or right? Can you repeat?', correct: true, feedbackBn: 'ভালো! না বুঝলে আবার জিজ্ঞেস করা দোষের নয়।', feedbackEn: 'Good! There\'s no shame in asking again if you didn\'t understand.' },
+          { textBn: 'আমি হেঁটে যেতে চাই না।', textEn: 'I don\'t want to walk.', correct: false, feedbackBn: 'তাহলে রিকশা বা বাস নিন।', feedbackEn: 'Then take a rickshaw or bus.' },
+        ]
+      },
+      {
+        id: 'hariye-rp3',
+        contextBn: 'রিকশাওয়ালা বলছে: "শাহবাগ? পঞ্চাশ টাকা লাগবে।"',
+        contextEn: 'The rickshaw driver says: "Shahbag? It will cost fifty taka."',
+        options: [
+          { textBn: 'ঠিক আছে, চলুন।', textEn: 'Okay, let\'s go.', correct: true, feedbackBn: 'ভালো! রিকশায় যাত্রা শুরু।', feedbackEn: 'Good! The rickshaw ride begins.' },
+          { textBn: 'ত্রিশ টাকায় যাবেন?', textEn: 'Will you go for thirty taka?', correct: true, feedbackBn: 'চমৎকার! দরদাম করতে পারছেন।', feedbackEn: 'Excellent! You can bargain.' },
+          { textBn: 'আমি জানি না রিকশা কী।', textEn: 'I don\'t know what a rickshaw is.', correct: false, feedbackBn: 'রিকশা বাংলাদেশের জনপ্রিয় যানবাহন!', feedbackEn: 'Rickshaws are a very common vehicle in Bangladesh!' },
+        ]
+      },
+      {
+        id: 'hariye-rp4',
+        contextBn: 'পথচারী বলছে: "হ্যাঁ, এখান থেকে পাঁচ মিনিটের পথে একটা হোটেল আছে।"',
+        contextEn: 'The passerby says: "Yes, there\'s a hotel five minutes from here."',
+        options: [
+          { textBn: 'কোন দিকে যেতে হবে?', textEn: 'Which direction should I go?', correct: true, feedbackBn: 'ভালো! দিকনির্দেশনা চাইতে পারছেন।', feedbackEn: 'Good! You can ask for directions.' },
+          { textBn: 'ধন্যবাদ! আমি খুঁজে নেব।', textEn: 'Thanks! I\'ll find it.', correct: true, feedbackBn: 'ঠিক আছে, তবে ঠিকানা জেনে নিন।', feedbackEn: 'Okay, but make sure to get the address.' },
+          { textBn: 'হোটেলে আমি থাকতে চাই না।', textEn: 'I don\'t want to stay at a hotel.', correct: false, feedbackBn: 'তাহলে বলুন আপনি আসলে কোথায় যেতে চান।', feedbackEn: 'Then tell them where you actually want to go.' },
+        ]
+      },
+    ],
+    quiz: [
+      { id: 'hariye-1', prompt: 'What does "পথ হারিয়ে ফেলেছি" mean?', promptBn: '"পথ হারিয়ে ফেলেছি" মানে কী?', options: ['I am lost', 'I am tired', 'I am late', 'I am hungry'], correct: 0, explanation: '"পথ হারিয়ে ফেলেছি" (poth hariye felechhi) = I have lost my way / I am lost.' },
+      { id: 'hariye-2', prompt: 'What does "সোজা যান" mean?', promptBn: '"সোজা যান" মানে কী?', options: ['Go straight', 'Turn left', 'Turn right', 'Go back'], correct: 0, explanation: '"সোজা যান" (shoja jan) = Go straight. Very useful for giving/taking directions.' },
+      { id: 'hariye-3', prompt: 'How do you say "turn right" in Bengali?', promptBn: 'বাংলায় "turn right" কীভাবে বলবেন?', options: ['ডানে ঘুরুন', 'বামে ঘুরুন', 'সোজা যান', 'পেছনে যান'], correct: 0, explanation: '"ডানে ঘুরুন" (dane ghurun) = turn right. "বামে ঘুরুন" = turn left.' },
+    ]
+  },
 ];
 
 export { CONVERSATIONS };

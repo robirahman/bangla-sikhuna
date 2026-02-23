@@ -18,6 +18,7 @@ import { FESTIVALS } from './festivals.js';
 import { HISTORY } from './history.js';
 import { TRAVEL } from './travel.js';
 import { CONVERSATIONS } from './conversations.js';
+import { IDIOMS_DATA } from './idioms.js';
 
 // ════════════════════════════════════════
 //  DISPLAY MODE — Standard / Romanized / Immersion
@@ -43,6 +44,7 @@ const UI_STRINGS_BN = {
   'History': 'ইতিহাস',
   'Travel': 'ভ্রমণ',
   'Conversations': 'কথোপকথন',
+  'Idioms': 'বাগধারা',
   // ── Tab group labels ──
   'Basics': 'মৌলিক',
   'Culture': 'সংস্কৃতি',
@@ -284,7 +286,7 @@ function _refreshActiveContent() {
   else if (id === 'chart') renderChart();
   else if (id === 'learn') showCard();
   else if (id === 'vocab-learn') showVocabCardAt();
-  else if (id === 'vocab-browse') renderVocabList();
+  else if (id === 'vocab-browse') { renderOriginChips(); renderVocabList(); }
   else if (id === 'grammar-lesson') renderGlCard();
   else if (id === 'phrases-situation') renderPsCard();
   else if (id === 'reading-screen') renderReadingScreen();
@@ -773,6 +775,7 @@ function showScreen(id) {
   if (id === 'history-home') renderHistoryHome();
   if (id === 'travel-home') renderTravelHome();
   if (id === 'conv-home') renderConvHome();
+  if (id === 'idioms-home') renderIdiomsHome();
   if (id === 'placement-results') renderPlacementResultsUI();
 }
 
@@ -2322,6 +2325,8 @@ function switchTab(tab) {
     showScreen('travel-home');
   } else if (tab === 'conversations') {
     showScreen('conv-home');
+  } else if (tab === 'idioms') {
+    showScreen('idioms-home');
   } else {
     showScreen('grammar-home');
   }
@@ -2674,6 +2679,7 @@ function launchMixedVocabQuiz() {
 // ════════════════════════════════════════
 let vbFilter = null;
 let vbLevelFilter = null;
+let vbOriginFilter = null;
 let vbPage = 0;
 const VB_PAGE_SIZE = 30;
 const CEFR_LEVELS = [
@@ -2723,6 +2729,33 @@ function setVocabLevel(level) {
   renderVocabList();
 }
 
+const ORIGIN_META = {
+  sanskrit: { label: 'Sanskrit', color: '#9b59b6' },
+  persian: { label: 'Persian / Arabic', color: '#e67e22' },
+  english: { label: 'English', color: '#3498db' },
+  dravidian: { label: 'Dravidian', color: '#1abc9c' },
+  native: { label: 'Native Bengali', color: '#2ecc71' },
+};
+
+function renderOriginChips() {
+  const container = document.getElementById('origin-chips');
+  if (!container) return;
+  const origins = Object.keys(ORIGIN_META);
+  container.innerHTML = `<div class="cat-chip ${vbOriginFilter === null ? 'active' : ''}" data-action="set-vocab-origin">All Origins</div>` +
+    origins.map(o => {
+      const count = VOCAB_DATA.filter(w => w.origin === o).length;
+      if (!count) return '';
+      return `<div class="cat-chip ${vbOriginFilter === o ? 'active' : ''}" data-action="set-vocab-origin" data-origin="${o}" style="border-color:${ORIGIN_META[o].color}">${ORIGIN_META[o].label} (${count})</div>`;
+    }).join('');
+}
+
+function setVocabOrigin(origin) {
+  vbOriginFilter = origin || null;
+  vbPage = 0;
+  renderOriginChips();
+  renderVocabList();
+}
+
 function setVocabFilter(cat) {
   vbFilter = cat;
   vbPage = 0;
@@ -2740,6 +2773,7 @@ function getFilteredVocab() {
   return VOCAB_DATA.filter(w => {
     if (vbFilter && w.category !== vbFilter) return false;
     if (vbLevelFilter && w.level !== vbLevelFilter) return false;
+    if (vbOriginFilter && w.origin !== vbOriginFilter) return false;
     if (search) {
       return w.lemma.includes(search) || w.roman.toLowerCase().includes(search) || w.english.toLowerCase().includes(search);
     }
@@ -2890,6 +2924,18 @@ function showVocabDetail(bengali) {
   document.getElementById('wm-pos').textContent = w.pos;
   document.getElementById('wm-english').textContent = w.english;
   document.getElementById('wm-cat').textContent = cat ? cat.title : w.category;
+  // Origin badge
+  const wmOrigin = document.getElementById('wm-origin');
+  if (wmOrigin) {
+    if (w.origin) {
+      const originLabels = { sanskrit: 'Sanskrit', persian: 'Persian / Arabic', english: 'English loanword', dravidian: 'Dravidian', native: 'Native Bengali' };
+      wmOrigin.textContent = originLabels[w.origin] || w.origin;
+      wmOrigin.className = 'vocab-card-origin origin-' + w.origin;
+      wmOrigin.style.display = '';
+    } else {
+      wmOrigin.style.display = 'none';
+    }
+  }
   const wmEx = document.getElementById('wm-example');
   if (wmEx) wmEx.textContent = w.example || '';
   const wmExBtn = document.getElementById('wm-example-btn');
@@ -3659,7 +3705,7 @@ function renderConjQuizQuestion() {
 
   document.getElementById('vq-progress-fill').style.width =
     ((conjQuizIndex / conjQuizQuestions.length) * 100) + '%';
-  document.getElementById('vq-score').textContent = conjQuizCorrect + ' / ' + conjQuizIndex;
+  document.getElementById('vq-score').textContent = conjQuizCorrect + ' / ' + conjQuizQuestions.length;
 
   const qa = document.getElementById('vq-question-area');
   if (q.type === 'mc') {
@@ -3686,13 +3732,28 @@ function renderConjQuizQuestion() {
   }
 }
 
+function _conjKey(q) {
+  const f = q._conjForm;
+  return 'conj:' + f.verb + ':' + f.tenseKey + ':' + f.pronoun;
+}
+
 function handleConjQuizMC(answer) {
   if (vqAnswered) return;
   vqAnswered = true;
   const q = conjQuizQuestions[conjQuizIndex];
   const correct = answer === q.correct;
-  if (correct) conjQuizCorrect++;
-  else conjQuizMissed.push(q);
+  const conjKey = _conjKey(q);
+
+  if (correct) {
+    conjQuizCorrect++;
+    applyFsrsRating(conjKey, FSRS_GOOD);
+  } else {
+    _recordMiss(conjQuizMissed, { bengali: q._conjForm.bengali, answer: q.correct, _q: q });
+    _trackMistake(conjKey, 'conjugation');
+    applyFsrsRating(conjKey, FSRS_AGAIN);
+  }
+  _trackLastSeen(conjKey);
+  saveProgress();
 
   document.getElementById('vq-question-area').querySelectorAll('.mc-btn').forEach(btn => {
     const val = btn.getAttribute('data-answer');
@@ -3719,9 +3780,22 @@ function handleConjQuizFIB() {
   vqAnswered = true;
   hideBengaliKbd();
 
-  const correct = val === q._conjForm.bengali || q.acceptable.includes(val.toLowerCase());
-  if (correct) conjQuizCorrect++;
-  else conjQuizMissed.push(q);
+  const normVal = _normRoman(val);
+  const correct = val === q._conjForm.bengali
+    || q.acceptable.includes(val.toLowerCase())
+    || q.acceptable.some(a => _normRoman(a) === normVal);
+  const conjKey = _conjKey(q);
+
+  if (correct) {
+    conjQuizCorrect++;
+    applyFsrsRating(conjKey, FSRS_GOOD);
+  } else {
+    _recordMiss(conjQuizMissed, { bengali: q._conjForm.bengali, answer: q.answer, _q: q });
+    _trackMistake(conjKey, 'conjugation');
+    applyFsrsRating(conjKey, FSRS_AGAIN);
+  }
+  _trackLastSeen(conjKey);
+  saveProgress();
 
   const f = q._conjForm;
   input.disabled = true;
@@ -3737,6 +3811,7 @@ function showConjQuizResults() {
   const elapsed = Math.round((Date.now() - _quizStartTime) / 1000);
   const pct = Math.round((conjQuizCorrect / conjQuizQuestions.length) * 100);
   addXP(conjQuizCorrect * 10, 'grammar');
+  detachQuizKeyHandler();
 
   const qa = document.getElementById('vq-question-area');
   qa.innerHTML = `
@@ -3744,17 +3819,32 @@ function showConjQuizResults() {
       <h2>Conjugation Quiz Complete!</h2>
       <div class="quiz-results-score">${conjQuizCorrect} / ${conjQuizQuestions.length} correct (${pct}%)</div>
       <div class="quiz-results-time">Time: ${elapsed}s</div>
-      ${conjQuizMissed.length ? `<div class="quiz-results-missed"><strong>Review these:</strong><ul>${conjQuizMissed.map(q => {
-        const f = q._conjForm;
-        return `<li>${escHtml(f.verb)} — ${escHtml(f.tenseLabel)}, ${escHtml(f.pronounLabel)}: <strong>${escHtml(f.bengali)}</strong> (${escHtml(f.roman)})</li>`;
-      }).join('')}</ul></div>` : ''}
+      <div id="conj-missed-section"></div>
       <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" id="conj-retry-missed-btn" style="display:none" data-action="retry-conj-missed">Retry Missed</button>
         <button class="btn-primary" data-action="start-conj-quiz">Try Again</button>
         <button class="nav-btn" data-action="show-screen" data-screen="grammar-home">Back to Grammar</button>
       </div>
     </div>`;
+  _renderMissedSection(conjQuizMissed, 'conj-missed-section', 'conj-retry-missed-btn');
   document.getElementById('vq-progress-fill').style.width = '100%';
   document.getElementById('vq-score').textContent = conjQuizCorrect + ' / ' + conjQuizQuestions.length;
+  checkAchievements();
+  saveProgress();
+}
+
+function retryConjugationQuiz() {
+  if (!conjQuizMissed.length) return;
+  const missedQs = conjQuizMissed.map(m => m._q || m).filter(Boolean);
+  if (!missedQs.length) { startConjugationQuiz(); return; }
+  conjQuizQuestions = shuffle(missedQs);
+  conjQuizIndex = 0;
+  conjQuizCorrect = 0;
+  conjQuizMissed = [];
+  _quizStartTime = Date.now();
+  document.getElementById('vq-title').textContent = 'Conjugation Quiz — Retry Missed';
+  showScreen('vocab-quiz');
+  renderConjQuizQuestion();
 }
 
 // ════════════════════════════════════════
@@ -3797,6 +3887,17 @@ function renderGrammarHome() {
   `;
   mixCard.onclick = () => startGrammarMixedPractice();
   grid.appendChild(mixCard);
+
+  // Sentence Building card
+  const sbCard = document.createElement('div');
+  sbCard.className = 'module-card';
+  sbCard.innerHTML = `
+    <div class="module-icon">🧩</div>
+    <h3>Sentence Building</h3>
+    <p>Arrange word tiles in correct Bengali SOV order</p>
+  `;
+  sbCard.onclick = () => startSentenceBuilding();
+  grid.appendChild(sbCard);
 
   // Lesson cards
   GRAMMAR_LESSONS.forEach((lesson, idx) => {
@@ -5475,7 +5576,7 @@ function renderPhonemePairQuestion() {
 
   document.getElementById('vq-progress-fill').style.width =
     ((ppIndex / ppQuestions.length) * 100) + '%';
-  document.getElementById('vq-score').textContent = ppCorrect + ' / ' + ppIndex;
+  document.getElementById('vq-score').textContent = ppCorrect + ' / ' + ppQuestions.length;
 
   const qa = document.getElementById('vq-question-area');
 
@@ -5483,7 +5584,7 @@ function renderPhonemePairQuestion() {
     qa.innerHTML = `
       <div class="quiz-prompt">${escHtml(q.prompt)}</div>
       <div class="listening-controls">
-        <button class="listening-play-btn" data-action="speak" data-text="${escapeStr(q.audio)}">&#9654; Play Sound</button>
+        <button class="listening-play-btn" data-action="speak" data-text="${escapeStr(q.audio)}" aria-label="Play sound">&#9654; Play Sound</button>
         <button class="slow-audio-btn${_audioSlowMode ? ' active' : ''}" data-action="toggle-slow-audio" title="Play at half speed">&#128034; Slow</button>
       </div>
       <div class="mc-options">
@@ -5512,13 +5613,27 @@ function renderPhonemePairQuestion() {
   }
 }
 
+function _ppKey(q) {
+  return 'pp:' + q.pair.a + ':' + q.pair.b;
+}
+
 function handlePhonemePairMC(answer) {
   if (vqAnswered) return;
   vqAnswered = true;
   const q = ppQuestions[ppIndex];
   const correct = answer === q.correct;
-  if (correct) ppCorrect++;
-  else ppMissed.push(q);
+  const ppk = _ppKey(q);
+
+  if (correct) {
+    ppCorrect++;
+    applyFsrsRating(ppk, FSRS_GOOD);
+  } else {
+    _recordMiss(ppMissed, { bengali: q.pair.a + ' / ' + q.pair.b, answer: q.correct, _q: q });
+    _trackMistake(ppk, 'phoneme');
+    applyFsrsRating(ppk, FSRS_AGAIN);
+  }
+  _trackLastSeen(ppk);
+  saveProgress();
 
   document.getElementById('vq-question-area').querySelectorAll('.mc-btn').forEach(btn => {
     const val = btn.getAttribute('data-answer');
@@ -5538,6 +5653,7 @@ function showPhonemePairResults() {
   const elapsed = Math.round((Date.now() - _quizStartTime) / 1000);
   const pct = Math.round((ppCorrect / ppQuestions.length) * 100);
   addXP(ppCorrect * 10, 'alphabet');
+  detachQuizKeyHandler();
 
   const qa = document.getElementById('vq-question-area');
   qa.innerHTML = `
@@ -5545,16 +5661,53 @@ function showPhonemePairResults() {
       <h2>Phoneme Drill Complete!</h2>
       <div class="quiz-results-score">${ppCorrect} / ${ppQuestions.length} correct (${pct}%)</div>
       <div class="quiz-results-time">Time: ${elapsed}s</div>
-      ${ppMissed.length ? `<div class="quiz-results-missed"><strong>Review these pairs:</strong><ul>${ppMissed.map(q =>
-        `<li><strong>${escHtml(q.pair.label)}</strong> — ${escHtml(q.pair.hint)}</li>`
-      ).join('')}</ul></div>` : ''}
+      <div id="pp-missed-section"></div>
       <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" id="pp-retry-missed-btn" style="display:none" data-action="retry-pp-missed">Retry Missed</button>
         <button class="btn-primary" data-action="start-phoneme-quiz">Try Again</button>
         <button class="nav-btn" data-action="show-screen" data-screen="alphabet-home">Back to Alphabet</button>
       </div>
     </div>`;
+  _renderMissedSection(ppMissed, 'pp-missed-section', 'pp-retry-missed-btn');
   document.getElementById('vq-progress-fill').style.width = '100%';
   document.getElementById('vq-score').textContent = ppCorrect + ' / ' + ppQuestions.length;
+  checkAchievements();
+  saveProgress();
+}
+
+function retryPhonemePairQuiz() {
+  if (!ppMissed.length) return;
+  // Extract unique pairs from missed questions
+  const seenPairs = new Set();
+  const missedPairs = [];
+  ppMissed.forEach(m => {
+    const q = m._q || m;
+    if (!q.pair) return;
+    const pairId = q.pair.a + ':' + q.pair.b;
+    if (!seenPairs.has(pairId)) { seenPairs.add(pairId); missedPairs.push(q.pair); }
+  });
+  if (!missedPairs.length) { startPhonemePairQuiz(); return; }
+
+  // Re-generate quiz targeting only missed pairs
+  const questions = [];
+  missedPairs.forEach(pair => {
+    const la = _letterLookup(pair.a);
+    const lb = _letterLookup(pair.b);
+    const target = Math.random() < 0.5 ? pair.a : pair.b;
+    questions.push({
+      type: 'phoneme-listen',
+      audio: target, prompt: 'Which letter did you hear?',
+      correct: target, options: shuffle([pair.a, pair.b]),
+      pair, la, lb,
+    });
+  });
+
+  ppQuestions = shuffle(questions);
+  ppIndex = 0; ppCorrect = 0; ppMissed = [];
+  _quizStartTime = Date.now();
+  document.getElementById('vq-title').textContent = 'Phoneme Pair Drill — Retry Missed';
+  showScreen('vocab-quiz');
+  renderPhonemePairQuestion();
 }
 
 function startVocabListening() {
@@ -10245,6 +10398,7 @@ let _convRpCorrect = 0;
 let _convRpAnswered = false;
 let _convRpTotal = 0;
 let _convRpStartTime = null;
+let _convRpChosenIdx = -1; // index of chosen option, for branching
 let _convMode = 'quiz'; // 'quiz' or 'roleplay'
 
 function renderConvHome() {
@@ -10389,6 +10543,7 @@ function renderConvRpExchange() {
 function answerConvRpChoice(btn, idx) {
   if (_convRpAnswered) return;
   _convRpAnswered = true;
+  _convRpChosenIdx = idx;
   const ex = _convRpExchanges[_convRpIndex];
   if (!ex) return;
 
@@ -10437,7 +10592,19 @@ function answerConvRpChoice(btn, idx) {
 }
 
 function convRpNext() {
-  _convRpIndex++;
+  // Support branching: if the current exchange's chosen option has a `next` property, jump to that index
+  const curEx = _convRpExchanges[_convRpIndex];
+  if (curEx && curEx.options && _convRpChosenIdx >= 0) {
+    const chosenOpt = curEx.options[_convRpChosenIdx];
+    if (chosenOpt && typeof chosenOpt.next === 'number') {
+      _convRpIndex = chosenOpt.next;
+    } else {
+      _convRpIndex++;
+    }
+  } else {
+    _convRpIndex++;
+  }
+  _convRpChosenIdx = -1;
   if (_convRpIndex >= _convRpExchanges.length) {
     // Show interstitial
     const pct = _convRpTotal > 0 ? Math.round((_convRpCorrect / _convRpTotal) * 100) : 0;
@@ -10887,6 +11054,388 @@ if ('serviceWorker' in navigator) {
 }
 
 
+// ════════════════════════════════════════
+//  IDIOMS MODULE
+// ════════════════════════════════════════
+const IDIOM_CATEGORIES = {
+  body: { title: 'Body', icon: '🦴' },
+  animal: { title: 'Animals', icon: '🐾' },
+  nature: { title: 'Nature', icon: '🌿' },
+  food: { title: 'Food', icon: '🍚' },
+  daily: { title: 'Daily Life', icon: '🏠' },
+  emotion: { title: 'Emotions', icon: '❤️' },
+  wisdom: { title: 'Wisdom', icon: '📖' },
+};
+
+let _idiomFilter = null;
+let _idiomQuizQuestions = [], _idiomQuizIndex = 0, _idiomQuizCorrect = 0, _idiomQuizMissed = [];
+let _idiomFlashcardIndex = 0, _idiomFlashcardSet = [];
+
+function _idiomKey(id) { return 'idiom:' + id; }
+
+function renderIdiomsHome() {
+  // Category filter chips
+  const chipEl = document.getElementById('idiom-cat-chips');
+  if (chipEl) {
+    chipEl.innerHTML = `<div class="cat-chip ${_idiomFilter === null ? 'active' : ''}" data-action="set-idiom-filter">All</div>` +
+      Object.entries(IDIOM_CATEGORIES).map(([id, cat]) => {
+        const count = IDIOMS_DATA.filter(i => i.category === id).length;
+        if (!count) return '';
+        return `<div class="cat-chip ${_idiomFilter === id ? 'active' : ''}" data-action="set-idiom-filter" data-catid="${id}">${cat.icon} ${cat.title} (${count})</div>`;
+      }).join('');
+  }
+
+  const list = document.getElementById('idiom-list');
+  if (!list) return;
+
+  const filtered = _idiomFilter ? IDIOMS_DATA.filter(i => i.category === _idiomFilter) : IDIOMS_DATA;
+
+  let html = `<div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;justify-content:center">
+    <button class="btn-primary" data-action="start-idiom-flashcard">📇 Flashcards</button>
+    <button class="btn-primary" data-action="start-idiom-quiz">📝 Quiz</button>
+  </div>`;
+
+  filtered.forEach(idiom => {
+    const key = _idiomKey(idiom.id);
+    const mastery = progress.mastery?.[key] || 0;
+    const masteryColor = mastery >= 3 ? 'var(--accent)' : mastery >= 1 ? 'var(--accent-dim)' : 'rgba(255,255,255,0.15)';
+    html += `<div class="module-card" data-action="show-idiom-detail" data-id="${escHtml(idiom.id)}" style="cursor:pointer">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:1.3rem">${escHtml(idiom.bengali)}</span>
+        <span style="width:8px;height:8px;border-radius:50%;background:${masteryColor};flex-shrink:0"></span>
+      </div>
+      <div style="color:var(--text-dim);font-size:0.85rem">${escHtml(idiom.roman)}</div>
+      <div style="font-size:0.9rem;margin-top:4px">${escHtml(idiom.meaning)}</div>
+    </div>`;
+  });
+  list.innerHTML = html;
+}
+
+function setIdiomFilter(catId) {
+  _idiomFilter = catId || null;
+  renderIdiomsHome();
+}
+
+function showIdiomDetail(id) {
+  const idx = IDIOMS_DATA.findIndex(i => i.id === id);
+  if (idx < 0) return;
+  _idiomFlashcardSet = _idiomFilter ? IDIOMS_DATA.filter(i => i.category === _idiomFilter) : IDIOMS_DATA;
+  _idiomFlashcardIndex = _idiomFlashcardSet.findIndex(i => i.id === id);
+  if (_idiomFlashcardIndex < 0) _idiomFlashcardIndex = 0;
+  showScreen('idiom-detail');
+  renderIdiomDetailCard();
+}
+
+function renderIdiomDetailCard() {
+  const idiom = _idiomFlashcardSet[_idiomFlashcardIndex];
+  if (!idiom) return;
+  document.getElementById('idiom-detail-title').textContent = 'Idiom ' + (_idiomFlashcardIndex + 1) + ' / ' + _idiomFlashcardSet.length;
+
+  const key = _idiomKey(idiom.id);
+  const mastery = progress.mastery?.[key] || 0;
+
+  document.getElementById('idiom-detail-content').innerHTML = `
+    <div class="flashcard" id="idiom-fc" data-action="flip-idiom-card" style="cursor:pointer;min-height:200px">
+      <div class="flashcard-face flashcard-front">
+        <div style="font-size:2rem;margin-bottom:12px">${escHtml(idiom.bengali)}</div>
+        <div style="color:var(--text-dim);font-size:1rem">${escHtml(idiom.roman)}</div>
+        <div style="color:var(--text-dim);font-size:0.85rem;margin-top:12px">Literal: "${escHtml(idiom.literal)}"</div>
+      </div>
+      <div class="flashcard-face flashcard-back">
+        <div style="font-size:1.1rem;font-weight:600;margin-bottom:8px">${escHtml(idiom.meaning)}</div>
+        <div style="font-size:0.95rem;margin-top:12px;color:var(--text-dim)">
+          <div>${escHtml(idiom.example)}</div>
+          <div style="font-size:0.85rem;margin-top:4px">${escHtml(idiom.exampleEn)}</div>
+        </div>
+        <div style="margin-top:12px">
+          <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(idiom.bengali)}" aria-label="Play idiom">🔊</button>
+          <button class="card-sound-btn" data-action="speak" data-text="${escapeStr(idiom.example)}" aria-label="Play example">🔊 Example</button>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text-dim);font-size:0.8rem;margin-top:8px">Tap card to flip</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+      <button class="nav-btn" data-action="prev-idiom-card" ${_idiomFlashcardIndex <= 0 ? 'disabled' : ''}>← Prev</button>
+      <button class="nav-btn" data-action="next-idiom-card" ${_idiomFlashcardIndex >= _idiomFlashcardSet.length - 1 ? 'disabled' : ''}>Next →</button>
+    </div>`;
+
+  // Track as seen
+  if (!progress.mastery[key]) progress.mastery[key] = 0;
+  if (progress.mastery[key] < 1) progress.mastery[key] = 1;
+  _trackLastSeen(key);
+  saveProgress();
+
+  document.getElementById('idiom-detail-nav').innerHTML =
+    `<span style="font-size:0.85rem;color:var(--text-dim)">${IDIOM_CATEGORIES[idiom.category]?.icon || ''} ${IDIOM_CATEGORIES[idiom.category]?.title || ''}</span>`;
+}
+
+function flipIdiomCard() {
+  const fc = document.getElementById('idiom-fc');
+  if (fc) fc.classList.toggle('flipped');
+}
+
+function prevIdiomCard() {
+  if (_idiomFlashcardIndex > 0) { _idiomFlashcardIndex--; renderIdiomDetailCard(); }
+}
+function nextIdiomCard() {
+  if (_idiomFlashcardIndex < _idiomFlashcardSet.length - 1) { _idiomFlashcardIndex++; renderIdiomDetailCard(); }
+}
+
+function startIdiomFlashcard() {
+  _idiomFlashcardSet = _idiomFilter ? IDIOMS_DATA.filter(i => i.category === _idiomFilter) : IDIOMS_DATA;
+  _idiomFlashcardIndex = 0;
+  showScreen('idiom-detail');
+  renderIdiomDetailCard();
+}
+
+function generateIdiomQuiz() {
+  const pool = _idiomFilter ? IDIOMS_DATA.filter(i => i.category === _idiomFilter) : IDIOMS_DATA;
+  const selected = shuffle([...pool]).slice(0, Math.min(10, pool.length));
+  const questions = [];
+
+  selected.forEach((idiom, i) => {
+    if (i % 2 === 0) {
+      // MC: match idiom to meaning
+      const correct = idiom.meaning;
+      const distractors = shuffle(pool.filter(x => x.id !== idiom.id).map(x => x.meaning))
+        .filter(x => x !== correct).slice(0, 3);
+      questions.push({
+        type: 'mc',
+        prompt: `What does "${idiom.bengali}" mean?`,
+        hint: `Literal: "${idiom.literal}"`,
+        correct,
+        options: shuffle([correct, ...distractors]),
+        idiom,
+      });
+    } else {
+      // MC: match meaning to idiom
+      const correct = idiom.bengali;
+      const distractors = shuffle(pool.filter(x => x.id !== idiom.id).map(x => x.bengali))
+        .filter(x => x !== correct).slice(0, 3);
+      questions.push({
+        type: 'mc',
+        prompt: `Which idiom means "${idiom.meaning}"?`,
+        hint: '',
+        correct,
+        options: shuffle([correct, ...distractors]),
+        idiom,
+      });
+    }
+  });
+  return questions;
+}
+
+function startIdiomQuiz() {
+  _idiomQuizQuestions = generateIdiomQuiz();
+  _idiomQuizIndex = 0;
+  _idiomQuizCorrect = 0;
+  _idiomQuizMissed = [];
+  _quizStartTime = Date.now();
+  showScreen('idiom-quiz');
+  renderIdiomQuizQuestion();
+}
+
+function renderIdiomQuizQuestion() {
+  if (_idiomQuizIndex >= _idiomQuizQuestions.length) { showIdiomQuizResults(); return; }
+  vqAnswered = false;
+  const q = _idiomQuizQuestions[_idiomQuizIndex];
+  document.getElementById('iq-progress-fill').style.width =
+    ((_idiomQuizIndex / _idiomQuizQuestions.length) * 100) + '%';
+  document.getElementById('iq-score').textContent = _idiomQuizCorrect + ' / ' + _idiomQuizQuestions.length;
+
+  const qa = document.getElementById('iq-question-area');
+  qa.innerHTML = `
+    <div class="quiz-prompt">${escHtml(q.prompt)}</div>
+    ${q.hint ? `<div class="vq-hint">${escHtml(q.hint)}</div>` : ''}
+    <div class="mc-options">
+      ${q.options.map(opt => `<button class="mc-btn" data-action="idiom-quiz-mc" data-answer="${escapeStr(opt)}">${escHtml(opt)}</button>`).join('')}
+    </div>`;
+}
+
+function handleIdiomQuizMC(answer) {
+  if (vqAnswered) return;
+  vqAnswered = true;
+  const q = _idiomQuizQuestions[_idiomQuizIndex];
+  const correct = answer === q.correct;
+  const key = _idiomKey(q.idiom.id);
+
+  if (correct) {
+    _idiomQuizCorrect++;
+    applyFsrsRating(key, FSRS_GOOD);
+  } else {
+    _recordMiss(_idiomQuizMissed, { bengali: q.idiom.bengali, answer: q.correct, _q: q });
+    _trackMistake(key, 'idiom');
+    applyFsrsRating(key, FSRS_AGAIN);
+  }
+  _trackLastSeen(key);
+  saveProgress();
+
+  document.getElementById('iq-question-area').querySelectorAll('.mc-btn').forEach(btn => {
+    const val = btn.getAttribute('data-answer');
+    if (val === q.correct) btn.classList.add('correct');
+    else if (val === answer && !correct) btn.classList.add('wrong');
+    btn.disabled = true;
+  });
+
+  const feedbackHtml = `<div class="vq-feedback ${correct ? 'correct' : 'wrong'}">${correct ? 'Correct!' : `Answer: ${escHtml(q.correct)}`}</div>
+    <div class="vq-hint" style="margin-top:8px">${escHtml(q.idiom.bengali)} — "${escHtml(q.idiom.meaning)}"</div>`;
+  document.getElementById('iq-question-area').insertAdjacentHTML('beforeend', feedbackHtml);
+
+  setTimeout(() => { _idiomQuizIndex++; renderIdiomQuizQuestion(); }, correct ? 1000 : 2200);
+}
+
+function showIdiomQuizResults() {
+  const elapsed = Math.round((Date.now() - _quizStartTime) / 1000);
+  const pct = Math.round((_idiomQuizCorrect / _idiomQuizQuestions.length) * 100);
+  addXP(_idiomQuizCorrect * 10, 'grammar');
+  detachQuizKeyHandler();
+
+  // Animate results ring
+  const circ = 2 * Math.PI * 72;
+  document.getElementById('iqr-ring').style.strokeDashoffset = circ - (circ * pct / 100);
+  document.getElementById('iqr-pct').textContent = pct + '%';
+  document.getElementById('iqr-title').textContent = pct >= 80 ? 'Excellent!' : pct >= 50 ? 'Good effort!' : 'Keep practicing!';
+  document.getElementById('iqr-sub').textContent = `You scored ${_idiomQuizCorrect}/${_idiomQuizQuestions.length} in ${elapsed}s`;
+
+  _renderMissedSection(_idiomQuizMissed, 'iqr-missed', 'iqr-retry-missed-btn');
+  showScreen('idiom-results');
+  checkAchievements();
+  saveProgress();
+}
+
+function retryIdiomMissed() {
+  if (!_idiomQuizMissed.length) return;
+  const missedQs = _idiomQuizMissed.map(m => m._q || m).filter(Boolean);
+  if (!missedQs.length) { startIdiomQuiz(); return; }
+  _idiomQuizQuestions = shuffle(missedQs);
+  _idiomQuizIndex = 0;
+  _idiomQuizCorrect = 0;
+  _idiomQuizMissed = [];
+  _quizStartTime = Date.now();
+  document.getElementById('iq-title').textContent = 'Idiom Quiz — Retry Missed';
+  showScreen('idiom-quiz');
+  renderIdiomQuizQuestion();
+}
+
+// ════════════════════════════════════════
+//  SENTENCE BUILDING
+// ════════════════════════════════════════
+let _sbQuestions = [], _sbIndex = 0, _sbCorrect = 0, _sbMissed = [];
+let _sbSelectedWords = [];
+
+function generateSentenceBuildingSet() {
+  const questions = [];
+  GRAMMAR_LESSONS.forEach(lesson => {
+    if (!lesson.quiz) return;
+    lesson.quiz.forEach(q => {
+      if (q.type === 'word-order' && q.words && q.correct) {
+        questions.push({
+          prompt: q.prompt || q.question || 'Arrange the words in correct order:',
+          words: q.words,
+          correct: q.correct,
+          lessonTitle: lesson.title,
+        });
+      }
+    });
+  });
+  return shuffle(questions).slice(0, Math.min(10, questions.length));
+}
+
+function startSentenceBuilding() {
+  _sbQuestions = generateSentenceBuildingSet();
+  if (!_sbQuestions.length) return;
+  _sbIndex = 0;
+  _sbCorrect = 0;
+  _sbMissed = [];
+  _quizStartTime = Date.now();
+  showScreen('sentence-build');
+  renderSentenceBuildQuestion();
+}
+
+function renderSentenceBuildQuestion() {
+  if (_sbIndex >= _sbQuestions.length) { showSentenceBuildResults(); return; }
+  _sbSelectedWords = [];
+  const q = _sbQuestions[_sbIndex];
+  document.getElementById('sb-progress-fill').style.width =
+    ((_sbIndex / _sbQuestions.length) * 100) + '%';
+  document.getElementById('sb-score').textContent = _sbCorrect + ' / ' + _sbQuestions.length;
+
+  const shuffledWords = shuffle([...q.words]);
+  const qa = document.getElementById('sb-question-area');
+  qa.innerHTML = `
+    <div class="quiz-prompt">${escHtml(q.prompt)}</div>
+    <div class="wo-answer-area" id="sb-answer-area" style="min-height:48px;border:2px dashed rgba(255,255,255,0.15);border-radius:8px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;margin:12px 0"></div>
+    <div class="wo-tiles" id="sb-tiles" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0">
+      ${shuffledWords.map((w, i) => `<div class="wo-tile" data-action="sb-select-tile" data-idx="${i}" data-word="${escapeStr(w)}">${escHtml(w)}</div>`).join('')}
+    </div>
+    <button class="btn-primary" data-action="sb-check" style="margin-top:12px">Check</button>`;
+}
+
+function sbSelectTile(el) {
+  if (el.classList.contains('used')) return;
+  el.classList.add('used');
+  const word = el.dataset.word;
+  _sbSelectedWords.push(word);
+
+  const ansArea = document.getElementById('sb-answer-area');
+  const tag = document.createElement('div');
+  tag.className = 'wo-tile selected';
+  tag.textContent = word;
+  tag.dataset.srcIdx = el.dataset.idx;
+  tag.addEventListener('click', () => {
+    _sbSelectedWords = _sbSelectedWords.filter((_, i) => i !== [...ansArea.children].indexOf(tag));
+    tag.remove();
+    el.classList.remove('used');
+    // Rebuild _sbSelectedWords from current state
+    _sbSelectedWords = [...ansArea.querySelectorAll('.wo-tile')].map(t => t.textContent);
+  });
+  ansArea.appendChild(tag);
+}
+
+function sbCheck() {
+  const q = _sbQuestions[_sbIndex];
+  const ansArea = document.getElementById('sb-answer-area');
+  const isCorrect = JSON.stringify(_sbSelectedWords) === JSON.stringify(q.correct);
+
+  if (isCorrect) {
+    _sbCorrect++;
+    ansArea.classList.add('correct-wo');
+    addXP(5, 'grammar');
+  } else {
+    ansArea.classList.add('wrong-wo');
+    _sbMissed.push({ bengali: q.correct.join(' '), answer: q.correct.join(' '), _q: q });
+    // Show correct answer
+    const feedback = document.createElement('div');
+    feedback.className = 'vq-feedback wrong';
+    feedback.style.marginTop = '8px';
+    feedback.textContent = 'Correct: ' + q.correct.join(' ');
+    document.getElementById('sb-question-area').appendChild(feedback);
+  }
+
+  // Disable tiles and check button
+  document.querySelectorAll('#sb-tiles .wo-tile').forEach(t => t.style.pointerEvents = 'none');
+  document.querySelector('[data-action="sb-check"]').disabled = true;
+
+  setTimeout(() => { _sbIndex++; renderSentenceBuildQuestion(); }, isCorrect ? 1000 : 2500);
+}
+
+function showSentenceBuildResults() {
+  const elapsed = Math.round((Date.now() - _quizStartTime) / 1000);
+  const pct = _sbQuestions.length > 0 ? Math.round((_sbCorrect / _sbQuestions.length) * 100) : 0;
+  addXP(_sbCorrect * 10, 'grammar');
+
+  const circ = 2 * Math.PI * 72;
+  document.getElementById('sbr-ring').style.strokeDashoffset = circ - (circ * pct / 100);
+  document.getElementById('sbr-pct').textContent = pct + '%';
+  document.getElementById('sbr-title').textContent = pct >= 80 ? 'Excellent!' : pct >= 50 ? 'Good effort!' : 'Keep practicing!';
+  document.getElementById('sbr-sub').textContent = `You scored ${_sbCorrect}/${_sbQuestions.length} in ${elapsed}s`;
+
+  _renderMissedSection(_sbMissed, 'sbr-missed', null);
+  showScreen('sentence-build-results');
+  checkAchievements();
+  saveProgress();
+}
+
 // ============================================================
 // Delegated click listener — handles all data-action elements
 // ============================================================
@@ -10941,6 +11490,7 @@ document.addEventListener('click', function(e) {
     case 'retry-missed-vocab': retryMissedVocab(); break;
     case 'set-vocab-filter': setVocabFilter(a.catid || null); break;
     case 'set-vocab-level': setVocabLevel(a.level || null); break;
+    case 'set-vocab-origin': setVocabOrigin(a.origin || null); break;
     case 'start-vocab-filter-quiz': startFilteredVocabQuiz(); break;
     case 'show-vocab-detail': showVocabDetail(a.lemma); break;
     case 'show-vocab-detail-search': closeSearch(); showVocabDetail(JSON.parse(a.lemma)); break;
@@ -10967,6 +11517,7 @@ document.addEventListener('click', function(e) {
     case 'start-conj-quiz': startConjugationQuiz(); break;
     case 'conj-quiz-mc': handleConjQuizMC(a.answer); break;
     case 'conj-quiz-fib-submit': handleConjQuizFIB(); break;
+    case 'retry-conj-missed': retryConjugationQuiz(); break;
     // Phrases
     case 'flip-ps-card': flipPsCard(); break;
     case 'prev-ps-card': prevPsCard(); break;
@@ -11069,6 +11620,7 @@ document.addEventListener('click', function(e) {
     case 'start-letter-listening': startLetterListening(); break;
     case 'start-phoneme-quiz': startPhonemePairQuiz(); break;
     case 'phoneme-quiz-mc': handlePhonemePairMC(a.answer); break;
+    case 'retry-pp-missed': retryPhonemePairQuiz(); break;
     // Onboarding
     case 'dismiss-onboarding': dismissOnboarding(); break;
     // Bengali keyboard
@@ -11143,6 +11695,20 @@ document.addEventListener('click', function(e) {
     case 'conv-mc':             answerConvMC(el, +a.idx); break;
     case 'conv-next':           convNext(); break;
     case 'conv-retry':          startConvQuiz(_convCurrentId); break;
+    // Idioms
+    case 'set-idiom-filter':    setIdiomFilter(a.catid || null); break;
+    case 'show-idiom-detail':   showIdiomDetail(a.id); break;
+    case 'flip-idiom-card':     flipIdiomCard(); break;
+    case 'prev-idiom-card':     prevIdiomCard(); break;
+    case 'next-idiom-card':     nextIdiomCard(); break;
+    case 'start-idiom-flashcard': startIdiomFlashcard(); break;
+    case 'start-idiom-quiz':    startIdiomQuiz(); break;
+    case 'idiom-quiz-mc':       handleIdiomQuizMC(a.answer); break;
+    case 'retry-idiom-missed':  retryIdiomMissed(); break;
+    // Sentence Building
+    case 'start-sentence-build': startSentenceBuilding(); break;
+    case 'sb-select-tile':      sbSelectTile(el); break;
+    case 'sb-check':            sbCheck(); break;
     // Trivia
     case 'trivia-mc':         answerTriviaMC(el, +a.idx); break;
     case 'trivia-submit-fib': answerTriviaFIB(); break;

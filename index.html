@@ -85,6 +85,7 @@
       <button class="tab-btn" data-action="switch-tab" data-tab="travel" data-t="Travel">Travel</button>
       <button class="tab-btn" data-action="switch-tab" data-tab="trivia" data-t="Trivia">Trivia</button>
       <button class="tab-btn" data-action="switch-tab" data-tab="conversations" data-t="Conversations">Conversations</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="idioms" data-t="Idioms">Idioms</button>
     </div>
   </div>
 
@@ -372,6 +373,7 @@
     <input type="text" class="vb-search" id="vb-search" placeholder="Search words…" oninput="filterVocabList()">
   </div>
   <div class="level-chips" id="level-chips"></div>
+  <div class="cat-chips" id="origin-chips" style="margin-bottom:4px"></div>
   <div class="cat-chips" id="cat-chips"></div>
   <div class="vocab-list" id="vocab-list"></div>
   <div class="vocab-pagination" id="vocab-pagination"></div>
@@ -1359,6 +1361,91 @@
   <div id="cvr-missed"></div>
 </div>
 
+<!-- IDIOMS HOME -->
+<div class="screen" id="idioms-home">
+  <div class="hero">
+    <h2>বাগধারা — Idioms</h2>
+    <p>Learn Bengali idioms with literal meanings, actual usage, and interactive quizzes</p>
+  </div>
+  <div id="idiom-cat-chips" class="filter-chips" style="padding:0 1rem;margin-bottom:12px"></div>
+  <div id="idiom-list" class="module-grid" style="padding:0 1rem"></div>
+</div>
+
+<!-- IDIOM DETAIL (flashcard) -->
+<div class="screen" id="idiom-detail">
+  <div class="learn-header">
+    <button class="back-btn" data-action="show-screen" data-screen="idioms-home">← Back</button>
+    <h2 id="idiom-detail-title">Idiom</h2>
+    <div id="idiom-detail-nav"></div>
+  </div>
+  <div id="idiom-detail-content" style="padding:1rem"></div>
+</div>
+
+<!-- IDIOM QUIZ -->
+<div class="screen" id="idiom-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="idioms-home">← Quit</button>
+    <h2 id="iq-title">Idiom Quiz</h2>
+    <div id="iq-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="iq-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="iq-question-area"></div>
+</div>
+
+<!-- IDIOM QUIZ RESULTS -->
+<div class="screen" id="idiom-results">
+  <div class="results-circle" id="iqr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="iqr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="iqr-pct">0%</span>
+  </div>
+  <div class="results-title" id="iqr-title">Great job!</div>
+  <div class="results-sub" id="iqr-sub">You scored 0/0</div>
+  <div class="results-actions">
+    <button class="btn-primary" id="iqr-retry-missed-btn" style="display:none" data-action="retry-idiom-missed">Retry Missed</button>
+    <button class="btn-primary" data-action="start-idiom-quiz">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="idioms-home">Home</button>
+  </div>
+  <div id="iqr-missed"></div>
+</div>
+
+<!-- SENTENCE BUILDING -->
+<div class="screen" id="sentence-build">
+  <div class="quiz-header">
+    <button class="back-btn" data-action="show-screen" data-screen="grammar-home">← Quit</button>
+    <h2 id="sb-title">Sentence Building</h2>
+    <div id="sb-score">0 / 0</div>
+  </div>
+  <div class="quiz-progress-bar">
+    <div class="quiz-progress-fill" id="sb-progress-fill"></div>
+  </div>
+  <div class="quiz-question-area" id="sb-question-area"></div>
+</div>
+
+<!-- SENTENCE BUILDING RESULTS -->
+<div class="screen" id="sentence-build-results">
+  <div class="results-circle" id="sbr-circle">
+    <svg viewBox="0 0 160 160">
+      <circle class="bg-ring" cx="80" cy="80" r="72"/>
+      <circle class="fg-ring" id="sbr-ring" cx="80" cy="80" r="72"
+        stroke-dasharray="452.4" stroke-dashoffset="452.4"/>
+    </svg>
+    <span id="sbr-pct">0%</span>
+  </div>
+  <div class="results-title" id="sbr-title">Great job!</div>
+  <div class="results-sub" id="sbr-sub">You scored 0/0</div>
+  <div class="results-actions">
+    <button class="btn-primary" data-action="start-sentence-build">Try Again</button>
+    <button class="nav-btn" data-action="show-screen" data-screen="grammar-home">Home</button>
+  </div>
+  <div id="sbr-missed"></div>
+</div>
+
 <script type="module" src="app.js"></script>
 
 <!-- ── First-run Onboarding Modal ─────────────────────────────── -->
@@ -1388,6 +1475,7 @@
         <div class="vocab-card-pos" id="wm-pos"></div>
         <div class="vocab-card-english" id="wm-english"></div>
         <div class="vocab-card-cat" id="wm-cat"></div>
+        <div class="vocab-card-origin" id="wm-origin" style="display:none"></div>
         <div class="vocab-card-example" id="wm-example"></div>
         <div class="wm-related" id="wm-related" style="display:none">
           <div class="wm-related-title">Related words</div>
